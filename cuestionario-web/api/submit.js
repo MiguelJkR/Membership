@@ -1,332 +1,409 @@
-// Vercel Function: recibe respuestas del cuestionario y crea una pagina en la
-// database "Entrevistas de Validacion" (Notion). Infiere automaticamente los
-// campos derivados (nivel de dolor, receptividad, proximo paso, etc.).
+const NOTION_TOKEN = process.env.NOTION_TOKEN;
+const DATABASE_ID = process.env.NOTION_DATABASE_ID || 'a5de9526-4375-41f4-bc7d-475dc16f0264';
 
+const NOTION_API_VERSION = '2022-06-28';
 const NOTION_API_URL = 'https://api.notion.com/v1/pages';
-const NOTION_VERSION = '2022-06-28';
-const FALLBACK_DATABASE_ID = 'a5de9526-4375-41f4-bc7d-475dc16f0264';
 
-const CATEGORY_MAP = {
-  ac_hvac: 'A/C & HVAC',
-  pool: 'Pool service',
-  lawn: 'Lawn care',
-  pest: 'Pest control',
-  roof: 'Roof maintenance',
-  pressure: 'Pressure washing',
-  gutter: 'Gutter cleaning',
-  exterior: 'Exterior cleaning',
-  hurricane: 'Hurricane prep',
-  handyman: 'Handyman',
-  generator: 'Generator service',
-  tree: 'Tree service',
-};
-
-const VALID_CITIES = new Set([
-  'Cape Coral', 'Fort Myers', 'Naples', 'Bonita Springs',
-  'Estero', 'Lehigh Acres', 'Otro',
-]);
-
-const VALID_SOURCES = new Set([
-  'Referido', 'NextDoor', 'Facebook Group', 'Walk-in', 'Google Maps', 'Otro',
-]);
-
-const PAIN_KEYWORDS = [
-  'horrible', 'desesperante', 'terrible', 'imposible', 'frustrante',
-  'dificil', 'difícil', 'duro', 'pesadilla', 'odio', 'agotador',
-  'estresante', 'caotico', 'caótico', 'insufrible', 'nightmare',
-  'awful', 'terrible', 'frustrating', 'impossible', 'hard',
-  'stressful', 'exhausting', 'hate', 'painful',
+const ALLOWED_CATEGORIES = [
+  'A/C & HVAC', 'Pool service', 'Lawn care', 'Pest control',
+  'Roof maintenance', 'Pressure washing', 'Gutter cleaning',
+  'Exterior cleaning', 'Hurricane prep', 'Handyman',
+  'Generator service', 'Tree service'
 ];
 
-function safeText(value, max = 2000) {
-  if (value === null || value === undefined) return '';
-  const str = String(value).trim();
-  return str.length > max ? str.slice(0, max) : str;
+const CITY_MAP = {
+  'Cape Coral': 'Cape Coral',
+  'Fort Myers': 'Fort Myers',
+  'Naples': 'Naples',
+  'Bonita Springs': 'Bonita Springs',
+  'Estero': 'Estero',
+  'Lehigh Acres': 'Lehigh Acres',
+  'Punta Gorda': 'Otro',
+  'Otro': 'Otro',
+  'Other': 'Otro'
+};
+
+function clamp(s, max = 2000) {
+  if (!s) return '';
+  return String(s).slice(0, max);
 }
 
-function richText(value, max = 2000) {
-  const content = safeText(value, max);
-  if (!content) return [];
-  return [{ type: 'text', text: { content } }];
+function asArray(v) {
+  if (Array.isArray(v)) return v;
+  if (v === undefined || v === null || v === '') return [];
+  return [v];
 }
 
-function title(value, max = 200) {
-  const content = safeText(value, max) || 'Sin nombre';
-  return [{ type: 'text', text: { content } }];
+function normalizeCity(city) {
+  if (!city) return null;
+  return CITY_MAP[city] || 'Otro';
 }
 
-function selectOpt(value, allowed) {
-  const v = safeText(value);
-  if (!v) return null;
-  if (allowed && !allowed.has(v)) return null;
-  return { name: v };
+function filterCategories(arr) {
+  return asArray(arr).filter(c => ALLOWED_CATEGORIES.includes(c));
 }
 
-function multiSelectOpts(values) {
-  if (!Array.isArray(values)) return [];
-  const seen = new Set();
-  const result = [];
-  for (const v of values) {
-    const mapped = CATEGORY_MAP[v] || (Object.values(CATEGORY_MAP).includes(v) ? v : null);
-    if (mapped && !seen.has(mapped)) {
-      seen.add(mapped);
-      result.push({ name: mapped });
-    }
+function inferProviderDominant(data) {
+  const dom = data.q3_dominante;
+  if (!dom) return null;
+  const lower = dom.toLowerCase();
+  if (lower.includes('a/c') || lower.includes('ac ') || lower.includes('hvac') || lower.includes('aire')) return 'A/C & HVAC';
+  if (lower.includes('pool') || lower.includes('piscina')) return 'Pool service';
+  if (lower.includes('lawn') || lower.includes('jardín') || lower.includes('jardin') || lower.includes('grass')) return 'Lawn care';
+  if (lower.includes('pest') || lower.includes('plaga') || lower.includes('mosquito')) return 'Pest control';
+  if (lower.includes('roof') || lower.includes('techo')) return 'Roof maintenance';
+  if (lower.includes('pressure') || lower.includes('presión') || lower.includes('presion')) return 'Pressure washing';
+  if (lower.includes('gutter') || lower.includes('canaleta')) return 'Gutter cleaning';
+  if (lower.includes('exterior') || lower.includes('window')) return 'Exterior cleaning';
+  if (lower.includes('hurricane') || lower.includes('huracán') || lower.includes('huracan')) return 'Hurricane prep';
+  if (lower.includes('handyman') || lower.includes('handy')) return 'Handyman';
+  if (lower.includes('generator') || lower.includes('generador')) return 'Generator service';
+  if (lower.includes('tree') || lower.includes('árbol') || lower.includes('arbol') || lower.includes('poda')) return 'Tree service';
+  return null;
+}
+
+function inferDolor(data, type) {
+  if (type === 'provider') {
+    const txt = (data.q8_problema_grande || '').toLowerCase();
+    if (!txt) return null;
+    if (txt.length < 20) return 3;
+    if (txt.includes('terrible') || txt.includes('horrible') || txt.includes('me arruina') || txt.includes('imposible')) return 9;
+    if (txt.includes('frustrante') || txt.includes('grande') || txt.includes('serio') || txt.includes('mucho')) return 7;
+    if (txt.includes('a veces') || txt.includes('ocasional')) return 5;
+    return 6;
+  } else {
+    const txt = (data.q6_frustracion || '').toLowerCase();
+    if (!txt) return null;
+    if (txt.length < 20) return 3;
+    if (txt.includes('terrible') || txt.includes('horrible')) return 9;
+    if (txt.includes('frustrante') || txt.includes('grande') || txt.includes('mucho')) return 7;
+    if (txt.includes('a veces') || txt.includes('poco')) return 4;
+    return 6;
   }
-  return result;
 }
 
-function inferPainLevel(payload) {
-  let score = 5;
-  const dolor = safeText(payload.dolor_principal).toLowerCase();
-  for (const kw of PAIN_KEYWORDS) {
-    if (dolor.includes(kw)) { score += 1; break; }
+function inferReceptividad(data, type) {
+  if (type === 'provider') {
+    const txt = (data.q12_reaccion || '').toLowerCase();
+    const piloto = data.q18_piloto;
+    let score = 5;
+    if (piloto === 'Sí' || piloto === 'Si') score = 8;
+    else if (piloto === 'Quizás' || piloto === 'Quizas') score = 6;
+    else if (piloto === 'No') score = 3;
+    if (txt.includes('me encanta') || txt.includes('excelente') || txt.includes('genial')) score = Math.min(10, score + 2);
+    if (txt.includes('no me convence') || txt.includes('no creo') || txt.includes('mal')) score = Math.max(1, score - 2);
+    return score;
+  } else {
+    const txt = (data.q11_reaccion || '').toLowerCase();
+    const subs = data.q12_suscribirse;
+    let score = 5;
+    if (subs === 'Sí' || subs === 'Si') score = 8;
+    else if (subs === 'Tal vez') score = 5;
+    else if (subs === 'No') score = 2;
+    if (txt.includes('me gusta') || txt.includes('excelente')) score = Math.min(10, score + 2);
+    if (txt.includes('confuso') || txt.includes('no me gusta')) score = Math.max(1, score - 2);
+    return score;
   }
-  if (dolor.length > 200) score += 1;
-  if (dolor.length > 500) score += 1;
-
-  const yesAnswers = [
-    payload.problemas_facturacion,
-    payload.dificultad_clientes,
-    payload.proveedores_confiables,
-    payload.olvidos_dano,
-  ];
-  for (const ans of yesAnswers) {
-    const a = safeText(ans).toLowerCase();
-    if (a === 'si' || a === 'sí' || a === 'yes' || a.startsWith('mucho') || a.startsWith('a lot')) score += 1;
-    if (a === 'no' || a.startsWith('nada') || a.startsWith('none')) score -= 1;
-  }
-
-  const molestia = parseInt(payload.molestia_coordinacion, 10);
-  if (!Number.isNaN(molestia)) {
-    if (molestia >= 8) score += 2;
-    else if (molestia >= 5) score += 1;
-    else if (molestia <= 2) score -= 1;
-  }
-
-  const baja = safeText(payload.baja_temporada).toLowerCase();
-  if (baja.includes('mucho') || baja.includes('a lot') || /[4-9]\d?%|\b[4-9]\b/.test(baja)) score += 1;
-
-  return Math.max(1, Math.min(10, score));
 }
 
-function inferReceptivity(payload) {
-  const r = parseInt(payload.receptividad_membresia, 10);
-  if (Number.isNaN(r)) return 5;
-  return Math.max(1, Math.min(10, r));
-}
-
-function inferDominantCategory(payload) {
-  const list = payload.tipo === 'proveedor'
-    ? payload.categorias_proveedor
-    : payload.categorias_actuales;
-  if (!Array.isArray(list) || list.length === 0) return null;
-  const mapped = CATEGORY_MAP[list[0]] || list[0];
-  return Object.values(CATEGORY_MAP).includes(mapped) ? mapped : null;
-}
-
-function inferBundleDisposition(payload) {
-  if (payload.tipo === 'proveedor') {
-    const ans = safeText(payload.disposicion_bundles).toLowerCase();
-    if (ans.startsWith('si') || ans.startsWith('sí') || ans.includes('definit') || ans.startsWith('yes')) return 'Alta';
-    if (ans.startsWith('tal vez') || ans.startsWith('quiz') || ans.startsWith('maybe') || ans.includes('depende')) return 'Media';
-    if (ans.startsWith('no') || ans.startsWith('nada')) return 'Baja';
+function inferDisposicionBundles(data, type) {
+  if (type === 'provider') {
+    const precio = (data.q14_precio_bundle || '').toLowerCase();
+    const valor = (data.q15_valor_bundle || '').toLowerCase();
+    if (!precio && !valor) return 'No aplica';
+    if (precio.match(/\d/) && (valor.includes('sí') || valor.includes('si') || valor.includes('mejor'))) return 'Alta';
+    if (precio.match(/\d/) || valor.includes('quizás') || valor.includes('depende')) return 'Media';
+    if (valor.includes('no') && !valor.includes('no sé')) return 'Baja';
+    return 'Media';
+  } else {
+    const precio = (data.q14_bundle_precio || '').toLowerCase();
+    if (!precio) return 'No aplica';
+    if (precio.match(/\d/) && !precio.includes('no')) return 'Alta';
+    if (precio.includes('depende') || precio.includes('quizás') || precio.includes('quizas')) return 'Media';
+    if (precio.includes('no')) return 'Baja';
     return 'Media';
   }
-  const interes = Array.isArray(payload.categorias_interes) ? payload.categorias_interes.length : 0;
-  if (interes >= 4) return 'Alta';
-  if (interes >= 2) return 'Media';
-  if (interes === 1) return 'Baja';
-  return 'No aplica';
 }
 
-function inferHurricaneInterest(payload) {
-  const ans = safeText(payload.interes_hurricane).toLowerCase();
-  if (ans.includes('mucho') || ans.includes('alto') || ans.startsWith('si') || ans.startsWith('sí') || ans.includes('very')) return 'Alto';
-  if (ans.includes('algo') || ans.includes('medio') || ans.includes('quiz') || ans.includes('some')) return 'Medio';
-  if (ans.includes('nada') || ans.includes('bajo') || ans.startsWith('no') || ans.includes('not')) return 'Bajo';
-  return 'No aplica';
+function inferInteresHurricane(data, type) {
+  if (type !== 'client') return 'No aplica';
+  const txt = (data.q17_hurricane || '').toLowerCase().trim();
+  if (!txt) return 'Bajo';
+  
+  // Si dice explicitamente "no me interesa" o "no" sin numero
+  if ((txt.includes('no me interesa') || txt.includes('no, gracias') || txt === 'no') && !txt.match(/\d/)) {
+    return 'Bajo';
+  }
+  
+  // Extraer cualquier numero de la respuesta
+  const match = txt.match(/(\d+)/);
+  if (match) {
+    const num = parseInt(match[1], 10);
+    // Numeros que suenan a precio anual razonable o entusiasta
+    if (num >= 300) return 'Alto';
+    if (num >= 100) return 'Medio';
+    return 'Bajo';
+  }
+  
+  // Si tiene texto positivo sin numero
+  if (txt.includes('mucho') || txt.includes('definit') || txt.includes('me parece bien') || txt.includes('si me')) {
+    return 'Alto';
+  }
+  if (txt.includes('quizas') || txt.includes('depende') || txt.includes('tal vez')) {
+    return 'Medio';
+  }
+  return 'Bajo';
 }
 
-function inferCommitment(payload) {
-  const ans = safeText(payload.compromiso_piloto).toLowerCase();
-  if (ans.startsWith('si') || ans.startsWith('sí') || ans.startsWith('yes')) return 'Si';
-  if (ans.startsWith('quiz') || ans.startsWith('tal vez') || ans.startsWith('maybe')) return 'Quizas';
-  if (ans.startsWith('no')) return 'No';
-  return 'Pendiente';
+function buildPrecioAceptableMensual(data, type) {
+  if (type === 'provider') {
+    return clamp(data.q14_precio_bundle, 200);
+  } else {
+    const parts = [];
+    if (data.q13_ac) parts.push(`A/C: ${data.q13_ac}`);
+    if (data.q13_pool) parts.push(`Pool: ${data.q13_pool}`);
+    if (data.q13_lawn) parts.push(`Lawn: ${data.q13_lawn}`);
+    if (data.q13_pest) parts.push(`Pest: ${data.q13_pest}`);
+    if (data.q14_bundle_precio) parts.push(`Bundle: ${data.q14_bundle_precio}`);
+    return clamp(parts.join(' | '), 200);
+  }
 }
 
-function inferNextStep(receptivity, commitment) {
-  if (commitment === 'Si' && receptivity >= 6) return 'Pasar a piloto';
-  if (receptivity >= 7) return 'Pasar a piloto';
-  if (receptivity >= 4) return 'Volver a contactar';
-  if (receptivity > 0) return 'Descartar';
-  return 'Sin accion';
+function buildFraseTextual(data, type) {
+  const candidates = type === 'provider' 
+    ? [data.q8_problema_grande, data.q11_cambio_uno, data.q12_reaccion, data.q17_frenos]
+    : [data.q6_frustracion, data.q10_cambio_uno, data.q11_reaccion, data.q16_frenos];
+  
+  const valid = candidates.filter(c => c && c.length > 30 && c.length < 400);
+  if (valid.length === 0) return '';
+  
+  return clamp(valid.sort((a, b) => b.length - a.length)[0], 400);
 }
 
-function buildKeyPhrase(payload) {
-  const dolor = safeText(payload.dolor_principal, 500);
-  return dolor || safeText(payload.notas, 500);
+function buildNotasPrincipales(data, type) {
+  const lines = [`Tipo: ${type === 'provider' ? 'Proveedor' : 'Cliente'} | Idioma: ${data.lang || 'es'}`];
+  
+  if (type === 'provider') {
+    if (data.negocio) lines.push(`Negocio: ${data.negocio}`);
+    if (data.anos) lines.push(`Años: ${data.anos}`);
+    if (data.q1_mes_tipico) lines.push(`Mes típico: ${clamp(data.q1_mes_tipico, 200)}`);
+    const cats = filterCategories(data.q2_categorias);
+    if (cats.length) lines.push(`Categorías: ${cats.join(', ')}`);
+    if (data.q3_dominante) lines.push(`Dominante: ${data.q3_dominante}`);
+    if (data.q4_lead_gen) lines.push(`Lead gen: ${clamp(data.q4_lead_gen, 200)}`);
+    if (data.q5_estabilidad) lines.push(`Estabilidad: ${clamp(data.q5_estabilidad, 200)}`);
+    if (data.q6_cobro) lines.push(`Cobro: ${clamp(data.q6_cobro, 200)}`);
+    if (data.q7_recurrentes) lines.push(`Recurrentes: ${data.q7_recurrentes}`);
+    if (data.q8_problema_grande) lines.push(`Problema grande: ${clamp(data.q8_problema_grande, 300)}`);
+    if (data.q9_compartir_precios) lines.push(`Comparte precios: ${clamp(data.q9_compartir_precios, 200)}`);
+    if (data.q10_pensado_mensual) lines.push(`Pensó en mensual: ${data.q10_pensado_mensual}`);
+    if (data.q10_pensado_mensual_detalle) lines.push(`Detalle mensual: ${clamp(data.q10_pensado_mensual_detalle, 200)}`);
+    if (data.q11_cambio_uno) lines.push(`Cambiaría: ${clamp(data.q11_cambio_uno, 200)}`);
+    if (data.q12_reaccion) lines.push(`Reacción: ${clamp(data.q12_reaccion, 300)}`);
+    if (data.q13_clientes_suscritos) lines.push(`Suscriptores estimados: ${data.q13_clientes_suscritos}`);
+    if (data.q14_precio_bundle) lines.push(`Precio bundle: ${data.q14_precio_bundle}`);
+    if (data.q15_valor_bundle) lines.push(`Valor bundle: ${clamp(data.q15_valor_bundle, 200)}`);
+    if (data.q16_comision) lines.push(`Comisión 10%: ${data.q16_comision}`);
+    if (data.q17_frenos) lines.push(`Frenos: ${clamp(data.q17_frenos, 200)}`);
+    if (data.q18_piloto) lines.push(`Piloto: ${data.q18_piloto}`);
+    if (data.q19_referidos) lines.push(`Referidos: ${clamp(data.q19_referidos, 300)}`);
+    if (data.q20_avisar) lines.push(`Avisar: ${data.q20_avisar}`);
+  } else {
+    if (data.tipo_propiedad) lines.push(`Propiedad: ${data.tipo_propiedad}`);
+    if (data.piscina) lines.push(`Piscina: ${data.piscina}`);
+    if (data.anos_florida) lines.push(`Años en FL: ${data.anos_florida}`);
+    const servs = filterCategories(data.q1_servicios);
+    if (servs.length) lines.push(`Servicios: ${servs.join(', ')}`);
+    if (data.q2_lealtad) lines.push(`Lealtad: ${data.q2_lealtad}`);
+    if (data.q3_handyman_confianza) lines.push(`Handyman confianza: ${clamp(data.q3_handyman_confianza, 200)}`);
+    if (data.q4_gasto_mensual) lines.push(`Gasto/mes: ${data.q4_gasto_mensual}`);
+    if (data.q5_emergencia) lines.push(`Emergencia: ${clamp(data.q5_emergencia, 200)}`);
+    if (data.q6_frustracion) lines.push(`Frustración: ${clamp(data.q6_frustracion, 300)}`);
+    if (data.q7_disponibilidad) lines.push(`Disponibilidad: ${clamp(data.q7_disponibilidad, 200)}`);
+    if (data.q8_claridad_precios) lines.push(`Claridad precios: ${clamp(data.q8_claridad_precios, 200)}`);
+    if (data.q9_sorpresa_precio) lines.push(`Sorpresa precio: ${clamp(data.q9_sorpresa_precio, 200)}`);
+    if (data.q10_cambio_uno) lines.push(`Cambiaría: ${clamp(data.q10_cambio_uno, 200)}`);
+    if (data.q11_reaccion) lines.push(`Reacción: ${clamp(data.q11_reaccion, 300)}`);
+    if (data.q12_suscribirse) lines.push(`Suscribirse: ${data.q12_suscribirse}`);
+    if (data.q12_suscribirse_porque) lines.push(`Por qué: ${clamp(data.q12_suscribirse_porque, 200)}`);
+    if (data.q13_ac) lines.push(`A/C: ${data.q13_ac}`);
+    if (data.q13_pool) lines.push(`Pool: ${data.q13_pool}`);
+    if (data.q13_lawn) lines.push(`Lawn: ${data.q13_lawn}`);
+    if (data.q13_pest) lines.push(`Pest: ${data.q13_pest}`);
+    if (data.q14_bundle_precio) lines.push(`Bundle: ${data.q14_bundle_precio}`);
+    if (data.q15_expectativa) lines.push(`Expectativa: ${clamp(data.q15_expectativa, 200)}`);
+    if (data.q16_frenos) lines.push(`Frenos: ${clamp(data.q16_frenos, 200)}`);
+    if (data.q17_hurricane) lines.push(`Hurricane: ${data.q17_hurricane}`);
+    if (data.q18_referidos) lines.push(`Referidos: ${clamp(data.q18_referidos, 300)}`);
+    if (data.q19_avisar) lines.push(`Avisar: ${data.q19_avisar}`);
+  }
+  
+  return clamp(lines.join('\n'), 1990);
 }
 
-function buildProperties(payload) {
-  const isProvider = payload.tipo === 'proveedor';
-  const today = new Date().toISOString().slice(0, 10);
-
-  const receptivity = inferReceptivity(payload);
-  const commitment = inferCommitment(payload);
-  const dominant = inferDominantCategory(payload);
-
-  const providerCats = isProvider ? multiSelectOpts(payload.categorias_proveedor) : [];
-  const interestCats = isProvider
-    ? []
-    : multiSelectOpts(payload.categorias_interes);
-  const currentCats = !isProvider ? multiSelectOpts(payload.categorias_actuales) : [];
-  const totalCats = isProvider ? providerCats.length : currentCats.length;
-
+function buildProperties(data, type) {
   const props = {
-    'Entrevistado': { title: title(payload.nombre || payload.negocio) },
-    'Tipo': { select: { name: isProvider ? 'Proveedor' : 'Cliente' } },
-    'Estado': { status: { name: 'Listo' } },
-    'Fecha': { date: { start: today } },
-    'Cantidad de categorias': { number: totalCats },
-    'Nivel de dolor': { number: inferPainLevel(payload) },
-    'Receptividad al concepto': { number: receptivity },
-    'Disposicion bundles': { select: { name: inferBundleDisposition(payload) } },
-    'Precio aceptable mensual': { rich_text: richText(payload.precio_aceptable) },
-    'Compromiso piloto': { select: { name: commitment } },
-    'Interes hurricane prep': { select: { name: inferHurricaneInterest(payload) } },
-    'Frase textual clave': { rich_text: richText(buildKeyPhrase(payload), 500) },
-    'Notas principales': { rich_text: richText(payload.notas) },
-    'Referidos obtenidos': { rich_text: richText(payload.referidos) },
-    'Proximo paso': { select: { name: inferNextStep(receptivity, commitment) } },
+    'Entrevistado': {
+      title: [{ text: { content: clamp(data.nombre || 'Anónimo', 100) } }]
+    },
+    'Tipo': {
+      select: { name: type === 'provider' ? 'Proveedor' : 'Cliente' }
+    },
+    'Estado': {
+      status: { name: 'Listo' }
+    },
+    'Fecha': {
+      date: { start: new Date().toISOString().split('T')[0] }
+    },
+    'Fuente del contacto': {
+      select: { name: 'Otro' }
+    },
+    'Notas principales': {
+      rich_text: [{ text: { content: buildNotasPrincipales(data, type) } }]
+    },
+    'Frase textual clave': {
+      rich_text: [{ text: { content: buildFraseTextual(data, type) } }]
+    },
+    'Precio aceptable mensual': {
+      rich_text: [{ text: { content: buildPrecioAceptableMensual(data, type) } }]
+    }
   };
-
-  const ciudad = selectOpt(payload.ciudad, VALID_CITIES);
-  if (ciudad) props['Ciudad'] = { select: ciudad };
-
-  const fuente = selectOpt(payload.fuente, VALID_SOURCES);
-  if (fuente) props['Fuente del contacto'] = { select: fuente };
-
-  const tel = safeText(payload.telefono);
-  if (tel) props['Telefono'] = { phone_number: tel };
-
-  const email = safeText(payload.email);
-  if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    props['Email'] = { email };
+  
+  if (data.telefono) props['Telefono'] = { phone_number: clamp(data.telefono, 30) };
+  if (data.email) {
+    const emailValue = clamp(data.email, 100);
+    if (emailValue.includes('@') && emailValue.includes('.')) {
+      props['Email'] = { email: emailValue };
+    }
   }
-
-  if (providerCats.length > 0) {
-    props['Categorias del proveedor'] = { multi_select: providerCats };
+  
+  const city = normalizeCity(data.ciudad);
+  if (city) props['Ciudad'] = { select: { name: city } };
+  
+  const dolor = inferDolor(data, type);
+  if (dolor !== null) props['Nivel de dolor'] = { number: dolor };
+  
+  const receptividad = inferReceptividad(data, type);
+  if (receptividad !== null) props['Receptividad al concepto'] = { number: receptividad };
+  
+  const bundles = inferDisposicionBundles(data, type);
+  if (bundles) props['Disposicion bundles'] = { select: { name: bundles } };
+  
+  if (type === 'provider') {
+    const cats = filterCategories(data.q2_categorias);
+    if (cats.length > 0) {
+      props['Categorias del proveedor'] = {
+        multi_select: cats.map(c => ({ name: c }))
+      };
+      props['Cantidad de categorias'] = { number: cats.length };
+    }
+    
+    const dominante = inferProviderDominant(data);
+    if (dominante) props['Categoria dominante'] = { select: { name: dominante } };
+    
+    if (data.q18_piloto) {
+      const pilotMap = { 'Sí': 'Si', 'Si': 'Si', 'Quizás': 'Quizas', 'Quizas': 'Quizas', 'No': 'No' };
+      const pilotVal = pilotMap[data.q18_piloto] || 'Pendiente';
+      props['Compromiso piloto'] = { select: { name: pilotVal } };
+    }
+    
+    if (data.q19_referidos) {
+      props['Referidos obtenidos'] = {
+        rich_text: [{ text: { content: clamp(data.q19_referidos, 1990) } }]
+      };
+    }
+    
+    const proxPaso = data.q18_piloto === 'Sí' || data.q18_piloto === 'Si'
+      ? 'Pasar a piloto'
+      : data.q18_piloto === 'Quizás' || data.q18_piloto === 'Quizas'
+      ? 'Volver a contactar'
+      : 'Sin accion';
+    props['Proximo paso'] = { select: { name: proxPaso } };
+  } else {
+    const servs = filterCategories(data.q1_servicios);
+    if (servs.length > 0) {
+      props['Categorias de interes'] = {
+        multi_select: servs.map(c => ({ name: c }))
+      };
+    }
+    
+    const hurricane = inferInteresHurricane(data, type);
+    props['Interes hurricane prep'] = { select: { name: hurricane } };
+    
+    if (data.q18_referidos) {
+      props['Referidos obtenidos'] = {
+        rich_text: [{ text: { content: clamp(data.q18_referidos, 1990) } }]
+      };
+    }
+    
+    props['Proximo paso'] = { select: { name: 'Sin accion' } };
   }
-
-  if (interestCats.length > 0) {
-    props['Categorias de interes'] = { multi_select: interestCats };
-  } else if (currentCats.length > 0) {
-    props['Categorias de interes'] = { multi_select: currentCats };
-  }
-
-  if (dominant) {
-    props['Categoria dominante'] = { select: { name: dominant } };
-  }
-
+  
   return props;
 }
 
-function setCors(res) {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Cache-Control', 'no-store, max-age=0');
-}
-
-async function readJson(req) {
-  if (req.body && typeof req.body === 'object') return req.body;
-  const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
-  const raw = Buffer.concat(chunks).toString('utf8');
-  if (!raw) return {};
-  return JSON.parse(raw);
-}
-
-export default async function handler(req, res) {
-  setCors(res);
-
+  
   if (req.method === 'OPTIONS') {
-    res.status(204).end();
-    return;
+    return res.status(200).end();
   }
-
+  
   if (req.method !== 'POST') {
-    res.status(405).json({ ok: false, error: 'Method not allowed' });
-    return;
+    return res.status(405).json({ error: 'Method not allowed' });
   }
-
-  const token = process.env.NOTION_TOKEN;
-  const databaseId = process.env.NOTION_DATABASE_ID || FALLBACK_DATABASE_ID;
-
-  if (!token) {
-    console.error('Falta NOTION_TOKEN en variables de entorno');
-    res.status(500).json({ ok: false, error: 'Servidor sin configurar' });
-    return;
+  
+  if (!NOTION_TOKEN) {
+    console.error('Missing NOTION_TOKEN env variable');
+    return res.status(500).json({ error: 'Server not configured' });
   }
-
-  let payload;
+  
   try {
-    payload = await readJson(req);
-  } catch (err) {
-    res.status(400).json({ ok: false, error: 'JSON invalido' });
-    return;
-  }
-
-  if (!payload || (payload.tipo !== 'proveedor' && payload.tipo !== 'cliente')) {
-    res.status(400).json({ ok: false, error: 'Tipo de entrevista requerido' });
-    return;
-  }
-
-  if (!safeText(payload.nombre) && !safeText(payload.negocio)) {
-    res.status(400).json({ ok: false, error: 'Nombre requerido' });
-    return;
-  }
-
-  let properties;
-  try {
-    properties = buildProperties(payload);
-  } catch (err) {
-    console.error('Error construyendo properties:', err);
-    res.status(500).json({ ok: false, error: 'Error procesando datos' });
-    return;
-  }
-
-  try {
+    const data = req.body || {};
+    const type = data.type;
+    
+    if (!type || (type !== 'provider' && type !== 'client')) {
+      return res.status(400).json({ error: 'Invalid type' });
+    }
+    
+    if (!data.nombre || data.nombre.trim().length < 2) {
+      return res.status(400).json({ error: 'Name required' });
+    }
+    
+    const properties = buildProperties(data, type);
+    
     const notionResponse = await fetch(NOTION_API_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Notion-Version': NOTION_VERSION,
+        'Authorization': `Bearer ${NOTION_TOKEN}`,
         'Content-Type': 'application/json',
+        'Notion-Version': NOTION_API_VERSION
       },
       body: JSON.stringify({
-        parent: { database_id: databaseId },
-        properties,
-      }),
+        parent: { database_id: DATABASE_ID },
+        properties
+      })
     });
-
-    const result = await notionResponse.json();
-
+    
     if (!notionResponse.ok) {
-      console.error('Notion API error:', notionResponse.status, result);
-      res.status(502).json({
-        ok: false,
-        error: 'No se pudo guardar en Notion',
-        detail: result?.message || result?.code || 'unknown',
+      const errText = await notionResponse.text();
+      console.error('Notion API error:', notionResponse.status, errText);
+      return res.status(500).json({ 
+        error: 'Notion API error',
+        details: process.env.NODE_ENV === 'development' ? errText : undefined
       });
-      return;
     }
-
-    res.status(200).json({ ok: true, id: result.id });
+    
+    const notionData = await notionResponse.json();
+    
+    return res.status(200).json({ 
+      success: true,
+      pageId: notionData.id 
+    });
   } catch (err) {
-    console.error('Error llamando a Notion:', err);
-    res.status(500).json({ ok: false, error: 'Error de red contactando Notion' });
+    console.error('Submit error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }

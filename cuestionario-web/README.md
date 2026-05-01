@@ -1,208 +1,182 @@
-# Cuestionario MacLorian Innovation
+# Investigación MacLorian — Cuestionario Web
 
-Web bilingue (ES/EN) para validar la idea de **membresias multi-categoria de servicios para hogares en SW Florida**. Cada respuesta se guarda automaticamente en la database de Notion **"Entrevistas de Validacion"**.
-
-- **Proveedores:** 20 preguntas, ~10 minutos.
-- **Homeowners:** 19 preguntas, ~8 minutos.
-- 5 bloques: A) sobre ti, B) tu negocio o casa hoy, C) que te frustra, D) la idea, E) cierre.
-- Inferencia automatica de: nivel de dolor (1-10), receptividad (1-10), categoria dominante, disposicion bundles, interes hurricane, frase textual clave, proximo paso.
+Web bilingüe (ES/EN) que registra respuestas directamente en la database de Notion **"Entrevistas de Validación"** del workspace MacLorian.
 
 ---
 
-## Estructura
+## Estructura del proyecto
 
 ```
 cuestionario-web/
-├── index.html              ← Frontend bilingue, mobile-first, sin dependencias
+├── index.html              ← Frontend (1 archivo, todo dentro)
 ├── api/
-│   └── submit.js           ← Vercel Function. POST /api/submit → Notion API
-├── package.json            ← type: module, sin dependencias externas
-├── vercel.json             ← maxDuration 10s + headers de seguridad
-├── .env.example            ← Documentacion de variables (NUNCA con secretos reales)
-├── .gitignore
-├── README.md               ← Este archivo
-└── 03-mensajes-outreach.md ← Plantillas para outreach a proveedores
+│   └── submit.js           ← Vercel Function que envía a Notion
+├── package.json            ← type: module
+├── vercel.json             ← Config Vercel
+├── .env.example            ← Documentación de variables
+└── .gitignore
 ```
 
 ---
 
-## Deploy en Vercel — paso a paso
+## Deploy en 5 pasos (~20 min total)
 
-### Prerrequisitos
+### Paso 1 — Generar el token de Notion (3 min)
 
-```bash
-node --version    # >= 18
-npm --version
-npm install -g vercel
-vercel --version
-```
+> ⚠️ Este es el único paso que requiere que TÚ estés loggeado en Notion. No se puede hacer programáticamente.
 
-### 1. Login
+1. Abrir [https://www.notion.com/my-integrations](https://www.notion.com/my-integrations)
+2. Click **"+ New integration"**
+3. Configurar:
+   - **Name:** `MacLorian Cuestionario Web`
+   - **Associated workspace:** El workspace donde está la database "Entrevistas de Validación"
+   - **Type:** Internal
+   - **Capabilities:** Marcar `Read content`, `Update content`, `Insert content`
+4. Click **Submit**
+5. Copiar el **Internal Integration Token** (empieza con `secret_` o `ntn_`)
+6. Guardarlo temporalmente — lo vas a pegar en Vercel en el paso 4
 
-```bash
-vercel login
-```
+### Paso 2 — Conectar la database de Notion a la integración (1 min)
 
-Usa la cuenta `migueljkrs`.
+> Necesario para que la integración tenga permiso de escribir en la database.
 
-### 2. Linkear con el proyecto existente
+1. Abrir la database **"Entrevistas de Validación"** en Notion
+   - Database ID: `a5de9526-4375-41f4-bc7d-475dc16f0264`
+2. Click los **tres puntos `...`** en la esquina superior derecha
+3. Scroll hasta **"Connections"** → **"Connect to"**
+4. Buscar **"MacLorian Cuestionario Web"** y seleccionarla
+5. Confirmar acceso
 
-Desde la carpeta `cuestionario-web/`:
+### Paso 3 — Deploy del proyecto en Vercel (5 min)
 
-```bash
-cd cuestionario-web
-vercel link
-```
+#### Opción 3A: Drag & drop (más fácil, sin Git)
 
-- Set up and develop? **Y**
-- Which scope → seleccionar **migueljkrs**
-- Link to existing project? **Y**
-- Nombre del proyecto: **project-6lklw**
+1. Ir a [vercel.com](https://vercel.com), crear cuenta gratis (login con email o GitHub)
+2. Dashboard → **"Add new..."** → **"Project"**
+3. Click **"Browse"** o arrastra la carpeta `cuestionario-web` completa
+4. **Project Name:** `investigacion-maclorian` (o el que prefieras)
+5. **Framework Preset:** `Other` (es HTML estático con función)
+6. **NO hacer click en "Deploy" todavía** — primero agregar las variables (paso 4)
 
-Esto crea una carpeta `.vercel/` (no la commitees, ya esta en .gitignore).
-
-### 3. Configurar variables de entorno
-
-```bash
-vercel env add NOTION_TOKEN
-# Valor: el token de la integracion "MacLorian Cuestionario Web"
-# Environments: Production, Preview, Development (las 3)
-
-vercel env add NOTION_DATABASE_ID
-# Valor: a5de9526-4375-41f4-bc7d-475dc16f0264
-# Environments: Production, Preview, Development (las 3)
-```
-
-> **OJO:** si el token de Notion estuvo expuesto en alguna captura de pantalla,
-> regeneralo PRIMERO en https://www.notion.so/my-integrations antes de
-> guardarlo en Vercel.
-
-### 4. Deploy a produccion
+#### Opción 3B: Vercel CLI (más rápido si ya tienes Node)
 
 ```bash
-vercel --prod
+npm i -g vercel
+cd cuestionario-web/
+vercel
+# Seguir prompts. Aceptar defaults para todo.
 ```
 
-Te dara una URL tipo `https://project-6lklw-xxxxx.vercel.app`.
+### Paso 4 — Configurar variables de entorno en Vercel (2 min)
 
-### 5. Test end-to-end
+1. Ir a **Project → Settings → Environment Variables**
+2. Agregar variable 1:
+   - **Key:** `NOTION_TOKEN`
+   - **Value:** el token del paso 1 (empieza con `secret_` o `ntn_`)
+   - **Environments:** marcar las tres (Production, Preview, Development)
+   - **Save**
+3. Agregar variable 2:
+   - **Key:** `NOTION_DATABASE_ID`
+   - **Value:** `a5de9526-4375-41f4-bc7d-475dc16f0264`
+   - **Environments:** las tres
+   - **Save**
+4. Volver a Deployments → click "..." en el último → **Redeploy**
 
-1. Abrir la URL en el navegador.
-2. Probar el toggle ES/EN (debe persistir tras recargar).
-3. Click en "Soy proveedor de servicios".
-4. Llenar el cuestionario completo con datos de prueba.
-5. Submit.
-6. Verificar la pantalla de exito.
-7. Ir a Notion → database "Entrevistas de Validacion".
-8. Debe aparecer una nueva entrada con `Estado = Listo` y todos los campos poblados.
-9. Repetir para "Soy homeowner".
-10. Borrar las 2 entradas de prueba en Notion.
+### Paso 5 — Configurar dominio personalizado (5 min)
 
-### 6. Dominio personalizado (opcional)
+#### En Vercel:
+1. **Project → Settings → Domains**
+2. Agregar: `investigacion.maclorianxgroup.com`
+3. Vercel te muestra un registro CNAME
 
-```bash
-vercel domains add investigacion.maclorianxgroup.com
-```
-
-Luego, en el panel DNS de `maclorianxgroup.com` agregar:
-
+#### En tu DNS de maclorianxgroup.com:
 ```
 Type:  CNAME
 Name:  investigacion
 Value: cname.vercel-dns.com
-TTL:   3600
+TTL:   3600 (o automático)
 ```
 
-SSL automatico en 5-30 min.
+Espera 5–30 minutos para propagación. SSL automático.
 
 ---
 
-## Desarrollo local
+## Test del flujo completo
 
-```bash
-cd cuestionario-web
-cp .env.example .env.local
-# Editar .env.local y poner el token de Notion real
-vercel dev
-```
+### Test 1: deploy básico funciona
 
-Abre http://localhost:3000.
+1. Abrir tu URL de Vercel
+2. Verificar que carga la pantalla home
+3. Probar el toggle ES/EN
+4. Click en una card — debe abrir el cuestionario
 
----
+### Test 2: el endpoint conecta con Notion
 
-## Troubleshooting
+1. Llenar el cuestionario completo (datos de prueba está bien)
+2. Click "Enviar respuestas"
+3. Esperar mensaje de éxito
+4. Abrir la database en Notion → debe aparecer una nueva fila con "Listo"
 
-| Sintoma | Causa probable | Solucion |
-|---|---|---|
-| "Hubo un problema enviando tus respuestas" | Token de Notion mal copiado | `vercel env rm NOTION_TOKEN` y volver a agregar. Re-deploy. |
-| Logs muestran 401 | Token invalido o expirado | Regenerar en https://www.notion.so/my-integrations |
-| Logs muestran 404 | Database ID incorrecto | Verificar `a5de9526-4375-41f4-bc7d-475dc16f0264` |
-| Logs muestran 403 | Integracion sin acceso a la database | En Notion: abrir database → ⋯ → Connections → Connect to → MacLorian Cuestionario Web |
-| Web carga pero submit no responde | Variables agregadas DESPUES del deploy | `vercel --prod` de nuevo |
-| Property "X" not found | El nombre exacto del campo en Notion no coincide | Comparar mapping en `api/submit.js` con la database |
+### Test 3: si no funciona...
 
-Ver logs en tiempo real:
+**Síntoma: "Hubo un problema enviando tus respuestas"**
 
-```bash
-vercel logs <URL_DEPLOYMENT>
-```
+Causas posibles:
+- ❌ `NOTION_TOKEN` mal copiado o no guardado en Vercel
+- ❌ La integración no está conectada a la database (paso 2)
+- ❌ No hiciste re-deploy después de agregar las variables
 
----
-
-## Notion - schema esperado
-
-Database **"Entrevistas de Validacion"** (ID: `a5de9526-4375-41f4-bc7d-475dc16f0264`). El backend escribe estas propiedades:
-
-| Propiedad | Tipo Notion | Origen |
-|---|---|---|
-| Entrevistado | title | `nombre` o `negocio` |
-| Tipo | select (Proveedor / Cliente) | `tipo` |
-| Estado | status (Listo) | fijo |
-| Fecha | date | hoy |
-| Ciudad | select | `ciudad` |
-| Telefono | phone_number | `telefono` |
-| Email | email | `email` |
-| Categorias del proveedor | multi_select | `categorias_proveedor` |
-| Categoria dominante | select | inferido (primera del array) |
-| Cantidad de categorias | number | length del array |
-| Categorias de interes | multi_select | `categorias_interes` o `categorias_actuales` |
-| Nivel de dolor | number 1-10 | inferido (texto + radios) |
-| Receptividad al concepto | number 1-10 | slider directo |
-| Disposicion bundles | select (Alta/Media/Baja/No aplica) | inferido |
-| Precio aceptable mensual | rich_text | `precio_aceptable` |
-| Compromiso piloto | select (Si/Quizas/No/Pendiente) | inferido |
-| Interes hurricane prep | select (Alto/Medio/Bajo/No aplica) | inferido |
-| Frase textual clave | rich_text | `dolor_principal` truncado a 500 chars |
-| Notas principales | rich_text | `notas` |
-| Referidos obtenidos | rich_text | `referidos` |
-| Proximo paso | select | inferido (Pasar a piloto / Volver a contactar / Descartar) |
-| Fuente del contacto | select | `fuente` |
-| ID | unique_id | auto (Notion) |
-| Fecha de creacion | created_time | auto (Notion) |
-| Ultima actualizacion | last_edited_time | auto (Notion) |
+**Cómo debuggear:**
+1. Vercel → Deployments → click el último → **"Functions"** tab
+2. Click `submit` → **"View Logs"**
+3. Ver el error real (401 si es token, 404 si es database, 403 si no hay permisos)
 
 ---
 
-## Logica de inferencia (api/submit.js)
+## Cómo funciona el mapping automático
 
-- **Nivel de dolor (1-10):** arranca en 5, suma por keywords de frustracion en `dolor_principal`, suma por longitud del texto, suma/resta segun "Si/No" en preguntas de C, considera el slider `molestia_coordinacion` para clientes.
-- **Receptividad:** valor del slider `receptividad_membresia` (1-10).
-- **Categoria dominante:** primera categoria seleccionada (asume orden de prioridad del usuario).
-- **Disposicion bundles (proveedor):** parsea `disposicion_bundles` (definitivamente si → Alta, tal vez → Media, no → Baja).
-- **Disposicion bundles (cliente):** segun cantidad de `categorias_interes` (4+ → Alta, 2-3 → Media, 1 → Baja).
-- **Interes hurricane:** parsea `interes_hurricane` (mucho → Alto, algo → Medio, nada → Bajo).
-- **Compromiso piloto:** parsea `compromiso_piloto` (si → Si, quiza → Quizas, no → No).
-- **Proximo paso:** si `compromiso_piloto = Si` Y `receptividad >= 6` → "Pasar a piloto". Si `receptividad >= 7` → "Pasar a piloto". Si `>= 4` → "Volver a contactar". Si `< 4` → "Descartar".
-- **Frase textual clave:** primer 500 caracteres de `dolor_principal`.
+El backend infiere propiedades de Notion analizando el texto de las respuestas:
 
----
-
-## Cambios y mantenimiento
-
-- Para agregar una pregunta: editar `QUESTIONS_PROVEEDOR` o `QUESTIONS_CLIENTE` en `index.html`. Si el dato debe ir a Notion, agregar el mapping en `buildProperties()` de `api/submit.js`.
-- Para agregar un idioma: extender el objeto `I18N` en `index.html` y agregar las traducciones en cada `label`/`option` de las preguntas.
-- Para cambiar la paleta: modificar las CSS variables en `:root` (`--primary`, `--accent`, etc.).
+| Propiedad de Notion | Cómo se infiere |
+|---|---|
+| Nivel de dolor (1-10) | Análisis del texto del problema (keywords: "frustrante", "horrible", "imposible") |
+| Receptividad al concepto (1-10) | Combina respuesta de piloto + tono de la reacción |
+| Disposición bundles | Alta si dio precio + "sí mejor valor". Baja si dijo "no" |
+| Compromiso piloto | "Sí" → "Si", "Quizás" → "Quizas", "No" → "No" |
+| Próximo paso | "Pasar a piloto" si Sí, "Volver a contactar" si Quizás, "Sin acción" si No |
+| Categoría dominante | Detecta keywords en respuesta de "qué te genera más ingresos" |
+| Frase textual clave | Mejor cita de las respuestas abiertas (30-400 chars) |
+| Notas principales | Concatena TODAS las respuestas en formato legible |
+| Interés hurricane | Alto si $300+, Medio si $100-299, Bajo si <$100 o "no" |
+| Precio aceptable mensual | Combina precios mencionados (q14 + q13_ac + q13_pool + etc.) |
 
 ---
 
-© MacLorian X Group LLC · Cape Coral, FL
+## Costo total
+
+- **Vercel:** Gratis (Hobby plan, sin límite para este uso)
+- **Notion:** Gratis (API 100% gratuita en plan Free, 3 req/seg = 10,800/hora)
+- **Dominio:** Ya tienes maclorianxgroup.com
+- **SSL:** Gratis automático en Vercel
+
+**Total: $0/mes**
+
+---
+
+## Archivos de referencia
+
+- `index.html` — el frontend (1825 líneas, 80 KB)
+- `api/submit.js` — la Vercel Function (recibe POST, envía a Notion)
+- `vercel.json` — config con headers de seguridad
+- `package.json` — type: module para ES modules
+
+---
+
+## Próximos pasos después de deploy
+
+1. ✅ Llenar un cuestionario de prueba (proveedor) y verificar que llega a Notion
+2. ✅ Llenar otro (cliente) para verificar el otro flujo
+3. ✅ Borrar las 2 entradas de prueba de la database
+4. 📤 Mandar el link a los 25 proveedores de la lista (ver `03-mensajes-outreach.md`)
+5. 📤 Postear en NextDoor + grupos de Facebook locales
+6. 📊 Día 15: revisar respuestas en Notion, decidir go/no-go
