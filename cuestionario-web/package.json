@@ -1,0 +1,14 @@
+{
+  "name": "cuestionario-web",
+  "version": "1.0.0",
+  "description": "Cuestionario bilingue de validacion para MacLorian Innovation - membresias por invitacion en SW Florida",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
