@@ -2,1448 +2,1823 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1B4332">
-<meta name="description" content="MacLorian Innovation - Investigacion abierta sobre membresias de servicios para hogares en SW Florida.">
-<meta property="og:title" content="MacLorian Innovation - Investigacion">
-<meta property="og:description" content="Estamos validando una idea. Tu opinion vale oro. 8-10 minutos.">
-<meta property="og:type" content="website">
-<title>MacLorian Innovation - Investigacion</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="Investigación de mercado de MacLorian X Group sobre servicios de property care en SW Florida.">
+<meta name="theme-color" content="#0F4C3A">
+<title>Investigación · MacLorian X Group</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Söhne:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --primary: #1B4332;
-    --primary-2: #2D6A4F;
-    --primary-3: #52B788;
-    --accent: #D4A373;
-    --accent-2: #B08968;
-    --bg: #FAF3E0;
-    --bg-2: #F5E9CF;
-    --card: #FFFFFF;
-    --text: #1A2421;
-    --muted: #6B7570;
-    --line: #E8DCC4;
-    --error: #B23A48;
-    --success: #2D6A4F;
-    --radius: 16px;
-    --radius-sm: 10px;
-    --shadow: 0 1px 2px rgba(27, 67, 50, 0.06), 0 8px 24px rgba(27, 67, 50, 0.08);
-    --shadow-lg: 0 4px 12px rgba(27, 67, 50, 0.10), 0 24px 60px rgba(27, 67, 50, 0.14);
-    --serif: 'Fraunces', Georgia, serif;
-    --sans: 'DM Sans', system-ui, -apple-system, sans-serif;
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    margin: 0;
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.55;
-    font-size: 16px;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-  }
-  h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.15; margin: 0 0 .5em; letter-spacing: -0.01em; }
-  h1 { font-size: clamp(2rem, 5vw, 3.4rem); }
-  h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); }
-  h3 { font-size: 1.2rem; font-weight: 600; }
-  p { margin: 0 0 1em; }
-  a { color: var(--primary-2); }
+:root {
+  --green-deep: #0F4C3A;
+  --green-soft: #1D9E75;
+  --green-pale: #E1F5EE;
+  --sand: #F5EFE3;
+  --sand-warm: #EBE2D0;
+  --ink: #1A1A17;
+  --ink-soft: #4A4A45;
+  --ink-mute: #888780;
+  --rule: #D6CFBF;
+  --paper: #FBF8F1;
+  --accent: #C04828;
+  --error: #B23B2A;
+  --success: #1D9E75;
+  --ring: rgba(15, 76, 58, 0.18);
+  --radius: 6px;
+  --radius-lg: 14px;
+  --shadow: 0 1px 0 rgba(26, 26, 23, 0.04), 0 8px 28px rgba(26, 26, 23, 0.06);
+  --serif: 'Fraunces', 'Times New Roman', serif;
+  --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-  .topbar {
-    position: sticky; top: 0; z-index: 50;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 22px;
-    background: rgba(250, 243, 224, 0.92);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--line);
-  }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 1rem; }
-  .brand .logo {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 32px; height: 32px; border-radius: 8px;
-    background: var(--primary); color: var(--bg);
-    font-family: var(--serif); font-weight: 700; font-size: 1.15rem;
-  }
-  .brand small { display: block; color: var(--muted); font-weight: 400; font-size: .78rem; line-height: 1; margin-top: 2px; }
-  .lang-toggle {
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--text);
-    padding: 7px 14px;
-    border-radius: 999px;
-    font-family: var(--sans); font-size: .85rem; font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .lang-toggle:hover { border-color: var(--primary); color: var(--primary); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
 
-  .screen { display: none; }
-  .screen.active { display: block; animation: fade-in 0.3s ease; }
-  @keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+button, input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
 
-  .container { max-width: 760px; margin: 0 auto; padding: 0 22px; }
-  .container-wide { max-width: 980px; margin: 0 auto; padding: 0 22px; }
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
 
-  .hero {
-    padding: clamp(40px, 8vw, 80px) 0 clamp(28px, 5vw, 50px);
-    text-align: left;
-  }
-  .eyebrow {
-    display: inline-block;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: .78rem;
-    font-weight: 600;
-    color: var(--primary-2);
-    margin-bottom: 18px;
-    padding: 6px 12px;
-    background: rgba(82, 183, 136, 0.14);
-    border-radius: 999px;
-  }
-  .hero .subtitle { font-size: 1.15rem; color: var(--muted); max-width: 560px; }
-  .choose-prompt {
-    margin-top: 36px;
-    font-family: var(--serif);
-    font-size: 1.3rem;
-    font-weight: 500;
-    color: var(--text);
-  }
+header.site-header {
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(12px);
+  background: rgba(251, 248, 241, 0.92);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--green-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 13px;
+}
 
-  .cards {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
-    padding-bottom: 30px;
-  }
-  @media (min-width: 720px) { .cards { grid-template-columns: 1fr 1fr; gap: 22px; } }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 28px;
-    text-align: left;
-    cursor: pointer;
-    font-family: var(--sans);
-    color: var(--text);
-    box-shadow: var(--shadow);
-    transition: transform .2s, box-shadow .2s, border-color .2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary-3); }
-  .card:focus-visible { outline: 3px solid var(--primary-3); outline-offset: 3px; }
-  .card-eyebrow {
-    font-size: .78rem;
-    color: var(--muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .card h2 { margin: 12px 0 10px; }
-  .card p { color: var(--muted); margin-bottom: 22px; }
-  .card-cta {
-    display: inline-flex; align-items: center; gap: 6px;
-    color: var(--primary); font-weight: 600;
-  }
-  .card[data-tipo="cliente"] { background: linear-gradient(160deg, var(--card) 0%, var(--bg-2) 100%); }
-  .privacy {
-    text-align: center;
-    color: var(--muted);
-    font-size: .85rem;
-    padding: 20px 0 50px;
-  }
+.lang-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--sand-warm);
+  padding: 3px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.lang-toggle button {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all 0.2s;
+}
+.lang-toggle button.active {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
 
-  .progress-bar {
-    position: sticky; top: 60px; z-index: 40;
-    background: rgba(250, 243, 224, 0.96);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--line);
-    padding: 14px 22px;
-  }
-  .progress-meta {
-    display: flex; justify-content: space-between; align-items: baseline;
-    font-size: .85rem; color: var(--muted);
-    margin-bottom: 8px;
-    max-width: 760px; margin-left: auto; margin-right: auto;
-  }
-  .progress-meta strong { color: var(--text); font-weight: 600; }
-  .progress-track {
-    height: 6px;
-    background: var(--line);
-    border-radius: 999px;
-    overflow: hidden;
-    max-width: 760px;
-    margin: 0 auto;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary-3), var(--primary-2));
-    width: 0%;
-    transition: width .35s cubic-bezier(0.65, 0, 0.35, 1);
-    border-radius: 999px;
-  }
+main { padding: 56px 0 96px; }
 
-  form#questionnaire { padding: 28px 0 80px; }
-  .section-header { padding: 14px 0 8px; }
-  .section-header h2 { margin: 0; }
-  .section-header .section-eyebrow {
-    color: var(--primary-2);
-    font-size: .8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
+.intro {
+  text-align: left;
+  margin-bottom: 64px;
+}
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green-deep);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--green-deep);
+}
+h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(36px, 6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+h1 em {
+  font-style: italic;
+  color: var(--green-deep);
+}
+.lede {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 580px;
+  margin-bottom: 32px;
+}
 
-  .pitch-box {
-    background: var(--primary);
-    color: var(--bg);
-    padding: 26px 28px;
-    border-radius: var(--radius);
-    margin: 18px 0 30px;
-    border: 1px solid var(--primary-2);
-  }
-  .pitch-box h3 {
-    color: var(--bg-2);
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 500;
-  }
-  .pitch-box p { color: var(--bg); margin: 0; font-size: 1.04rem; line-height: 1.6; }
+.choice-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 40px;
+}
+@media (max-width: 600px) {
+  .choice-cards { grid-template-columns: 1fr; }
+}
+.choice {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+.choice:hover {
+  border-color: var(--green-deep);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.choice::after {
+  content: '→';
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-size: 20px;
+  color: var(--ink-mute);
+  transition: transform 0.25s, color 0.25s;
+}
+.choice:hover::after {
+  color: var(--green-deep);
+  transform: translateX(4px);
+}
+.choice-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--green-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.choice-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--green-deep);
+}
+.choice-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+.choice-desc {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.choice-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin-top: 16px;
+  padding: 4px 10px;
+  background: var(--sand);
+  border-radius: 999px;
+}
+.choice-time::before {
+  content: '◷';
+  font-size: 14px;
+}
 
-  .question { margin: 0 0 32px; }
-  .q-label {
-    display: block;
-    font-family: var(--serif);
-    font-size: 1.18rem;
-    font-weight: 500;
-    color: var(--text);
-    line-height: 1.3;
-    margin-bottom: 6px;
-  }
-  .q-tag {
-    display: inline-block;
-    font-family: var(--sans);
-    font-size: .7rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 2px 8px;
-    border-radius: 999px;
-    margin-left: 8px;
-    vertical-align: middle;
-    color: var(--muted);
-    background: var(--bg-2);
-  }
-  .q-tag.required { color: var(--primary); background: rgba(82, 183, 136, 0.16); }
-  .q-help { color: var(--muted); font-size: .92rem; margin: 0 0 14px; }
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--ink-mute);
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.trust-item svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--green-deep);
+  flex-shrink: 0;
+}
 
-  input[type="text"], input[type="email"], input[type="tel"], textarea, select {
-    width: 100%;
-    font-family: var(--sans);
-    font-size: 1rem;
-    padding: 13px 16px;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    transition: border-color .15s, box-shadow .15s;
-  }
-  input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--primary-2);
-    box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.18);
-  }
-  textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
-  select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231B4332' d='M6 8 0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
+.form-section { display: none; }
+.form-section.active { display: block; animation: fadeIn 0.4s ease-out; }
 
-  .input-row { display: grid; gap: 12px; grid-template-columns: 1fr; }
-  @media (min-width: 560px) { .input-row.split { grid-template-columns: 1fr 1fr; } }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-  .options { display: grid; gap: 10px; grid-template-columns: 1fr; }
-  @media (min-width: 560px) {
-    .options.cols-2 { grid-template-columns: 1fr 1fr; }
-    .options.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
-    .options.cols-4 { grid-template-columns: repeat(4, 1fr); }
-  }
-  .option {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 16px;
-    background: var(--card);
-    border: 1.5px solid var(--line);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all .15s;
-    user-select: none;
-  }
-  .option:hover { border-color: var(--primary-3); background: rgba(82, 183, 136, 0.05); }
-  .option input { position: absolute; opacity: 0; pointer-events: none; }
-  .option-dot {
-    width: 18px; height: 18px;
-    border: 1.5px solid var(--line);
-    border-radius: 50%;
-    flex-shrink: 0;
-    transition: all .15s;
-    position: relative;
-  }
-  .option-dot.square { border-radius: 5px; }
-  .option input:checked ~ .option-dot {
-    border-color: var(--primary);
-    background: var(--primary);
-  }
-  .option input:checked ~ .option-dot::after {
-    content: ''; position: absolute;
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 6px; height: 6px; border-radius: 50%; background: var(--bg);
-  }
-  .option-dot.square ~ * {} /* spacer */
-  .option input[type="checkbox"]:checked ~ .option-dot {
-    border-color: var(--primary);
-    background: var(--primary);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='10' viewBox='0 0 12 10'%3E%3Cpath fill='none' stroke='%23FAF3E0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 5l3 3 7-7'/%3E%3C/svg%3E");
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-  .option input[type="checkbox"]:checked ~ .option-dot::after { display: none; }
-  .option:has(input:checked) {
-    border-color: var(--primary);
-    background: rgba(45, 106, 79, 0.06);
-  }
-  .option-label { flex: 1; line-height: 1.4; }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 32px;
+  padding: 6px 0;
+  font-weight: 500;
+}
+.back-link:hover { color: var(--green-deep); }
+.back-link::before { content: '←'; }
 
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 14px;
-    background: var(--card);
-    border: 1.5px solid var(--line);
-    border-radius: 999px;
-    cursor: pointer;
-    user-select: none;
-    font-size: .94rem;
-    transition: all .15s;
-  }
-  .chip:hover { border-color: var(--primary-3); }
-  .chip input { position: absolute; opacity: 0; pointer-events: none; }
-  .chip:has(input:checked) {
-    background: var(--primary);
-    color: var(--bg);
-    border-color: var(--primary);
-  }
-  .chip:has(input:checked)::before {
-    content: '✓'; font-weight: 700; font-size: .85rem;
-  }
+.form-header {
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+}
+.form-header h2 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+.form-header p {
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.55;
+}
 
-  .slider-wrap {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    padding: 22px 22px 18px;
-  }
-  .slider-value-row {
-    display: flex; align-items: baseline; justify-content: space-between;
-    margin-bottom: 14px;
-  }
-  .slider-value {
-    font-family: var(--serif);
-    font-size: 2.6rem;
-    font-weight: 600;
-    color: var(--primary);
-    line-height: 1;
-  }
-  .slider-anchors {
-    display: flex; justify-content: space-between;
-    font-size: .82rem; color: var(--muted);
-    margin-top: 10px;
-  }
-  input[type="range"] {
-    -webkit-appearance: none; appearance: none;
-    width: 100%; height: 6px;
-    background: var(--line); border-radius: 999px;
-    outline: none;
-    margin: 0;
-  }
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none;
-    width: 26px; height: 26px;
-    background: var(--primary);
-    border: 4px solid var(--bg);
-    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.25);
-    border-radius: 50%; cursor: pointer;
-  }
-  input[type="range"]::-moz-range-thumb {
-    width: 26px; height: 26px;
-    background: var(--primary);
-    border: 4px solid var(--bg);
-    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.25);
-    border-radius: 50%; cursor: pointer;
-  }
+.progress {
+  position: sticky;
+  top: 65px;
+  z-index: 40;
+  background: var(--paper);
+  padding: 16px 0;
+  margin: -16px -24px 32px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--rule);
+}
+.progress-bar {
+  height: 3px;
+  background: var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--green-deep);
+  width: 0%;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--ink-mute);
+  letter-spacing: 0.02em;
+}
 
-  .form-error-msg {
-    color: var(--error);
-    font-size: .88rem;
-    margin-top: 6px;
-    display: none;
-  }
-  .question.invalid .form-error-msg { display: block; }
-  .question.invalid input:not([type="radio"]):not([type="checkbox"]),
-  .question.invalid textarea,
-  .question.invalid select { border-color: var(--error); }
+.block {
+  margin-bottom: 56px;
+  padding-bottom: 8px;
+}
+.block-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green-deep);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.block-label::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--green-deep);
+}
 
-  .form-nav {
-    display: flex; gap: 12px; align-items: center;
-    margin-top: 28px;
-    padding-top: 22px;
-    border-top: 1px solid var(--line);
-  }
-  .btn {
-    font-family: var(--sans); font-weight: 600; font-size: 1rem;
-    padding: 14px 26px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    border: 1.5px solid transparent;
-    transition: all .15s;
-    text-decoration: none;
-    display: inline-flex; align-items: center; gap: 8px;
-  }
-  .btn-primary { background: var(--primary); color: var(--bg); border-color: var(--primary); }
-  .btn-primary:hover:not(:disabled) { background: var(--primary-2); border-color: var(--primary-2); }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-secondary { background: transparent; color: var(--text); border-color: var(--line); }
-  .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
-  .btn-link { background: transparent; color: var(--primary-2); border: none; padding: 6px 8px; cursor: pointer; }
-  .btn-spacer { flex: 1; }
+.q {
+  margin-bottom: 36px;
+}
+.q-num {
+  display: inline-block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--green-deep);
+  margin-bottom: 8px;
+}
+.q-text {
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.q-hint {
+  font-size: 14px;
+  color: var(--ink-mute);
+  margin-bottom: 16px;
+  font-style: italic;
+}
 
-  .form-error {
-    margin-top: 18px;
-    padding: 14px 16px;
-    background: rgba(178, 58, 72, 0.08);
-    border: 1px solid rgba(178, 58, 72, 0.25);
-    color: var(--error);
-    border-radius: var(--radius-sm);
-    font-size: .94rem;
-    display: none;
-  }
-  .form-error.visible { display: block; }
+input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select, textarea {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-size: 16px;
+  color: var(--ink);
+  transition: all 0.2s;
+  font-family: var(--sans);
+}
+textarea {
+  resize: vertical;
+  min-height: 96px;
+  line-height: 1.55;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--green-deep);
+  box-shadow: 0 0 0 3px var(--ring);
+  background: white;
+}
+input::placeholder, textarea::placeholder {
+  color: var(--ink-mute);
+  font-style: italic;
+}
 
-  .draft-toast {
-    position: fixed; bottom: 22px; right: 22px;
-    background: var(--text); color: var(--bg);
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: .82rem;
-    opacity: 0; transform: translateY(10px);
-    transition: opacity .25s, transform .25s;
-    pointer-events: none;
-    z-index: 100;
-  }
-  .draft-toast.visible { opacity: .92; transform: none; }
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 500px) {
+  .field-row { grid-template-columns: 1fr; }
+}
 
-  .success-card {
-    max-width: 520px;
-    margin: 60px auto;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 48px 32px;
-    text-align: center;
-    box-shadow: var(--shadow-lg);
-  }
-  .check {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    background: var(--primary-3);
-    color: var(--bg);
-    font-size: 2.4rem; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 22px;
-  }
-  .success-card h1 { margin-bottom: 14px; }
-  .success-card p { color: var(--muted); margin-bottom: 26px; }
-  .success-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+.check-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  user-select: none;
+}
+.check-option:hover {
+  border-color: var(--green-soft);
+  background: var(--green-pale);
+}
+.check-option input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--green-deep);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.check-option input:checked + span {
+  font-weight: 500;
+  color: var(--green-deep);
+}
+.check-option:has(input:checked) {
+  border-color: var(--green-deep);
+  background: var(--green-pale);
+}
 
-  footer {
-    text-align: center;
-    padding: 30px 22px 50px;
-    color: var(--muted);
-    font-size: .82rem;
-  }
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.radio-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.radio-option:hover { border-color: var(--green-soft); }
+.radio-option input { margin-top: 4px; flex-shrink: 0; accent-color: var(--green-deep); }
+.radio-option:has(input:checked) {
+  border-color: var(--green-deep);
+  background: var(--green-pale);
+}
+.radio-option-text {
+  font-size: 14px;
+  line-height: 1.5;
+  flex: 1;
+}
 
-  @media (max-width: 559px) {
-    .topbar { padding: 12px 18px; }
-    .brand { font-size: .95rem; }
-    .container { padding: 0 18px; }
-    .progress-bar { padding: 12px 18px; }
-    .form-nav { flex-direction: column-reverse; align-items: stretch; }
-    .form-nav .btn { width: 100%; justify-content: center; }
-    .form-nav .btn-spacer { display: none; }
-  }
+.scale {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 4px;
+  margin-top: 8px;
+}
+.scale-btn {
+  aspect-ratio: 1;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  transition: all 0.15s;
+}
+.scale-btn:hover {
+  border-color: var(--green-soft);
+  background: var(--green-pale);
+  transform: translateY(-1px);
+}
+.scale-btn.selected {
+  border-color: var(--green-deep);
+  background: var(--green-deep);
+  color: var(--paper);
+}
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 8px;
+  letter-spacing: 0.02em;
+}
 
-  .visually-hidden {
-    position: absolute; width: 1px; height: 1px; padding: 0;
-    margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;
-  }
+.pitch {
+  background: linear-gradient(135deg, var(--green-pale) 0%, var(--sand) 100%);
+  border-left: 3px solid var(--green-deep);
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  position: relative;
+}
+.pitch::before {
+  content: '"';
+  position: absolute;
+  top: 4px;
+  left: 16px;
+  font-family: var(--serif);
+  font-size: 80px;
+  color: var(--green-deep);
+  opacity: 0.15;
+  line-height: 1;
+}
+.pitch-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green-deep);
+  margin-bottom: 12px;
+  position: relative;
+}
+.pitch-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink);
+  position: relative;
+  letter-spacing: -0.005em;
+}
+
+.submit-area {
+  margin-top: 64px;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+}
+.btn-primary {
+  background: var(--green-deep);
+  color: var(--paper);
+  border: none;
+  padding: 18px 40px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn-primary:hover {
+  background: var(--ink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(15, 76, 58, 0.25);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-primary::after {
+  content: '→';
+  transition: transform 0.2s;
+}
+.btn-primary:hover::after { transform: translateX(4px); }
+
+.submit-note {
+  font-size: 13px;
+  color: var(--ink-mute);
+  margin-top: 16px;
+  line-height: 1.5;
+}
+
+.success-state {
+  text-align: center;
+  padding: 80px 24px;
+  display: none;
+}
+.success-state.active { display: block; animation: fadeIn 0.5s ease-out; }
+.success-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 32px;
+  border-radius: 50%;
+  background: var(--green-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.success-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: var(--green-deep);
+  stroke-width: 2.5;
+}
+.success-state h2 {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+.success-state p {
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 auto 12px;
+}
+.success-state .next {
+  margin-top: 32px;
+  padding: 24px;
+  background: var(--sand);
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer {
+  border-top: 1px solid var(--rule);
+  padding: 32px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-mute);
+  background: var(--paper);
+}
+footer a { color: var(--green-deep); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+.error-msg {
+  color: var(--error);
+  font-size: 13px;
+  margin-top: 6px;
+  display: none;
+}
+.field-error input, .field-error select, .field-error textarea {
+  border-color: var(--error);
+}
+.field-error .error-msg { display: block; }
+
+[hidden] { display: none !important; }
+
+.required {
+  color: var(--accent);
+  margin-left: 4px;
+  font-weight: 500;
+}
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <span class="logo" aria-hidden="true">M</span>
-    <div>
-      <div data-i18n="brand.name">MacLorian</div>
-      <small data-i18n="brand.unit">Innovation · Investigacion</small>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="brand" onclick="goHome(event)">
+      <span class="brand-mark">M</span>
+      <span data-i18n="brand">MacLorian X Group</span>
+    </a>
+    <div class="lang-toggle">
+      <button id="btn-es" class="active" onclick="setLang('es')">ES</button>
+      <button id="btn-en" onclick="setLang('en')">EN</button>
     </div>
   </div>
-  <button class="lang-toggle" id="lang-toggle" type="button">EN</button>
 </header>
 
-<!-- ================= PANTALLA HOME ================= -->
-<main class="screen active" id="screen-home">
-  <div class="container">
-    <section class="hero">
-      <span class="eyebrow" data-i18n="home.eyebrow">Investigacion abierta</span>
-      <h1 data-i18n="home.title">Estamos validando algo nuevo en SW Florida.</h1>
-      <p class="subtitle" data-i18n="home.subtitle">Nos toma 8-10 minutos. Tus respuestas no se publican y solo se usan para decidir si esta idea sale al mercado.</p>
-      <p class="choose-prompt" data-i18n="home.choose">¿Quien eres?</p>
-    </section>
-    <section class="cards">
-      <button class="card" type="button" data-tipo="proveedor">
-        <span class="card-eyebrow" data-i18n="home.card_provider_meta">20 preguntas · ~10 min</span>
-        <h2 data-i18n="home.card_provider_title">Soy proveedor de servicios</h2>
-        <p data-i18n="home.card_provider_desc">Lawn, pool, A/C, roof, pressure washing, gutter, pest, handyman... cualquier servicio recurrente para hogares.</p>
-        <span class="card-cta"><span data-i18n="home.card_cta">Empezar</span> →</span>
-      </button>
-      <button class="card" type="button" data-tipo="cliente">
-        <span class="card-eyebrow" data-i18n="home.card_client_meta">19 preguntas · ~8 min</span>
-        <h2 data-i18n="home.card_client_title">Soy homeowner</h2>
-        <p data-i18n="home.card_client_desc">Vivo o tengo propiedad en Cape Coral, Fort Myers, Naples, Bonita Springs, Estero o Lehigh Acres.</p>
-        <span class="card-cta"><span data-i18n="home.card_cta">Empezar</span> →</span>
-      </button>
-    </section>
-    <p class="privacy" data-i18n="home.privacy">Confidencial · Sin spam · No vendemos tu data</p>
-  </div>
-</main>
+<main class="container">
 
-<!-- ================= PANTALLA FORMULARIO ================= -->
-<main class="screen" id="screen-form">
-  <div class="progress-bar">
-    <div class="progress-meta">
-      <span><strong id="progress-section">Seccion A</strong> · <span id="progress-section-name">Sobre ti</span></span>
-      <span id="progress-pct">0%</span>
+<section id="home" class="form-section active">
+  <div class="intro">
+    <div class="eyebrow" data-i18n="eyebrow">Investigación · 25 minutos</div>
+    <h1 data-i18n="hero">Estamos diseñando algo para los profesionales de <em>property care</em> en SW Florida.</h1>
+    <p class="lede" data-i18n="lede">Antes de construirlo, queremos escuchar a quienes hacen el trabajo y a quienes lo contratan. Tu respuesta moldea el producto. No vendemos nada.</p>
+  </div>
+
+  <div class="eyebrow" style="margin-top: 64px;" data-i18n="who">¿Quién eres?</div>
+
+  <div class="choice-cards">
+    <button class="choice" onclick="showForm('provider')">
+      <div class="choice-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7l9-4 9 4-9 4-9-4z"/>
+          <path d="M3 12l9 4 9-4"/>
+          <path d="M3 17l9 4 9-4"/>
+        </svg>
+      </div>
+      <div class="choice-title" data-i18n="card-pro-title">Soy proveedor de servicios</div>
+      <div class="choice-desc" data-i18n="card-pro-desc">A/C, jardín, techos, pressure washing, piscinas, pest control, handyman, etc.</div>
+      <div class="choice-time" data-i18n="card-pro-time">≈ 12 minutos</div>
+    </button>
+
+    <button class="choice" onclick="showForm('client')">
+      <div class="choice-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+          <polyline points="9,22 9,12 15,12 15,22"/>
+        </svg>
+      </div>
+      <div class="choice-title" data-i18n="card-cli-title">Soy homeowner</div>
+      <div class="choice-desc" data-i18n="card-cli-desc">Tengo casa en SW Florida y contrato servicios de mantenimiento.</div>
+      <div class="choice-time" data-i18n="card-cli-time">≈ 10 minutos</div>
+    </button>
+  </div>
+
+  <div class="trust">
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      <span data-i18n="trust-1">Tus respuestas son confidenciales</span>
     </div>
-    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-  </div>
-  <div class="container">
-    <form id="questionnaire" novalidate>
-      <div id="form-content"><!-- rendered dynamically --></div>
-      <div class="form-nav">
-        <button type="button" class="btn btn-secondary" id="btn-back" data-i18n="form.back">Atras</button>
-        <span class="btn-spacer"></span>
-        <button type="button" class="btn btn-primary" id="btn-next" data-i18n="form.next">Siguiente →</button>
-        <button type="submit" class="btn btn-primary" id="btn-submit" style="display:none" data-i18n="form.submit">Enviar respuestas</button>
-      </div>
-      <div class="form-error" id="form-error"></div>
-    </form>
-  </div>
-</main>
-
-<!-- ================= PANTALLA EXITO ================= -->
-<main class="screen" id="screen-success">
-  <div class="container">
-    <div class="success-card">
-      <div class="check">✓</div>
-      <h1 data-i18n="success.title">¡Listo, gracias!</h1>
-      <p data-i18n="success.text">Tus respuestas estan guardadas. Si dejaste tus datos te contactamos en 48-72h. Si conoces a alguien mas que pueda llenarlo, comparte el link.</p>
-      <div class="success-actions">
-        <button type="button" class="btn btn-secondary" id="btn-share" data-i18n="success.share">Copiar link</button>
-        <button type="button" class="btn btn-primary" id="btn-again" data-i18n="success.again">Hacer otro</button>
-      </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12,6 12,12 16,14"/>
+      </svg>
+      <span data-i18n="trust-2">Toma 10–12 minutos</span>
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span data-i18n="trust-3">Sin venta, solo investigación</span>
     </div>
   </div>
+</section>
+
+<!-- ============================== PROVEEDOR ============================== -->
+<section id="provider-form" class="form-section">
+  <button class="back-link" onclick="goHome()" data-i18n="back">Volver</button>
+  
+  <div class="form-header">
+    <h2 data-i18n="pro-title">Cuéntanos cómo trabajas hoy.</h2>
+    <p data-i18n="pro-intro">25 preguntas. Lo importante son los detalles concretos: tus servicios reales, tus precios reales, tus dolores reales. Cuanto más honesto, más útil para ti y para nosotros.</p>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar"><div class="progress-fill" id="pro-progress"></div></div>
+    <div class="progress-label">
+      <span id="pro-progress-text" data-i18n="pro-progress-0">Empieza por el bloque A</span>
+      <span id="pro-progress-pct">0%</span>
+    </div>
+  </div>
+
+  <form id="provider-questionnaire" novalidate>
+
+    <!-- BLOQUE A: DATOS BÁSICOS -->
+    <div class="block">
+      <div class="block-label" data-i18n="pro-a-label">A · Datos del entrevistado</div>
+
+      <div class="q">
+        <div class="q-text" data-i18n="pro-name">¿Cuál es tu nombre?<span class="required">*</span></div>
+        <input type="text" name="nombre" required>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="q">
+        <div class="q-text" data-i18n="pro-business">¿Cómo se llama tu negocio?<span class="required">*</span></div>
+        <input type="text" name="negocio" required>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="q">
+          <div class="q-text" data-i18n="pro-city">Ciudad<span class="required">*</span></div>
+          <select name="ciudad" required>
+            <option value="" data-i18n="select-city">— Selecciona —</option>
+            <option value="Cape Coral">Cape Coral</option>
+            <option value="Fort Myers">Fort Myers</option>
+            <option value="Naples">Naples</option>
+            <option value="Bonita Springs">Bonita Springs</option>
+            <option value="Estero">Estero</option>
+            <option value="Lehigh Acres">Lehigh Acres</option>
+            <option value="Punta Gorda">Punta Gorda</option>
+            <option value="Otro" data-i18n="other">Otro</option>
+          </select>
+          <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+        </div>
+
+        <div class="q">
+          <div class="q-text" data-i18n="pro-years">Años en el oficio<span class="required">*</span></div>
+          <input type="number" name="anos" min="0" max="60" required>
+          <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="q">
+          <div class="q-text" data-i18n="pro-phone">Teléfono o WhatsApp<span class="required">*</span></div>
+          <input type="tel" name="telefono" placeholder="(239) 555-0123" required>
+          <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+        </div>
+
+        <div class="q">
+          <div class="q-text" data-i18n="pro-email">Email</div>
+          <input type="email" name="email" placeholder="tu@email.com">
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE B: NEGOCIO HOY -->
+    <div class="block">
+      <div class="block-label" data-i18n="pro-b-label">B · Cómo es tu negocio hoy</div>
+
+      <div class="q">
+        <span class="q-num">P1</span>
+        <div class="q-text" data-i18n="pro-q1">Cuéntanos cómo es un mes típico de trabajo. ¿Cuántos clientes atiendes? ¿Cuántos servicios haces?<span class="required">*</span></div>
+        <textarea name="q1_mes_tipico" required></textarea>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P2</span>
+        <div class="q-text" data-i18n="pro-q2">¿Qué servicios diferentes ofreces? Marca todos los que aplican.<span class="required">*</span></div>
+        <div class="q-hint" data-i18n="pro-q2-hint">Si haces de todo, marca todo. No te limites.</div>
+        <div class="checkbox-grid">
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="A/C & HVAC"><span>A/C & HVAC</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Pool service"><span data-i18n="cat-pool">Servicio de piscinas</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Lawn care"><span data-i18n="cat-lawn">Lawn care / jardín</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Pest control"><span data-i18n="cat-pest">Pest control</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Roof maintenance"><span data-i18n="cat-roof">Mantenimiento de techos</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Pressure washing"><span data-i18n="cat-pw">Pressure washing</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Gutter cleaning"><span data-i18n="cat-gutter">Limpieza de canaletas</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Exterior cleaning"><span data-i18n="cat-ext">Limpieza exterior</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Hurricane prep"><span data-i18n="cat-hurricane">Hurricane prep</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Handyman"><span>Handyman</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Generator service"><span data-i18n="cat-gen">Servicio de generador</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Tree service"><span data-i18n="cat-tree">Tree service / poda</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P3</span>
+        <div class="q-text" data-i18n="pro-q3">De todos los servicios que ofreces, ¿cuál es el que más te genera ingresos hoy?<span class="required">*</span></div>
+        <input type="text" name="q3_dominante" placeholder="Ej: Roof maintenance" required>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P4</span>
+        <div class="q-text" data-i18n="pro-q4">¿Cómo consigues clientes nuevos hoy?</div>
+        <div class="q-hint" data-i18n="pro-q4-hint">Referidos, Facebook, NextDoor, Google, anuncios, walk-by, etc.</div>
+        <textarea name="q4_lead_gen"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P5</span>
+        <div class="q-text" data-i18n="pro-q5">¿Tus ingresos son estables mes a mes o varían mucho? Cuéntanos cuál fue tu peor mes del año pasado.</div>
+        <textarea name="q5_estabilidad"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P6</span>
+        <div class="q-text" data-i18n="pro-q6">¿Cómo cobras a tus clientes? ¿Qué método prefieres y por qué?</div>
+        <div class="q-hint" data-i18n="pro-q6-hint">Efectivo, Zelle, Venmo, transferencia, cheque, tarjeta.</div>
+        <textarea name="q6_cobro"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P7</span>
+        <div class="q-text" data-i18n="pro-q7">De tus clientes actuales, ¿qué porcentaje son recurrentes (te llaman varias veces al año) vs una sola vez?</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q7_recurrentes" value="0-25"><span class="radio-option-text" data-i18n="recur-1">Pocos recurrentes (menos del 25%)</span></label>
+          <label class="radio-option"><input type="radio" name="q7_recurrentes" value="25-50"><span class="radio-option-text" data-i18n="recur-2">Una cuarta parte a la mitad (25–50%)</span></label>
+          <label class="radio-option"><input type="radio" name="q7_recurrentes" value="50-75"><span class="radio-option-text" data-i18n="recur-3">La mayoría son recurrentes (50–75%)</span></label>
+          <label class="radio-option"><input type="radio" name="q7_recurrentes" value="75-100"><span class="radio-option-text" data-i18n="recur-4">Casi todos son recurrentes (más del 75%)</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE C: DOLORES -->
+    <div class="block">
+      <div class="block-label" data-i18n="pro-c-label">C · Dolores y frustraciones</div>
+
+      <div class="q">
+        <span class="q-num">P8</span>
+        <div class="q-text" data-i18n="pro-q8">¿Cuál es el problema más grande que tienes manejando tu negocio? ¿Qué te quita el sueño?<span class="required">*</span></div>
+        <textarea name="q8_problema_grande" required></textarea>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P9</span>
+        <div class="q-text" data-i18n="pro-q9">¿Cómo le compartes precios y servicios a un cliente nuevo? ¿Cómo lo haces hoy?</div>
+        <div class="q-hint" data-i18n="pro-q9-hint">PDF, WhatsApp, foto del flyer, palabra hablada, etc.</div>
+        <textarea name="q9_compartir_precios"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P10</span>
+        <div class="q-text" data-i18n="pro-q10">¿Has pensado alguna vez en cobrar a tus clientes recurrentes con un fijo mensual en lugar de cobrar por visita?</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q10_pensado_mensual" value="Sí, lo he pensado"><span class="radio-option-text" data-i18n="thought-1">Sí, lo he pensado pero no he sabido cómo</span></label>
+          <label class="radio-option"><input type="radio" name="q10_pensado_mensual" value="Lo intenté"><span class="radio-option-text" data-i18n="thought-2">Lo intenté pero no funcionó</span></label>
+          <label class="radio-option"><input type="radio" name="q10_pensado_mensual" value="Ya lo hago"><span class="radio-option-text" data-i18n="thought-3">Sí, ya lo hago con algunos clientes</span></label>
+          <label class="radio-option"><input type="radio" name="q10_pensado_mensual" value="No lo había pensado"><span class="radio-option-text" data-i18n="thought-4">No, no lo había pensado</span></label>
+        </div>
+        <textarea name="q10_pensado_mensual_detalle" placeholder="Cuéntanos un poco más..." style="margin-top: 12px;"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P11</span>
+        <div class="q-text" data-i18n="pro-q11">Si pudieras cambiar UNA sola cosa de cómo trabajas hoy, ¿qué sería?</div>
+        <textarea name="q11_cambio_uno"></textarea>
+      </div>
+    </div>
+
+    <!-- BLOQUE D: CONCEPTO -->
+    <div class="block">
+      <div class="block-label" data-i18n="pro-d-label">D · Reacción al concepto</div>
+
+      <div class="pitch">
+        <div class="pitch-label" data-i18n="pitch-label">Lo que estamos pensando</div>
+        <div class="pitch-text" data-i18n="pro-pitch">
+          Una plataforma donde tendrías una página privada con tu catálogo de servicios y precios. Generas un link y un código QR que compartes con tus clientes. Cuando ellos lo escanean, ven tu vitrina, tu información de contacto, y pueden suscribirse a un plan mensual contigo. Por ejemplo, $129 al mes por mantenimiento programado. La plataforma te cobra automáticamente cada mes y te deposita el dinero. Nosotros nos quedamos con el 10%. Tú decides los precios, los servicios, los planes. Y puedes combinar varios servicios en un mismo plan.
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P12</span>
+        <div class="q-text" data-i18n="pro-q12">¿Cuál es tu primera reacción? ¿Qué te gusta? ¿Qué no te convence?<span class="required">*</span></div>
+        <textarea name="q12_reaccion" required></textarea>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P13</span>
+        <div class="q-text" data-i18n="pro-q13">Si tuvieras esta plataforma hoy, ¿cuántos de tus clientes actuales crees que se suscribirían a un plan mensual?</div>
+        <input type="text" name="q13_clientes_suscritos" placeholder="Ej: 'unos 8 de 30' o '15 fijos'">
+      </div>
+
+      <div class="q">
+        <span class="q-num">P14</span>
+        <div class="q-text" data-i18n="pro-q14">Imagina un plan mensual que combine VARIOS de tus servicios al mismo cliente. Por ejemplo: jardín quincenal + limpieza de canaletas semestral + pressure washing trimestral. ¿Cuánto cobrarías al mes por ese plan combinado?<span class="required">*</span></div>
+        <input type="text" name="q14_precio_bundle" placeholder="$ /mes" required>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P15</span>
+        <div class="q-text" data-i18n="pro-q15">¿Crees que tus clientes verían un plan combinado como mejor valor que pagar por servicio separado? ¿Por qué?</div>
+        <textarea name="q15_valor_bundle"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P16</span>
+        <div class="q-text" data-i18n="pro-q16">El 10% de comisión, ¿te parece justo, mucho o poco?<span class="required">*</span></div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q16_comision" value="Justo" required><span class="radio-option-text" data-i18n="fee-1">Justo, vale la pena por lo que ofrece</span></label>
+          <label class="radio-option"><input type="radio" name="q16_comision" value="Poco"><span class="radio-option-text" data-i18n="fee-2">Poco, está muy barato</span></label>
+          <label class="radio-option"><input type="radio" name="q16_comision" value="Mucho"><span class="radio-option-text" data-i18n="fee-3">Mucho, no pagaría tanto</span></label>
+          <label class="radio-option"><input type="radio" name="q16_comision" value="Depende"><span class="radio-option-text" data-i18n="fee-4">Depende, necesito ver más detalles</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P17</span>
+        <div class="q-text" data-i18n="pro-q17">¿Qué te frenaría para usar algo así? ¿Qué te haría desconfiar?</div>
+        <textarea name="q17_frenos"></textarea>
+      </div>
+    </div>
+
+    <!-- BLOQUE E: COMPROMISO -->
+    <div class="block">
+      <div class="block-label" data-i18n="pro-e-label">E · Cierre y compromiso</div>
+
+      <div class="q">
+        <span class="q-num">P18</span>
+        <div class="q-text" data-i18n="pro-q18">Si lanzamos esto en los próximos 60 días en SW Florida, ¿estarías dispuesto a probarlo como uno de los primeros 5 proveedores piloto?<span class="required">*</span></div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q18_piloto" value="Sí" required><span class="radio-option-text" data-i18n="pilot-1">Sí, me interesa probarlo</span></label>
+          <label class="radio-option"><input type="radio" name="q18_piloto" value="Quizás"><span class="radio-option-text" data-i18n="pilot-2">Quizás, depende de lo que vea</span></label>
+          <label class="radio-option"><input type="radio" name="q18_piloto" value="No"><span class="radio-option-text" data-i18n="pilot-3">No, prefiero esperar</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P19</span>
+        <div class="q-text" data-i18n="pro-q19">¿Conoces a otros profesionales de servicios en SW Florida que deberíamos entrevistar también?</div>
+        <div class="q-hint" data-i18n="pro-q19-hint">Si nos das 1–2 nombres y teléfonos, te lo agradeceríamos enormemente.</div>
+        <textarea name="q19_referidos"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P20</span>
+        <div class="q-text" data-i18n="pro-q20">¿Quieres que te avisemos cuando esté listo para probar?</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q20_avisar" value="Sí, por WhatsApp"><span class="radio-option-text" data-i18n="notify-1">Sí, por WhatsApp</span></label>
+          <label class="radio-option"><input type="radio" name="q20_avisar" value="Sí, por email"><span class="radio-option-text" data-i18n="notify-2">Sí, por email</span></label>
+          <label class="radio-option"><input type="radio" name="q20_avisar" value="No, gracias"><span class="radio-option-text" data-i18n="notify-3">No, gracias</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-area">
+      <button type="submit" class="btn-primary" data-i18n="submit-pro">Enviar respuestas</button>
+      <p class="submit-note" data-i18n="submit-pro-note">Al enviar, aceptas que MacLorian X Group use tus respuestas anónimamente para diseñar el producto. Tus datos de contacto solo los usaremos si aceptaste que te avisemos.</p>
+    </div>
+  </form>
+</section>
+
+<!-- ============================== CLIENTE ============================== -->
+<section id="client-form" class="form-section">
+  <button class="back-link" onclick="goHome()" data-i18n="back">Volver</button>
+
+  <div class="form-header">
+    <h2 data-i18n="cli-title">¿Cómo manejas el mantenimiento de tu casa?</h2>
+    <p data-i18n="cli-intro">22 preguntas. Lo que respondas nos ayuda a decidir si construimos esto o no. Sin filtros, queremos saber cómo es de verdad.</p>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar"><div class="progress-fill" id="cli-progress"></div></div>
+    <div class="progress-label">
+      <span id="cli-progress-text" data-i18n="cli-progress-0">Empieza por el bloque A</span>
+      <span id="cli-progress-pct">0%</span>
+    </div>
+  </div>
+
+  <form id="client-questionnaire" novalidate>
+
+    <!-- BLOQUE A -->
+    <div class="block">
+      <div class="block-label" data-i18n="cli-a-label">A · Sobre ti y tu propiedad</div>
+
+      <div class="q">
+        <div class="q-text" data-i18n="cli-name">¿Cuál es tu nombre?<span class="required">*</span></div>
+        <input type="text" name="nombre" required>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="q">
+          <div class="q-text" data-i18n="cli-city">Ciudad<span class="required">*</span></div>
+          <select name="ciudad" required>
+            <option value="" data-i18n="select-city">— Selecciona —</option>
+            <option value="Cape Coral">Cape Coral</option>
+            <option value="Fort Myers">Fort Myers</option>
+            <option value="Naples">Naples</option>
+            <option value="Bonita Springs">Bonita Springs</option>
+            <option value="Estero">Estero</option>
+            <option value="Lehigh Acres">Lehigh Acres</option>
+            <option value="Punta Gorda">Punta Gorda</option>
+            <option value="Otro" data-i18n="other">Otro</option>
+          </select>
+          <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+        </div>
+
+        <div class="q">
+          <div class="q-text" data-i18n="cli-property">Tipo de propiedad<span class="required">*</span></div>
+          <select name="tipo_propiedad" required>
+            <option value="" data-i18n="select-property">— Selecciona —</option>
+            <option value="Casa unifamiliar" data-i18n="prop-1">Casa unifamiliar</option>
+            <option value="Villa" data-i18n="prop-2">Villa</option>
+            <option value="Townhouse" data-i18n="prop-3">Townhouse</option>
+            <option value="Condo" data-i18n="prop-4">Condo</option>
+            <option value="Otro" data-i18n="other">Otro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="q">
+          <div class="q-text" data-i18n="cli-pool">¿Tu propiedad tiene piscina?</div>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="piscina" value="Sí"><span class="radio-option-text" data-i18n="yes">Sí</span></label>
+            <label class="radio-option"><input type="radio" name="piscina" value="No"><span class="radio-option-text" data-i18n="no">No</span></label>
+          </div>
+        </div>
+
+        <div class="q">
+          <div class="q-text" data-i18n="cli-years">¿Cuántos años llevas en Florida?</div>
+          <input type="number" name="anos_florida" min="0" max="80">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="q">
+          <div class="q-text" data-i18n="cli-phone">Teléfono o WhatsApp</div>
+          <input type="tel" name="telefono" placeholder="(239) 555-0123">
+        </div>
+
+        <div class="q">
+          <div class="q-text" data-i18n="cli-email">Email</div>
+          <input type="email" name="email" placeholder="tu@email.com">
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE B: HOY -->
+    <div class="block">
+      <div class="block-label" data-i18n="cli-b-label">B · Cómo manejas tu casa hoy</div>
+
+      <div class="q">
+        <span class="q-num">P1</span>
+        <div class="q-text" data-i18n="cli-q1">¿Qué servicios contratas regularmente para tu casa?<span class="required">*</span></div>
+        <div class="checkbox-grid">
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="A/C & HVAC"><span>A/C & HVAC</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Pool service"><span data-i18n="cat-pool">Servicio de piscinas</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Lawn care"><span data-i18n="cat-lawn">Lawn care / jardín</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Pest control"><span data-i18n="cat-pest">Pest control</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Roof maintenance"><span data-i18n="cat-roof">Mantenimiento de techos</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Pressure washing"><span data-i18n="cat-pw">Pressure washing</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Gutter cleaning"><span data-i18n="cat-gutter">Limpieza de canaletas</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Limpieza interior"><span data-i18n="cat-clean">Limpieza interior</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Handyman"><span>Handyman</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Tree service"><span data-i18n="cat-tree">Tree service / poda</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P2</span>
+        <div class="q-text" data-i18n="cli-q2">Para los servicios que contratas, ¿llamas siempre al mismo proveedor o cambias seguido?</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q2_lealtad" value="Mismo siempre"><span class="radio-option-text" data-i18n="loyal-1">Tengo proveedores fijos para todo</span></label>
+          <label class="radio-option"><input type="radio" name="q2_lealtad" value="Algunos fijos"><span class="radio-option-text" data-i18n="loyal-2">Algunos fijos, otros los cambio</span></label>
+          <label class="radio-option"><input type="radio" name="q2_lealtad" value="Cambio seguido"><span class="radio-option-text" data-i18n="loyal-3">Cambio seguido, busco precio cada vez</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P3</span>
+        <div class="q-text" data-i18n="cli-q3">¿Tienes UN handyman o técnico de confianza que te resuelve varias cosas, o tienes uno distinto para cada servicio?</div>
+        <textarea name="q3_handyman_confianza"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P4</span>
+        <div class="q-text" data-i18n="cli-q4">¿Cuánto gastas aproximadamente al mes en mantenimiento de tu casa?<span class="required">*</span></div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q4_gasto_mensual" value="0-100" required><span class="radio-option-text" data-i18n="spend-1">Menos de $100</span></label>
+          <label class="radio-option"><input type="radio" name="q4_gasto_mensual" value="100-300"><span class="radio-option-text">$100 – $300</span></label>
+          <label class="radio-option"><input type="radio" name="q4_gasto_mensual" value="300-500"><span class="radio-option-text">$300 – $500</span></label>
+          <label class="radio-option"><input type="radio" name="q4_gasto_mensual" value="500-1000"><span class="radio-option-text">$500 – $1,000</span></label>
+          <label class="radio-option"><input type="radio" name="q4_gasto_mensual" value="1000+"><span class="radio-option-text" data-i18n="spend-5">Más de $1,000</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P5</span>
+        <div class="q-text" data-i18n="cli-q5">Cuéntanos la última vez que algo se rompió en tu casa y tuviste que llamar a un técnico de emergencia. ¿Qué pasó?</div>
+        <textarea name="q5_emergencia"></textarea>
+      </div>
+    </div>
+
+    <!-- BLOQUE C: DOLORES -->
+    <div class="block">
+      <div class="block-label" data-i18n="cli-c-label">C · Dolores y frustraciones</div>
+
+      <div class="q">
+        <span class="q-num">P6</span>
+        <div class="q-text" data-i18n="cli-q6">¿Qué es lo más frustrante de mantener tu casa? Sea con técnicos, con costos, con tiempo.<span class="required">*</span></div>
+        <textarea name="q6_frustracion" required></textarea>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P7</span>
+        <div class="q-text" data-i18n="cli-q7">¿Te ha pasado que un técnico no te llega cuando lo necesitas, especialmente en temporada de huracanes?</div>
+        <textarea name="q7_disponibilidad"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P8</span>
+        <div class="q-text" data-i18n="cli-q8">¿Cómo te enteras de los precios cuando llamas a alguien nuevo? ¿Sientes que es claro?</div>
+        <textarea name="q8_claridad_precios"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P9</span>
+        <div class="q-text" data-i18n="cli-q9">¿Te has sentido alguna vez sorprendido por el precio final de un servicio? Cuéntanos.</div>
+        <textarea name="q9_sorpresa_precio"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P10</span>
+        <div class="q-text" data-i18n="cli-q10">Si pudieras cambiar UNA cosa de cómo manejas el mantenimiento de tu casa, ¿qué sería?</div>
+        <textarea name="q10_cambio_uno"></textarea>
+      </div>
+    </div>
+
+    <!-- BLOQUE D: CONCEPTO -->
+    <div class="block">
+      <div class="block-label" data-i18n="cli-d-label">D · Reacción al concepto</div>
+
+      <div class="pitch">
+        <div class="pitch-label" data-i18n="pitch-label">Lo que estamos pensando</div>
+        <div class="pitch-text" data-i18n="cli-pitch">
+          Imagina que tu técnico de confianza te da un código QR. Lo escaneas y ves su catálogo: precios claros, servicios incluidos, y un plan mensual. Por ejemplo, $129 al mes recibes mantenimiento trimestral garantizado, prioridad en emergencias, y descuento en reparaciones. Pagas con tarjeta una vez y se cobra automáticamente cada mes. Tu técnico recibe el dinero, tú recibes el servicio garantizado. Si no estás contento, cancelas en un clic.
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P11</span>
+        <div class="q-text" data-i18n="cli-q11">¿Cuál es tu primera reacción? ¿Te gusta, te confunde, te genera dudas?<span class="required">*</span></div>
+        <textarea name="q11_reaccion" required></textarea>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P12</span>
+        <div class="q-text" data-i18n="cli-q12">Si tu técnico actual te ofreciera esto mañana, ¿te suscribirías?<span class="required">*</span></div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q12_suscribirse" value="Sí" required><span class="radio-option-text" data-i18n="sub-1">Sí, me interesa</span></label>
+          <label class="radio-option"><input type="radio" name="q12_suscribirse" value="Tal vez"><span class="radio-option-text" data-i18n="sub-2">Tal vez, depende del precio</span></label>
+          <label class="radio-option"><input type="radio" name="q12_suscribirse" value="No"><span class="radio-option-text" data-i18n="sub-3">No, prefiero pagar por visita</span></label>
+        </div>
+        <textarea name="q12_suscribirse_porque" placeholder="¿Por qué?" style="margin-top: 12px;"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P13</span>
+        <div class="q-text" data-i18n="cli-q13">¿Cuánto pagarías al mes por cada uno de estos servicios? Pon el número que tendría sentido para ti.</div>
+        <div class="q-hint" data-i18n="cli-q13-hint">Solo los que te interesen, deja el resto vacío.</div>
+        <div style="display: grid; grid-template-columns: 1fr 120px; gap: 8px; align-items: center; max-width: 400px;">
+          <label data-i18n="cat-ac-full">A/C maintenance</label><input type="text" name="q13_ac" placeholder="$ /mes">
+          <label data-i18n="cat-pool">Servicio de piscinas</label><input type="text" name="q13_pool" placeholder="$ /mes">
+          <label data-i18n="cat-lawn">Lawn care / jardín</label><input type="text" name="q13_lawn" placeholder="$ /mes">
+          <label data-i18n="cat-pest">Pest control</label><input type="text" name="q13_pest" placeholder="$ /mes">
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P14</span>
+        <div class="q-text" data-i18n="cli-q14">Y si en lugar de tener proveedores separados, UN solo proveedor de confianza te ofreciera un plan que combine VARIOS servicios (ej: jardín + canaletas + pressure washing + limpieza exterior), ¿pagarías más por la conveniencia de un solo punto de contacto y una sola factura?<span class="required">*</span></div>
+        <input type="text" name="q14_bundle_precio" placeholder="$ /mes (o explica por qué no)" required>
+        <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P15</span>
+        <div class="q-text" data-i18n="cli-q15">Si tuvieras un plan mensual con tu técnico, ¿qué esperarías recibir a cambio? ¿Qué te haría sentir que vale la pena?</div>
+        <textarea name="q15_expectativa"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P16</span>
+        <div class="q-text" data-i18n="cli-q16">¿Qué te frenaría para suscribirte a algo así? ¿Qué te haría desconfiar?</div>
+        <textarea name="q16_frenos"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P17</span>
+        <div class="q-text" data-i18n="cli-q17">Pregunta específica de Florida: ¿pagarías un plan especial de "hurricane prep" cada año en mayo, que incluya inspección de techo, ventanas, generador, y prioridad si pasa algo? ¿Cuánto?</div>
+        <input type="text" name="q17_hurricane" placeholder="$ /año (o no me interesa)">
+      </div>
+    </div>
+
+    <!-- BLOQUE E -->
+    <div class="block">
+      <div class="block-label" data-i18n="cli-e-label">E · Cierre</div>
+
+      <div class="q">
+        <span class="q-num">P18</span>
+        <div class="q-text" data-i18n="cli-q18">¿Conoces a algún técnico o proveedor confiable que te gustaría recomendarnos para entrevistar también?</div>
+        <textarea name="q18_referidos"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P19</span>
+        <div class="q-text" data-i18n="cli-q19">¿Te interesaría que te avisemos cuando esto esté listo, para probarlo con tu técnico de confianza?</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q19_avisar" value="Sí, por WhatsApp"><span class="radio-option-text" data-i18n="notify-1">Sí, por WhatsApp</span></label>
+          <label class="radio-option"><input type="radio" name="q19_avisar" value="Sí, por email"><span class="radio-option-text" data-i18n="notify-2">Sí, por email</span></label>
+          <label class="radio-option"><input type="radio" name="q19_avisar" value="No, gracias"><span class="radio-option-text" data-i18n="notify-3">No, gracias</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-area">
+      <button type="submit" class="btn-primary" data-i18n="submit-cli">Enviar respuestas</button>
+      <p class="submit-note" data-i18n="submit-cli-note">Al enviar, aceptas que MacLorian X Group use tus respuestas anónimamente para diseñar el producto.</p>
+    </div>
+  </form>
+</section>
+
+<!-- ============================== ÉXITO ============================== -->
+<section id="success" class="form-section success-state">
+  <div class="success-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20,6 9,17 4,12"/>
+    </svg>
+  </div>
+  <h2 data-i18n="success-title">Gracias.</h2>
+  <p data-i18n="success-msg">Tus respuestas ya están con nosotros. Lo que dijiste va a moldear directamente cómo construimos esto.</p>
+  <p data-i18n="success-msg2">Si nos diste tu contacto y aceptaste que te avisemos, te escribiremos cuando estemos listos para los primeros pilotos en SW Florida.</p>
+  <div class="next">
+    <strong data-i18n="success-next-label">Y si conoces a alguien más que debería responder esto, comparte el link:</strong><br>
+    <span style="font-family: monospace; font-size: 13px; color: var(--green-deep); word-break: break-all;" id="share-url"></span>
+  </div>
+  <button class="btn-primary" style="margin-top: 32px;" onclick="goHome()" data-i18n="success-btn">Volver al inicio</button>
+</section>
+
 </main>
 
 <footer>
-  <span data-i18n="footer.text">© MacLorian X Group LLC · Cape Coral, FL</span>
+  <p>© 2026 MacLorian X Group LLC · Cape Coral, FL · <a href="mailto:contact@maclorianxgroup.com">contact@maclorianxgroup.com</a></p>
+  <p style="margin-top: 6px; opacity: 0.6;" data-i18n="footer-note">Esta es una investigación de mercado. No estamos vendiendo nada.</p>
 </footer>
 
-<div class="draft-toast" id="draft-toast" data-i18n="form.draft_saved">Borrador guardado</div>
-
 <script>
-'use strict';
-
-// ============================================================
-// I18N
-// ============================================================
-const I18N = {
+const TRANSLATIONS = {
   es: {
-    'brand.name': 'MacLorian',
-    'brand.unit': 'Innovation · Investigacion',
-    'home.eyebrow': 'Investigacion abierta',
-    'home.title': 'Estamos validando algo nuevo en SW Florida.',
-    'home.subtitle': 'Nos toma 8-10 minutos. Tus respuestas no se publican y solo se usan para decidir si esta idea sale al mercado.',
-    'home.choose': '¿Quien eres?',
-    'home.card_provider_meta': '20 preguntas · ~10 min',
-    'home.card_provider_title': 'Soy proveedor de servicios',
-    'home.card_provider_desc': 'Lawn, pool, A/C, roof, pressure washing, gutter, pest, handyman... cualquier servicio recurrente para hogares.',
-    'home.card_client_meta': '19 preguntas · ~8 min',
-    'home.card_client_title': 'Soy homeowner',
-    'home.card_client_desc': 'Vivo o tengo propiedad en Cape Coral, Fort Myers, Naples, Bonita Springs, Estero o Lehigh Acres.',
-    'home.card_cta': 'Empezar',
-    'home.privacy': 'Confidencial · Sin spam · No vendemos tu data',
-    'form.back': '← Atras',
-    'form.next': 'Siguiente →',
-    'form.submit': 'Enviar respuestas',
-    'form.sending': 'Enviando...',
-    'form.draft_saved': 'Borrador guardado',
-    'form.required': 'Requerido',
-    'form.optional': 'Opcional',
-    'form.error_required': 'Este campo es requerido',
-    'form.error_email': 'El email no parece valido',
-    'form.error_min_select': 'Selecciona al menos una opcion',
-    'form.error_submit': 'Hubo un problema enviando tus respuestas. Intenta de nuevo en unos segundos.',
-    'section.A': 'Sobre ti',
-    'section.B_proveedor': 'Tu negocio hoy',
-    'section.B_cliente': 'Tu casa hoy',
-    'section.C': 'Que te frustra',
-    'section.D': 'La idea',
-    'section.E': 'Cierre',
-    'section.code': 'Seccion',
-    'pitch.proveedor.title': 'La idea en 30 segundos',
-    'pitch.proveedor.body': 'MacLorian Innovation esta evaluando una plataforma donde proveedores como tu empaquetan sus servicios en planes mensuales. El cliente paga una sola cuota y recibe lawn + pool + pressure + lo que combines. Nosotros ponemos la app, marketing, cobros automaticos y soporte. Tu te enfocas en el servicio. Cobramos 10% de comision sobre lo que se mueve por la plataforma.',
-    'pitch.cliente.title': 'La idea en 30 segundos',
-    'pitch.cliente.body': 'Imagina pagar UNA cuota mensual que cubra todo: lawn, roof, pool, A/C, pressure washing, hurricane prep. Un solo proveedor verificado, una sola app, cero llamadas para coordinar. Estamos evaluando si tiene sentido lanzarlo en SW Florida.',
-    'success.title': '¡Listo, gracias!',
-    'success.text': 'Tus respuestas estan guardadas. Si dejaste tus datos te contactamos en 48-72h. Si conoces a alguien mas que pueda llenarlo, comparte el link.',
-    'success.share': 'Copiar link',
-    'success.copied': '¡Link copiado!',
-    'success.again': 'Hacer otro cuestionario',
-    'footer.text': '© MacLorian X Group LLC · Cape Coral, FL'
+    "brand": "MacLorian X Group",
+    "eyebrow": "Investigación · 25 minutos",
+    "hero": 'Estamos diseñando algo para los profesionales de <em>property care</em> en SW Florida.',
+    "lede": "Antes de construirlo, queremos escuchar a quienes hacen el trabajo y a quienes lo contratan. Tu respuesta moldea el producto. No vendemos nada.",
+    "who": "¿Quién eres?",
+    "card-pro-title": "Soy proveedor de servicios",
+    "card-pro-desc": "A/C, jardín, techos, pressure washing, piscinas, pest control, handyman, etc.",
+    "card-pro-time": "≈ 12 minutos",
+    "card-cli-title": "Soy homeowner",
+    "card-cli-desc": "Tengo casa en SW Florida y contrato servicios de mantenimiento.",
+    "card-cli-time": "≈ 10 minutos",
+    "trust-1": "Tus respuestas son confidenciales",
+    "trust-2": "Toma 10–12 minutos",
+    "trust-3": "Sin venta, solo investigación",
+    "back": "Volver",
+    "pro-title": "Cuéntanos cómo trabajas hoy.",
+    "pro-intro": "20 preguntas. Lo importante son los detalles concretos: tus servicios reales, tus precios reales, tus dolores reales. Cuanto más honesto, más útil para ti y para nosotros.",
+    "pro-progress-0": "Empieza por el bloque A",
+    "pro-a-label": "A · Datos del entrevistado",
+    "pro-name": "¿Cuál es tu nombre?",
+    "pro-business": "¿Cómo se llama tu negocio?",
+    "pro-city": "Ciudad",
+    "pro-years": "Años en el oficio",
+    "pro-phone": "Teléfono o WhatsApp",
+    "pro-email": "Email",
+    "select-city": "— Selecciona —",
+    "select-property": "— Selecciona —",
+    "other": "Otro",
+    "pro-b-label": "B · Cómo es tu negocio hoy",
+    "pro-q1": "Cuéntanos cómo es un mes típico de trabajo. ¿Cuántos clientes atiendes? ¿Cuántos servicios haces?",
+    "pro-q2": "¿Qué servicios diferentes ofreces? Marca todos los que aplican.",
+    "pro-q2-hint": "Si haces de todo, marca todo. No te limites.",
+    "cat-pool": "Servicio de piscinas",
+    "cat-lawn": "Lawn care / jardín",
+    "cat-pest": "Pest control",
+    "cat-roof": "Mantenimiento de techos",
+    "cat-pw": "Pressure washing",
+    "cat-gutter": "Limpieza de canaletas",
+    "cat-ext": "Limpieza exterior",
+    "cat-hurricane": "Hurricane prep",
+    "cat-gen": "Servicio de generador",
+    "cat-tree": "Tree service / poda",
+    "cat-clean": "Limpieza interior",
+    "cat-ac-full": "A/C maintenance",
+    "pro-q3": "De todos los servicios que ofreces, ¿cuál es el que más te genera ingresos hoy?",
+    "pro-q4": "¿Cómo consigues clientes nuevos hoy?",
+    "pro-q4-hint": "Referidos, Facebook, NextDoor, Google, anuncios, walk-by, etc.",
+    "pro-q5": "¿Tus ingresos son estables mes a mes o varían mucho? Cuéntanos cuál fue tu peor mes del año pasado.",
+    "pro-q6": "¿Cómo cobras a tus clientes? ¿Qué método prefieres y por qué?",
+    "pro-q6-hint": "Efectivo, Zelle, Venmo, transferencia, cheque, tarjeta.",
+    "pro-q7": "De tus clientes actuales, ¿qué porcentaje son recurrentes (te llaman varias veces al año) vs una sola vez?",
+    "recur-1": "Pocos recurrentes (menos del 25%)",
+    "recur-2": "Una cuarta parte a la mitad (25–50%)",
+    "recur-3": "La mayoría son recurrentes (50–75%)",
+    "recur-4": "Casi todos son recurrentes (más del 75%)",
+    "pro-c-label": "C · Dolores y frustraciones",
+    "pro-q8": "¿Cuál es el problema más grande que tienes manejando tu negocio? ¿Qué te quita el sueño?",
+    "pro-q9": "¿Cómo le compartes precios y servicios a un cliente nuevo?",
+    "pro-q9-hint": "PDF, WhatsApp, foto del flyer, palabra hablada, etc.",
+    "pro-q10": "¿Has pensado alguna vez en cobrar a tus clientes recurrentes con un fijo mensual en lugar de cobrar por visita?",
+    "thought-1": "Sí, lo he pensado pero no he sabido cómo",
+    "thought-2": "Lo intenté pero no funcionó",
+    "thought-3": "Sí, ya lo hago con algunos clientes",
+    "thought-4": "No, no lo había pensado",
+    "pro-q11": "Si pudieras cambiar UNA sola cosa de cómo trabajas hoy, ¿qué sería?",
+    "pro-d-label": "D · Reacción al concepto",
+    "pitch-label": "Lo que estamos pensando",
+    "pro-pitch": "Una plataforma donde tendrías una página privada con tu catálogo de servicios y precios. Generas un link y un código QR que compartes con tus clientes. Cuando ellos lo escanean, ven tu vitrina, tu información de contacto, y pueden suscribirse a un plan mensual contigo. Por ejemplo, $129 al mes por mantenimiento programado. La plataforma te cobra automáticamente cada mes y te deposita el dinero. Nosotros nos quedamos con el 10%. Tú decides los precios, los servicios, los planes. Y puedes combinar varios servicios en un mismo plan.",
+    "pro-q12": "¿Cuál es tu primera reacción? ¿Qué te gusta? ¿Qué no te convence?",
+    "pro-q13": "Si tuvieras esta plataforma hoy, ¿cuántos de tus clientes actuales crees que se suscribirían a un plan mensual?",
+    "pro-q14": "Imagina un plan mensual que combine VARIOS de tus servicios al mismo cliente. Por ejemplo: jardín quincenal + limpieza de canaletas semestral + pressure washing trimestral. ¿Cuánto cobrarías al mes por ese plan combinado?",
+    "pro-q15": "¿Crees que tus clientes verían un plan combinado como mejor valor que pagar por servicio separado? ¿Por qué?",
+    "pro-q16": "El 10% de comisión, ¿te parece justo, mucho o poco?",
+    "fee-1": "Justo, vale la pena por lo que ofrece",
+    "fee-2": "Poco, está muy barato",
+    "fee-3": "Mucho, no pagaría tanto",
+    "fee-4": "Depende, necesito ver más detalles",
+    "pro-q17": "¿Qué te frenaría para usar algo así? ¿Qué te haría desconfiar?",
+    "pro-e-label": "E · Cierre y compromiso",
+    "pro-q18": "Si lanzamos esto en los próximos 60 días en SW Florida, ¿estarías dispuesto a probarlo como uno de los primeros 5 proveedores piloto?",
+    "pilot-1": "Sí, me interesa probarlo",
+    "pilot-2": "Quizás, depende de lo que vea",
+    "pilot-3": "No, prefiero esperar",
+    "pro-q19": "¿Conoces a otros profesionales de servicios en SW Florida que deberíamos entrevistar también?",
+    "pro-q19-hint": "Si nos das 1–2 nombres y teléfonos, te lo agradeceríamos enormemente.",
+    "pro-q20": "¿Quieres que te avisemos cuando esté listo para probar?",
+    "notify-1": "Sí, por WhatsApp",
+    "notify-2": "Sí, por email",
+    "notify-3": "No, gracias",
+    "submit-pro": "Enviar respuestas",
+    "submit-pro-note": "Al enviar, aceptas que MacLorian X Group use tus respuestas anónimamente para diseñar el producto. Tus datos de contacto solo los usaremos si aceptaste que te avisemos.",
+    "cli-title": "¿Cómo manejas el mantenimiento de tu casa?",
+    "cli-intro": "20 preguntas. Lo que respondas nos ayuda a decidir si construimos esto o no. Sin filtros, queremos saber cómo es de verdad.",
+    "cli-progress-0": "Empieza por el bloque A",
+    "cli-a-label": "A · Sobre ti y tu propiedad",
+    "cli-name": "¿Cuál es tu nombre?",
+    "cli-city": "Ciudad",
+    "cli-property": "Tipo de propiedad",
+    "prop-1": "Casa unifamiliar",
+    "prop-2": "Villa",
+    "prop-3": "Townhouse",
+    "prop-4": "Condo",
+    "cli-pool": "¿Tu propiedad tiene piscina?",
+    "yes": "Sí",
+    "no": "No",
+    "cli-years": "¿Cuántos años llevas en Florida?",
+    "cli-phone": "Teléfono o WhatsApp",
+    "cli-email": "Email",
+    "cli-b-label": "B · Cómo manejas tu casa hoy",
+    "cli-q1": "¿Qué servicios contratas regularmente para tu casa?",
+    "cli-q2": "Para los servicios que contratas, ¿llamas siempre al mismo proveedor o cambias seguido?",
+    "loyal-1": "Tengo proveedores fijos para todo",
+    "loyal-2": "Algunos fijos, otros los cambio",
+    "loyal-3": "Cambio seguido, busco precio cada vez",
+    "cli-q3": "¿Tienes UN handyman o técnico de confianza que te resuelve varias cosas, o tienes uno distinto para cada servicio?",
+    "cli-q4": "¿Cuánto gastas aproximadamente al mes en mantenimiento de tu casa?",
+    "spend-1": "Menos de $100",
+    "spend-5": "Más de $1,000",
+    "cli-q5": "Cuéntanos la última vez que algo se rompió en tu casa y tuviste que llamar a un técnico de emergencia. ¿Qué pasó?",
+    "cli-c-label": "C · Dolores y frustraciones",
+    "cli-q6": "¿Qué es lo más frustrante de mantener tu casa? Sea con técnicos, con costos, con tiempo.",
+    "cli-q7": "¿Te ha pasado que un técnico no te llega cuando lo necesitas, especialmente en temporada de huracanes?",
+    "cli-q8": "¿Cómo te enteras de los precios cuando llamas a alguien nuevo? ¿Sientes que es claro?",
+    "cli-q9": "¿Te has sentido alguna vez sorprendido por el precio final de un servicio? Cuéntanos.",
+    "cli-q10": "Si pudieras cambiar UNA cosa de cómo manejas el mantenimiento de tu casa, ¿qué sería?",
+    "cli-d-label": "D · Reacción al concepto",
+    "cli-pitch": "Imagina que tu técnico de confianza te da un código QR. Lo escaneas y ves su catálogo: precios claros, servicios incluidos, y un plan mensual. Por ejemplo, $129 al mes recibes mantenimiento trimestral garantizado, prioridad en emergencias, y descuento en reparaciones. Pagas con tarjeta una vez y se cobra automáticamente cada mes. Tu técnico recibe el dinero, tú recibes el servicio garantizado. Si no estás contento, cancelas en un clic.",
+    "cli-q11": "¿Cuál es tu primera reacción? ¿Te gusta, te confunde, te genera dudas?",
+    "cli-q12": "Si tu técnico actual te ofreciera esto mañana, ¿te suscribirías?",
+    "sub-1": "Sí, me interesa",
+    "sub-2": "Tal vez, depende del precio",
+    "sub-3": "No, prefiero pagar por visita",
+    "cli-q13": "¿Cuánto pagarías al mes por cada uno de estos servicios? Pon el número que tendría sentido para ti.",
+    "cli-q13-hint": "Solo los que te interesen, deja el resto vacío.",
+    "cli-q14": "Y si en lugar de tener proveedores separados, UN solo proveedor de confianza te ofreciera un plan que combine VARIOS servicios (ej: jardín + canaletas + pressure washing + limpieza exterior), ¿pagarías más por la conveniencia de un solo punto de contacto y una sola factura?",
+    "cli-q15": "Si tuvieras un plan mensual con tu técnico, ¿qué esperarías recibir a cambio? ¿Qué te haría sentir que vale la pena?",
+    "cli-q16": "¿Qué te frenaría para suscribirte a algo así? ¿Qué te haría desconfiar?",
+    "cli-q17": 'Pregunta específica de Florida: ¿pagarías un plan especial de "hurricane prep" cada año en mayo, que incluya inspección de techo, ventanas, generador, y prioridad si pasa algo? ¿Cuánto?',
+    "cli-e-label": "E · Cierre",
+    "cli-q18": "¿Conoces a algún técnico o proveedor confiable que te gustaría recomendarnos para entrevistar también?",
+    "cli-q19": "¿Te interesaría que te avisemos cuando esto esté listo, para probarlo con tu técnico de confianza?",
+    "submit-cli": "Enviar respuestas",
+    "submit-cli-note": "Al enviar, aceptas que MacLorian X Group use tus respuestas anónimamente para diseñar el producto.",
+    "success-title": "Gracias.",
+    "success-msg": "Tus respuestas ya están con nosotros. Lo que dijiste va a moldear directamente cómo construimos esto.",
+    "success-msg2": "Si nos diste tu contacto y aceptaste que te avisemos, te escribiremos cuando estemos listos para los primeros pilotos en SW Florida.",
+    "success-next-label": "Y si conoces a alguien más que debería responder esto, comparte el link:",
+    "success-btn": "Volver al inicio",
+    "footer-note": "Esta es una investigación de mercado. No estamos vendiendo nada.",
+    "err-required": "Este campo es obligatorio.",
+    "submitting": "Enviando..."
   },
   en: {
-    'brand.name': 'MacLorian',
-    'brand.unit': 'Innovation · Research',
-    'home.eyebrow': 'Open research',
-    'home.title': "We're validating something new in SW Florida.",
-    'home.subtitle': "It takes 8-10 minutes. Your answers stay private and only inform whether this idea ships.",
-    'home.choose': 'Who are you?',
-    'home.card_provider_meta': '20 questions · ~10 min',
-    'home.card_provider_title': "I'm a service provider",
-    'home.card_provider_desc': 'Lawn, pool, A/C, roof, pressure washing, gutter, pest, handyman... any recurring home service.',
-    'home.card_client_meta': '19 questions · ~8 min',
-    'home.card_client_title': "I'm a homeowner",
-    'home.card_client_desc': 'I live or own property in Cape Coral, Fort Myers, Naples, Bonita Springs, Estero or Lehigh Acres.',
-    'home.card_cta': 'Start',
-    'home.privacy': "Confidential · No spam · We don't sell your data",
-    'form.back': '← Back',
-    'form.next': 'Next →',
-    'form.submit': 'Submit responses',
-    'form.sending': 'Sending...',
-    'form.draft_saved': 'Draft saved',
-    'form.required': 'Required',
-    'form.optional': 'Optional',
-    'form.error_required': 'This field is required',
-    'form.error_email': "That email doesn't look right",
-    'form.error_min_select': 'Pick at least one option',
-    'form.error_submit': 'Something went wrong submitting. Try again in a few seconds.',
-    'section.A': 'About you',
-    'section.B_proveedor': 'Your business today',
-    'section.B_cliente': 'Your home today',
-    'section.C': 'What frustrates you',
-    'section.D': 'The idea',
-    'section.E': 'Wrap up',
-    'section.code': 'Section',
-    'pitch.proveedor.title': 'The idea in 30 seconds',
-    'pitch.proveedor.body': 'MacLorian Innovation is evaluating a platform where providers like you bundle your services into monthly plans. Customers pay a single fee and get lawn + pool + pressure + whatever you combine. We provide the app, marketing, automatic billing and support. You focus on the service. We take a 10% commission on platform revenue.',
-    'pitch.cliente.title': 'The idea in 30 seconds',
-    'pitch.cliente.body': 'Imagine paying ONE monthly fee that covers everything: lawn, roof, pool, A/C, pressure washing, hurricane prep. One verified provider, one app, zero calls to coordinate. We are evaluating whether to launch it in SW Florida.',
-    'success.title': 'Done. Thank you!',
-    'success.text': "Your responses are saved. If you left contact info we'll reach out in 48-72h. If you know someone else who'd fill it out, share the link.",
-    'success.share': 'Copy link',
-    'success.copied': 'Link copied!',
-    'success.again': 'Take another',
-    'footer.text': '© MacLorian X Group LLC · Cape Coral, FL'
+    "brand": "MacLorian X Group",
+    "eyebrow": "Research · 25 minutes",
+    "hero": 'We\'re designing something for <em>property care</em> professionals in SW Florida.',
+    "lede": "Before we build it, we want to hear from those who do the work and those who hire it. Your answer shapes the product. We're not selling anything.",
+    "who": "Who are you?",
+    "card-pro-title": "I'm a service provider",
+    "card-pro-desc": "A/C, lawn, roofs, pressure washing, pools, pest control, handyman, etc.",
+    "card-pro-time": "≈ 12 minutes",
+    "card-cli-title": "I'm a homeowner",
+    "card-cli-desc": "I have a home in SW Florida and hire maintenance services.",
+    "card-cli-time": "≈ 10 minutes",
+    "trust-1": "Your answers are confidential",
+    "trust-2": "Takes 10–12 minutes",
+    "trust-3": "No sales, just research",
+    "back": "Back",
+    "pro-title": "Tell us how you work today.",
+    "pro-intro": "20 questions. The details matter: your real services, your real prices, your real pains. The more honest, the more useful for you and for us.",
+    "pro-progress-0": "Start with block A",
+    "pro-a-label": "A · About you",
+    "pro-name": "What's your name?",
+    "pro-business": "What's your business name?",
+    "pro-city": "City",
+    "pro-years": "Years in the trade",
+    "pro-phone": "Phone or WhatsApp",
+    "pro-email": "Email",
+    "select-city": "— Select —",
+    "select-property": "— Select —",
+    "other": "Other",
+    "pro-b-label": "B · How your business works today",
+    "pro-q1": "Tell us about a typical month. How many customers do you serve? How many services?",
+    "pro-q2": "What different services do you offer? Check all that apply.",
+    "pro-q2-hint": "If you do everything, check everything. Don't hold back.",
+    "cat-pool": "Pool service",
+    "cat-lawn": "Lawn care",
+    "cat-pest": "Pest control",
+    "cat-roof": "Roof maintenance",
+    "cat-pw": "Pressure washing",
+    "cat-gutter": "Gutter cleaning",
+    "cat-ext": "Exterior cleaning",
+    "cat-hurricane": "Hurricane prep",
+    "cat-gen": "Generator service",
+    "cat-tree": "Tree service",
+    "cat-clean": "Indoor cleaning",
+    "cat-ac-full": "A/C maintenance",
+    "pro-q3": "Of all the services you offer, which one generates the most income today?",
+    "pro-q4": "How do you find new customers today?",
+    "pro-q4-hint": "Referrals, Facebook, NextDoor, Google, ads, walk-by, etc.",
+    "pro-q5": "Is your income stable month to month or does it vary a lot? Tell us about your worst month last year.",
+    "pro-q6": "How do you charge customers? What method do you prefer and why?",
+    "pro-q6-hint": "Cash, Zelle, Venmo, wire, check, card.",
+    "pro-q7": "Of your current customers, what percentage are recurring (call you several times a year) vs one-time?",
+    "recur-1": "Few recurring (less than 25%)",
+    "recur-2": "A quarter to half (25–50%)",
+    "recur-3": "Most are recurring (50–75%)",
+    "recur-4": "Almost all are recurring (more than 75%)",
+    "pro-c-label": "C · Pains and frustrations",
+    "pro-q8": "What's the biggest problem you have running your business? What keeps you up at night?",
+    "pro-q9": "How do you share prices and services with a new customer?",
+    "pro-q9-hint": "PDF, WhatsApp, photo of flyer, word of mouth, etc.",
+    "pro-q10": "Have you ever thought about charging your recurring customers a flat monthly fee instead of per visit?",
+    "thought-1": "Yes, I've thought about it but didn't know how",
+    "thought-2": "I tried but it didn't work",
+    "thought-3": "Yes, I already do it with some customers",
+    "thought-4": "No, I hadn't thought about it",
+    "pro-q11": "If you could change ONE thing about how you work today, what would it be?",
+    "pro-d-label": "D · Reaction to the concept",
+    "pitch-label": "What we're thinking",
+    "pro-pitch": "A platform where you'd have a private page with your service catalog and prices. You generate a link and QR code to share with your customers. When they scan it, they see your storefront, your contact info, and can subscribe to a monthly plan with you. For example, $129/month for scheduled maintenance. The platform charges automatically each month and deposits the money. We keep 10%. You decide prices, services, plans. And you can combine multiple services in a single plan.",
+    "pro-q12": "What's your first reaction? What do you like? What doesn't convince you?",
+    "pro-q13": "If you had this platform today, how many of your current customers do you think would subscribe to a monthly plan?",
+    "pro-q14": "Imagine a monthly plan that combines SEVERAL of your services for the same customer. For example: bi-weekly lawn + semi-annual gutter cleaning + quarterly pressure washing. How much would you charge per month for that combined plan?",
+    "pro-q15": "Do you think your customers would see a combined plan as better value than paying per service? Why?",
+    "pro-q16": "The 10% commission — does it seem fair, too low, or too high?",
+    "fee-1": "Fair, worth it for what it offers",
+    "fee-2": "Too low, it's too cheap",
+    "fee-3": "Too high, I wouldn't pay that much",
+    "fee-4": "Depends, I need to see more details",
+    "pro-q17": "What would stop you from using something like this? What would make you distrust it?",
+    "pro-e-label": "E · Closing and commitment",
+    "pro-q18": "If we launch this in the next 60 days in SW Florida, would you be willing to try it as one of the first 5 pilot providers?",
+    "pilot-1": "Yes, I'm interested in trying it",
+    "pilot-2": "Maybe, depends on what I see",
+    "pilot-3": "No, I'd rather wait",
+    "pro-q19": "Do you know other service professionals in SW Florida we should also interview?",
+    "pro-q19-hint": "If you can give us 1-2 names and phones, we'd really appreciate it.",
+    "pro-q20": "Want us to let you know when it's ready to try?",
+    "notify-1": "Yes, by WhatsApp",
+    "notify-2": "Yes, by email",
+    "notify-3": "No, thanks",
+    "submit-pro": "Submit answers",
+    "submit-pro-note": "By submitting, you accept that MacLorian X Group will use your answers anonymously to design the product. We'll only use your contact info if you accepted to be notified.",
+    "cli-title": "How do you handle home maintenance?",
+    "cli-intro": "20 questions. What you answer helps us decide whether we build this or not. Unfiltered — we want to know how it really is.",
+    "cli-progress-0": "Start with block A",
+    "cli-a-label": "A · About you and your property",
+    "cli-name": "What's your name?",
+    "cli-city": "City",
+    "cli-property": "Property type",
+    "prop-1": "Single-family home",
+    "prop-2": "Villa",
+    "prop-3": "Townhouse",
+    "prop-4": "Condo",
+    "cli-pool": "Does your property have a pool?",
+    "yes": "Yes",
+    "no": "No",
+    "cli-years": "How many years have you lived in Florida?",
+    "cli-phone": "Phone or WhatsApp",
+    "cli-email": "Email",
+    "cli-b-label": "B · How you handle your home today",
+    "cli-q1": "What services do you regularly hire for your home?",
+    "cli-q2": "For the services you hire, do you always call the same provider or do you switch often?",
+    "loyal-1": "I have fixed providers for everything",
+    "loyal-2": "Some fixed, others I switch",
+    "loyal-3": "I switch often, shopping for price each time",
+    "cli-q3": "Do you have ONE trusted handyman or tech who handles several things, or a different one for each service?",
+    "cli-q4": "About how much do you spend per month on home maintenance?",
+    "spend-1": "Less than $100",
+    "spend-5": "More than $1,000",
+    "cli-q5": "Tell us about the last time something broke at your home and you had to call an emergency tech. What happened?",
+    "cli-c-label": "C · Pains and frustrations",
+    "cli-q6": "What's most frustrating about maintaining your home? Whether it's with techs, costs, or time.",
+    "cli-q7": "Has it happened that a tech doesn't show up when you need them, especially during hurricane season?",
+    "cli-q8": "How do you find out about prices when you call someone new? Does it feel clear?",
+    "cli-q9": "Have you ever been surprised by the final price of a service? Tell us.",
+    "cli-q10": "If you could change ONE thing about how you handle home maintenance, what would it be?",
+    "cli-d-label": "D · Reaction to the concept",
+    "cli-pitch": "Imagine your trusted tech gives you a QR code. You scan it and see their catalog: clear prices, included services, and a monthly plan. For example, $129/month gets you guaranteed quarterly maintenance, priority on emergencies, and a discount on repairs. You pay by card once and it charges automatically each month. Your tech gets the money, you get guaranteed service. If you're not happy, you cancel in one click.",
+    "cli-q11": "What's your first reaction? Do you like it, does it confuse you, raise doubts?",
+    "cli-q12": "If your current tech offered this to you tomorrow, would you subscribe?",
+    "sub-1": "Yes, I'm interested",
+    "sub-2": "Maybe, depends on price",
+    "sub-3": "No, I prefer pay-per-visit",
+    "cli-q13": "How much would you pay per month for each of these services? Put the number that would make sense for you.",
+    "cli-q13-hint": "Only the ones that interest you, leave the rest blank.",
+    "cli-q14": "And if instead of separate providers, ONE trusted provider offered you a plan combining SEVERAL services (e.g., lawn + gutters + pressure washing + exterior cleaning), would you pay more for the convenience of one contact and one bill?",
+    "cli-q15": "If you had a monthly plan with your tech, what would you expect in return? What would make you feel it's worth it?",
+    "cli-q16": "What would stop you from subscribing to something like this? What would make you distrust it?",
+    "cli-q17": 'Florida-specific: would you pay a special "hurricane prep" plan every May, including roof, window, and generator inspection, plus priority if something happens? How much?',
+    "cli-e-label": "E · Closing",
+    "cli-q18": "Do you know any trusted tech or provider you'd recommend we also interview?",
+    "cli-q19": "Would you like us to let you know when this is ready, to try it with your trusted tech?",
+    "submit-cli": "Submit answers",
+    "submit-cli-note": "By submitting, you accept that MacLorian X Group will use your answers anonymously to design the product.",
+    "success-title": "Thank you.",
+    "success-msg": "Your answers are with us now. What you said will directly shape how we build this.",
+    "success-msg2": "If you gave us your contact and accepted to be notified, we'll write when we're ready for the first pilots in SW Florida.",
+    "success-next-label": "And if you know someone else who should answer this, share the link:",
+    "success-btn": "Back to start",
+    "footer-note": "This is market research. We're not selling anything.",
+    "err-required": "This field is required.",
+    "submitting": "Submitting..."
   }
 };
 
-// ============================================================
-// CATEGORIAS (12)
-// ============================================================
-const CATEGORIES = [
-  { id: 'lawn',      es: 'Lawn care (jardin)',     en: 'Lawn care' },
-  { id: 'pool',      es: 'Pool service (piscina)', en: 'Pool service' },
-  { id: 'ac_hvac',   es: 'A/C & HVAC',             en: 'A/C & HVAC' },
-  { id: 'roof',      es: 'Roof maintenance',       en: 'Roof maintenance' },
-  { id: 'pressure',  es: 'Pressure washing',       en: 'Pressure washing' },
-  { id: 'gutter',    es: 'Gutter cleaning',        en: 'Gutter cleaning' },
-  { id: 'pest',      es: 'Pest control',           en: 'Pest control' },
-  { id: 'exterior',  es: 'Exterior cleaning',      en: 'Exterior cleaning' },
-  { id: 'hurricane', es: 'Hurricane prep',         en: 'Hurricane prep' },
-  { id: 'handyman',  es: 'Handyman',               en: 'Handyman' },
-  { id: 'generator', es: 'Generator service',      en: 'Generator service' },
-  { id: 'tree',      es: 'Tree service',           en: 'Tree service' }
-];
+let currentLang = 'es';
 
-const CITIES = ['Cape Coral', 'Fort Myers', 'Naples', 'Bonita Springs', 'Estero', 'Lehigh Acres', 'Otro'];
-const CITIES_EN = ['Cape Coral', 'Fort Myers', 'Naples', 'Bonita Springs', 'Estero', 'Lehigh Acres', 'Other'];
-const SOURCES = [
-  { value: 'Referido',       es: 'Referido (alguien me mando el link)', en: 'Referral (someone sent me the link)' },
-  { value: 'NextDoor',       es: 'NextDoor',           en: 'NextDoor' },
-  { value: 'Facebook Group', es: 'Grupo de Facebook',  en: 'Facebook group' },
-  { value: 'Walk-in',        es: 'Lo encontre en persona', en: 'Met someone in person' },
-  { value: 'Google Maps',    es: 'Google',             en: 'Google' },
-  { value: 'Otro',           es: 'Otro',               en: 'Other' }
-];
-
-// ============================================================
-// PREGUNTAS - PROVEEDOR (20)
-// ============================================================
-const QUESTIONS_PROVEEDOR = [
-  // A - Sobre ti
-  { id: 'nombre', section: 'A', type: 'text', required: true,
-    label: { es: '¿Cual es tu nombre completo?', en: "What's your full name?" },
-    help:  { es: 'Para que sepamos a quien le agradecemos.', en: 'So we know who to thank.' },
-    placeholder: { es: 'Juan Perez', en: 'John Smith' } },
-  { id: 'negocio', section: 'A', type: 'text', required: true,
-    label: { es: '¿Como se llama tu negocio?', en: "What's your business name?" },
-    placeholder: { es: 'Cape Strong Lawn Care', en: 'Cape Strong Lawn Care' } },
-  { id: 'ciudad', section: 'A', type: 'select', required: true,
-    label: { es: '¿En que ciudad operas principalmente?', en: 'What city do you mainly operate in?' },
-    options: CITIES.map((c, i) => ({ value: c, es: c, en: CITIES_EN[i] })) },
-  { id: 'contacto', section: 'A', type: 'contacto', required: true,
-    label: { es: '¿Como te contactamos?', en: 'How do we reach you?' },
-    help:  { es: 'Telefono requerido. Email opcional pero ayuda para coordinar.',
-             en: 'Phone required. Email optional but helps us coordinate.' } },
-
-  // B - Tu negocio hoy
-  { id: 'categorias_proveedor', section: 'B', type: 'chips', required: true,
-    label: { es: '¿Que categorias de servicio ofreces?', en: 'Which service categories do you offer?' },
-    help:  { es: 'Marca todas las que apliquen. La primera que toques cuenta como tu categoria principal.',
-             en: 'Tap all that apply. The first one you tap counts as your main category.' },
-    options: CATEGORIES.map(c => ({ value: c.id, es: c.es, en: c.en })) },
-  { id: 'anos_operando', section: 'B', type: 'radio', required: true,
-    label: { es: '¿Cuantos años llevas operando?', en: 'How many years have you been operating?' },
-    options: [
-      { value: '0-1',  es: 'Menos de 1 año', en: 'Less than 1 year' },
-      { value: '2-5',  es: '2 a 5 años',     en: '2 to 5 years' },
-      { value: '6-10', es: '6 a 10 años',    en: '6 to 10 years' },
-      { value: '10+',  es: 'Mas de 10 años', en: 'More than 10 years' }
-    ] },
-  { id: 'clientes_activos', section: 'B', type: 'radio', required: true,
-    label: { es: 'Aproximadamente, ¿cuantos clientes activos tienes hoy?', en: 'Roughly, how many active clients do you have today?' },
-    options: [
-      { value: '<10',     es: 'Menos de 10', en: 'Less than 10' },
-      { value: '10-50',   es: '10 a 50',     en: '10 to 50' },
-      { value: '50-200',  es: '50 a 200',    en: '50 to 200' },
-      { value: '200+',    es: 'Mas de 200',  en: 'More than 200' }
-    ] },
-  { id: 'modelo_negocio', section: 'B', type: 'radio', required: true,
-    label: { es: '¿Como es tu modelo hoy?', en: "What's your model today?" },
-    options: [
-      { value: 'puntuales',         es: 'Solo trabajos puntuales',          en: 'Only one-off jobs' },
-      { value: 'mayoria_puntuales', es: 'Mayoria puntuales, algunos recurrentes', en: 'Mostly one-off, some recurring' },
-      { value: 'mayoria_recurrentes', es: 'Mayoria recurrentes',            en: 'Mostly recurring' },
-      { value: 'todos_recurrentes', es: 'Todos recurrentes',                en: 'All recurring' }
-    ] },
-
-  // C - Que te frustra
-  { id: 'dolor_principal', section: 'C', type: 'textarea', required: true,
-    label: { es: '¿Cual es tu mayor dolor de cabeza con el negocio hoy?',
-             en: "What's your biggest headache with the business today?" },
-    help:  { es: 'Cuentanos como si estuvieramos tomando un cafe. Mientras mas honesto, mas util.',
-             en: "Tell us like we're grabbing coffee. The more honest, the more useful." },
-    placeholder: { es: 'Por ejemplo: que tengo que correr detras de la gente para que me pague, que en verano no se que hacer con el equipo...',
-                   en: 'For example: chasing people to get paid, not knowing what to do with the crew in summer...' } },
-  { id: 'problemas_facturacion', section: 'C', type: 'radio', required: true,
-    label: { es: '¿Tienes problemas con cobros recurrentes o facturacion?', en: 'Any problems with recurring billing or invoicing?' },
-    options: [
-      { value: 'si_mucho', es: 'Si, mucho',     en: 'Yes, a lot' },
-      { value: 'a_veces',  es: 'A veces',       en: 'Sometimes' },
-      { value: 'no_fluye', es: 'No, fluye bien', en: 'No, it runs fine' }
-    ] },
-  { id: 'dificultad_clientes', section: 'C', type: 'radio', required: true,
-    label: { es: '¿Que tan dificil es conseguir clientes nuevos?', en: 'How hard is it to get new clients?' },
-    options: [
-      { value: 'muy_dificil', es: 'Muy dificil',  en: 'Very hard' },
-      { value: 'algo',        es: 'Algo dificil', en: 'Somewhat hard' },
-      { value: 'no_tema',     es: 'No es un tema', en: 'Not really an issue' }
-    ] },
-  { id: 'baja_temporada', section: 'C', type: 'radio', required: true,
-    label: { es: '¿Que parte del año es baja temporada para ti?', en: 'What share of the year is low season for you?' },
-    options: [
-      { value: '<10%',  es: 'Casi nada (<10%)',     en: 'Almost none (<10%)' },
-      { value: '10-30%', es: '10% - 30%',           en: '10% - 30%' },
-      { value: '30-60%', es: '30% - 60%',           en: '30% - 60%' },
-      { value: '>60%',  es: 'Mucho (mas de 60%)',   en: 'A lot (more than 60%)' }
-    ] },
-
-  // D - La idea (with pitch)
-  { id: '_pitch', section: 'D', type: 'pitch', subtype: 'proveedor' },
-  { id: 'receptividad_membresia', section: 'D', type: 'slider', required: true,
-    label: { es: 'Despues de leer la idea, ¿que tanto te interesa?', en: 'After reading the idea, how interested are you?' },
-    min: 1, max: 10, default: 5,
-    anchorLow:  { es: '1 = nada', en: '1 = not at all' },
-    anchorHigh: { es: '10 = quiero ser de los primeros', en: '10 = I want to be among the first' } },
-  { id: 'disposicion_bundles', section: 'D', type: 'radio', required: true,
-    label: { es: '¿Te interesa combinar tu servicio con otros (lawn + pressure washing, pool + A/C, etc.)?',
-             en: 'Want to bundle your service with others (lawn + pressure washing, pool + A/C, etc.)?' },
-    options: [
-      { value: 'definitivamente_si', es: 'Definitivamente si',  en: 'Definitely yes' },
-      { value: 'tal_vez_depende',    es: 'Tal vez, depende',    en: 'Maybe, depends' },
-      { value: 'no_me_veo',          es: 'No me veo ahi',       en: 'Not for me' }
-    ] },
-  { id: 'precio_aceptable', section: 'D', type: 'text', required: true,
-    label: { es: '¿Que precio mensual base te parece justo cobrar por tu servicio en un plan recurrente?',
-             en: 'What monthly base price seems fair for your service in a recurring plan?' },
-    help: { es: 'Ej: $89/mes lawn, $129/mes pool, $199/mes lawn + pressure.',
-            en: 'e.g.: $89/mo lawn, $129/mo pool, $199/mo lawn + pressure.' },
-    placeholder: { es: '$89/mes lawn, $199/mes bundle...', en: '$89/mo lawn, $199/mo bundle...' } },
-  { id: 'interes_hurricane', section: 'D', type: 'radio', required: true,
-    label: { es: '¿Te interesa ofrecer un paquete especial Hurricane Prep en temporada (Mayo-Octubre)?',
-             en: 'Interested in offering a special Hurricane Prep package in season (May-October)?' },
-    options: [
-      { value: 'mucho', es: 'Mucho',  en: 'A lot' },
-      { value: 'algo',  es: 'Algo',   en: 'Some' },
-      { value: 'nada',  es: 'Nada',   en: 'Not at all' }
-    ] },
-  { id: 'comision_aceptable', section: 'D', type: 'radio', required: true,
-    label: { es: 'Si MacLorian pone app, marketing, cobros automaticos y soporte... ¿aceptarias 10% de comision sobre lo cobrado por la plataforma?',
-             en: 'If MacLorian provides app, marketing, automatic billing and support... would you accept a 10% commission on platform revenue?' },
-    options: [
-      { value: 'si_sentido',     es: 'Si, tiene sentido',      en: 'Yes, makes sense' },
-      { value: 'depende_volumen', es: 'Depende del volumen',   en: 'Depends on volume' },
-      { value: 'no_mucho',       es: 'No, es mucho',           en: 'No, that is too much' }
-    ] },
-
-  // E - Cierre
-  { id: 'compromiso_piloto', section: 'E', type: 'radio', required: true,
-    label: { es: '¿Estarias dispuesto a ser parte del piloto inicial (primeros 5 negocios en SW Florida)?',
-             en: 'Open to joining the initial pilot (first 5 businesses in SW Florida)?' },
-    options: [
-      { value: 'si',   es: 'Si, cuenten conmigo',          en: 'Yes, count me in' },
-      { value: 'quiza', es: 'Tal vez, mandame mas info',   en: 'Maybe, send more info' },
-      { value: 'no',   es: 'No, gracias',                  en: 'No thanks' }
-    ] },
-  { id: 'referidos', section: 'E', type: 'textarea', required: false,
-    label: { es: '¿Conoces a otros proveedores que podrian interesarse?',
-             en: 'Know any other providers who might be interested?' },
-    help:  { es: 'Nombre + telefono o como contactarlos. Opcional.',
-             en: 'Name + phone or how to reach them. Optional.' },
-    placeholder: { es: 'Mike de Lawn Hunters - 239-555-...',
-                   en: 'Mike from Lawn Hunters - 239-555-...' } },
-  { id: 'fuente', section: 'E', type: 'fuente_notas', required: true,
-    label: { es: '¿Como nos conociste?', en: 'How did you hear about us?' },
-    options: SOURCES }
-];
-
-// ============================================================
-// PREGUNTAS - CLIENTE (19)
-// ============================================================
-const QUESTIONS_CLIENTE = [
-  // A - Sobre ti
-  { id: 'nombre', section: 'A', type: 'text', required: true,
-    label: { es: '¿Cual es tu nombre?', en: "What's your name?" },
-    placeholder: { es: 'Maria Lopez', en: 'Mary Smith' } },
-  { id: 'ciudad', section: 'A', type: 'select', required: true,
-    label: { es: '¿En que ciudad esta tu casa principal?', en: 'Where is your main home?' },
-    options: CITIES.map((c, i) => ({ value: c, es: c, en: CITIES_EN[i] })) },
-  { id: 'contacto', section: 'A', type: 'contacto', required: true,
-    label: { es: '¿Como te contactamos?', en: 'How do we reach you?' },
-    help:  { es: 'Telefono requerido. Email opcional.',
-             en: 'Phone required. Email optional.' } },
-  { id: 'residencia', section: 'A', type: 'radio', required: true,
-    label: { es: '¿Como vives en SW Florida?', en: 'How do you live in SW Florida?' },
-    options: [
-      { value: 'full_time',   es: 'Vivo aqui todo el año (full-time)',     en: 'I live here year-round (full-time)' },
-      { value: 'snowbird',    es: 'Snowbird - vengo parte del año',        en: 'Snowbird - I come part of the year' },
-      { value: 'rental',      es: 'La uso como vacation rental',           en: 'I use it as a vacation rental' },
-      { value: 'mix',         es: 'Mixto / depende',                       en: 'Mixed / depends' }
-    ] },
-
-  // B - Tu casa hoy
-  { id: 'propiedades', section: 'B', type: 'radio', required: true,
-    label: { es: '¿Cuantas propiedades tienes en SW Florida?', en: 'How many properties do you own in SW Florida?' },
-    options: [
-      { value: '1',  es: '1',          en: '1' },
-      { value: '2',  es: '2',          en: '2' },
-      { value: '3+', es: '3 o mas',    en: '3 or more' }
-    ] },
-  { id: 'categorias_actuales', section: 'B', type: 'chips', required: true,
-    label: { es: '¿Que servicios de mantenimiento contratas hoy?',
-             en: 'Which maintenance services do you currently use?' },
-    help:  { es: 'Marca todos los que apliquen.', en: 'Tap all that apply.' },
-    options: CATEGORIES.map(c => ({ value: c.id, es: c.es, en: c.en })) },
-  { id: 'gasto_mensual_actual', section: 'B', type: 'radio', required: true,
-    label: { es: 'Aproximadamente, ¿cuanto gastas al mes en estos servicios?',
-             en: 'Roughly, how much do you spend per month on these services?' },
-    options: [
-      { value: '<200',     es: 'Menos de $200',      en: 'Less than $200' },
-      { value: '200-500',  es: '$200 - $500',        en: '$200 - $500' },
-      { value: '500-1000', es: '$500 - $1,000',      en: '$500 - $1,000' },
-      { value: '1000+',    es: 'Mas de $1,000',      en: 'More than $1,000' }
-    ] },
-  { id: 'num_proveedores', section: 'B', type: 'radio', required: true,
-    label: { es: '¿Cuantos proveedores diferentes manejas?',
-             en: 'How many different providers do you juggle?' },
-    options: [
-      { value: '1',   es: '1',         en: '1' },
-      { value: '2-3', es: '2 a 3',     en: '2 to 3' },
-      { value: '4-6', es: '4 a 6',     en: '4 to 6' },
-      { value: '7+',  es: '7 o mas',   en: '7 or more' }
-    ] },
-
-  // C - Que te frustra
-  { id: 'dolor_principal', section: 'C', type: 'textarea', required: true,
-    label: { es: '¿Cual es tu mayor frustracion con el mantenimiento de tu casa?',
-             en: "What's your biggest frustration with home maintenance?" },
-    help:  { es: 'Cuentanos honestamente. No hay respuestas malas.',
-             en: 'Tell us honestly. There are no bad answers.' },
-    placeholder: { es: 'Por ejemplo: nunca se acuerdan de venir, el de la piscina cobra muy caro...',
-                   en: 'For example: they never remember to show up, pool guy charges too much...' } },
-  { id: 'proveedores_confiables', section: 'C', type: 'radio', required: true,
-    label: { es: '¿Que tan dificil es encontrar proveedores confiables?',
-             en: 'How hard is it to find reliable providers?' },
-    options: [
-      { value: 'muy_dificil', es: 'Muy dificil',  en: 'Very hard' },
-      { value: 'algo',        es: 'Algo dificil', en: 'Somewhat hard' },
-      { value: 'no_tema',     es: 'No es un tema', en: 'Not really an issue' }
-    ] },
-  { id: 'olvidos_dano', section: 'C', type: 'radio', required: true,
-    label: { es: '¿Has tenido daños o sorpresas por olvidar contratar algun servicio a tiempo?',
-             en: 'Ever had damage or surprises from forgetting to book a service in time?' },
-    options: [
-      { value: 'si_pasado', es: 'Si, me ha pasado',   en: "Yes, it's happened to me" },
-      { value: 'casi',      es: 'Casi, por suerte no', en: "Almost, luckily not yet" },
-      { value: 'nunca',     es: 'Nunca',               en: 'Never' }
-    ] },
-  { id: 'molestia_coordinacion', section: 'C', type: 'slider', required: true,
-    label: { es: '¿Que tanto te molesta coordinar con varios proveedores diferentes?',
-             en: 'How much does coordinating with multiple providers bother you?' },
-    min: 1, max: 10, default: 5,
-    anchorLow:  { es: '1 = no me molesta', en: '1 = no big deal' },
-    anchorHigh: { es: '10 = me agota', en: '10 = drains me' } },
-
-  // D - La idea
-  { id: '_pitch', section: 'D', type: 'pitch', subtype: 'cliente' },
-  { id: 'receptividad_membresia', section: 'D', type: 'slider', required: true,
-    label: { es: 'Despues de leer la idea, ¿que tanto te interesa?', en: 'After reading the idea, how interested are you?' },
-    min: 1, max: 10, default: 5,
-    anchorLow:  { es: '1 = nada', en: '1 = not at all' },
-    anchorHigh: { es: '10 = quiero probarlo ya', en: '10 = I want to try it now' } },
-  { id: 'categorias_interes', section: 'D', type: 'chips', required: false,
-    label: { es: '¿Que servicios te gustaria incluir en tu plan ideal?',
-             en: 'Which services would you want in your ideal plan?' },
-    help:  { es: 'Imagina que el plan los puede combinar todos. Marca los que SI o SI quieres incluir.',
-             en: 'Imagine the plan can combine all of them. Tap the ones you definitely want.' },
-    options: CATEGORIES.map(c => ({ value: c.id, es: c.es, en: c.en })) },
-  { id: 'precio_aceptable', section: 'D', type: 'text', required: true,
-    label: { es: '¿Cuanto pagarias al mes por un plan all-inclusive?',
-             en: 'How much would you pay per month for an all-inclusive plan?' },
-    help:  { es: 'Una sola cuota mensual que cubra todo lo que marcaste arriba.',
-             en: 'A single monthly fee that covers everything you tapped above.' },
-    placeholder: { es: '$299/mes, $499/mes...', en: '$299/mo, $499/mo...' } },
-  { id: 'interes_hurricane', section: 'D', type: 'radio', required: true,
-    label: { es: '¿Te interesa especialmente la preparacion para huracan?',
-             en: 'Are you especially interested in hurricane prep?' },
-    options: [
-      { value: 'mucho', es: 'Mucho',  en: 'A lot' },
-      { value: 'algo',  es: 'Algo',   en: 'Some' },
-      { value: 'nada',  es: 'Nada',   en: 'Not at all' }
-    ] },
-  { id: 'garantia_premium', section: 'D', type: 'radio', required: true,
-    label: { es: '¿Pagarias mas por proveedores verificados y garantia de respuesta en 24h?',
-             en: 'Would you pay more for verified providers with a 24h response guarantee?' },
-    options: [
-      { value: 'si',     es: 'Si, vale la pena',         en: 'Yes, worth it' },
-      { value: 'depende', es: 'Depende del precio',      en: 'Depends on the price' },
-      { value: 'no',     es: 'No me importa, busco precio', en: "Don't care, I shop on price" }
-    ] },
-
-  // E - Cierre
-  { id: 'compromiso_piloto', section: 'E', type: 'radio', required: true,
-    label: { es: '¿Aceptarias ser parte del piloto y darnos feedback durante 3 meses?',
-             en: 'Would you join the pilot and give feedback for 3 months?' },
-    options: [
-      { value: 'si',    es: 'Si, me apunto',         en: 'Yes, count me in' },
-      { value: 'quiza', es: 'Tal vez, mandame info', en: 'Maybe, send info' },
-      { value: 'no',    es: 'No, gracias',           en: 'No thanks' }
-    ] },
-  { id: 'fuente', section: 'E', type: 'fuente_notas', required: true,
-    label: { es: '¿Como nos conociste?', en: 'How did you hear about us?' },
-    options: SOURCES }
-];
-
-const SECTION_ORDER = ['A', 'B', 'C', 'D', 'E'];
-
-// ============================================================
-// STATE
-// ============================================================
-const STORAGE_KEY = 'maclorian_draft_v1';
-const LANG_KEY = 'maclorian_lang';
-
-let state = {
-  lang: 'es',
-  tipo: null,            // 'proveedor' | 'cliente'
-  sectionIndex: 0,       // 0..4
-  answers: {}
-};
-
-const $ = (sel) => document.querySelector(sel);
-const $$ = (sel) => Array.from(document.querySelectorAll(sel));
-
-function t(key) {
-  return I18N[state.lang][key] ?? key;
-}
-
-function loadDraft() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch (e) { return null; }
-}
-
-function saveDraft() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      tipo: state.tipo,
-      sectionIndex: state.sectionIndex,
-      answers: state.answers,
-      ts: Date.now()
-    }));
-    showDraftToast();
-  } catch (e) { /* localStorage full or disabled */ }
-}
-
-function clearDraft() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-}
-
-let toastTimer;
-function showDraftToast() {
-  const toast = $('#draft-toast');
-  if (!toast) return;
-  toast.classList.add('visible');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('visible'), 1500);
-}
-
-// ============================================================
-// LANG
-// ============================================================
-function applyLang() {
-  document.documentElement.lang = state.lang;
-  $('#lang-toggle').textContent = state.lang === 'es' ? 'EN' : 'ES';
-  $$('[data-i18n]').forEach(el => {
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    el.textContent = t(key);
+    const val = TRANSLATIONS[lang][key];
+    if (val !== undefined) {
+      if (val.includes('<')) el.innerHTML = val;
+      else el.textContent = val;
+    }
   });
-  // re-render form if visible
-  if ($('#screen-form').classList.contains('active')) {
-    renderForm();
-  }
+  document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  try { localStorage.setItem('lang', lang); } catch(e) {}
 }
 
-function toggleLang() {
-  state.lang = state.lang === 'es' ? 'en' : 'es';
-  try { localStorage.setItem(LANG_KEY, state.lang); } catch (e) {}
-  applyLang();
-}
+(function loadLang(){
+  try {
+    const stored = localStorage.getItem('lang');
+    if (stored) setLang(stored);
+    else if (navigator.language && navigator.language.startsWith('en')) setLang('en');
+  } catch(e) {}
+})();
 
-// ============================================================
-// RENDER
-// ============================================================
-function getQuestions() {
-  return state.tipo === 'proveedor' ? QUESTIONS_PROVEEDOR : QUESTIONS_CLIENTE;
-}
-
-function getSectionTitle(section) {
-  if (section === 'B') return t(`section.B_${state.tipo}`);
-  return t(`section.${section}`);
-}
-
-function renderQuestion(q) {
-  if (q.type === 'pitch') {
-    return `
-      <div class="pitch-box">
-        <h3>${t(`pitch.${q.subtype}.title`)}</h3>
-        <p>${t(`pitch.${q.subtype}.body`)}</p>
-      </div>
-    `;
-  }
-
-  const reqTag = q.required
-    ? `<span class="q-tag required">${t('form.required')}</span>`
-    : `<span class="q-tag">${t('form.optional')}</span>`;
-  const label = q.label[state.lang];
-  const help = q.help ? `<p class="q-help">${q.help[state.lang]}</p>` : '';
-  const errorMsg = `<p class="form-error-msg" id="err-${q.id}">${t('form.error_required')}</p>`;
-  const value = state.answers[q.id];
-
-  let body = '';
-
-  if (q.type === 'text' || q.type === 'email' || q.type === 'tel') {
-    const placeholder = q.placeholder ? q.placeholder[state.lang] : '';
-    body = `<input type="${q.type}" name="${q.id}" id="f-${q.id}" placeholder="${esc(placeholder)}" value="${esc(value || '')}">`;
-  } else if (q.type === 'textarea') {
-    const placeholder = q.placeholder ? q.placeholder[state.lang] : '';
-    body = `<textarea name="${q.id}" id="f-${q.id}" placeholder="${esc(placeholder)}">${esc(value || '')}</textarea>`;
-  } else if (q.type === 'select') {
-    const opts = q.options.map(o =>
-      `<option value="${esc(o.value)}" ${value === o.value ? 'selected' : ''}>${esc(o[state.lang])}</option>`
-    ).join('');
-    body = `<select name="${q.id}" id="f-${q.id}"><option value="">—</option>${opts}</select>`;
-  } else if (q.type === 'radio') {
-    const cols = q.options.length === 4 ? 'cols-2' : (q.options.length === 3 ? 'cols-3' : 'cols-2');
-    body = `<div class="options ${cols}">` + q.options.map(o => `
-      <label class="option">
-        <input type="radio" name="${q.id}" value="${esc(o.value)}" ${value === o.value ? 'checked' : ''}>
-        <span class="option-dot"></span>
-        <span class="option-label">${esc(o[state.lang])}</span>
-      </label>
-    `).join('') + `</div>`;
-  } else if (q.type === 'chips') {
-    const arr = Array.isArray(value) ? value : [];
-    body = `<div class="chips">` + q.options.map(o => `
-      <label class="chip">
-        <input type="checkbox" name="${q.id}" value="${esc(o.value)}" ${arr.includes(o.value) ? 'checked' : ''}>
-        <span>${esc(o[state.lang])}</span>
-      </label>
-    `).join('') + `</div>`;
-  } else if (q.type === 'slider') {
-    const v = value ?? q.default;
-    body = `
-      <div class="slider-wrap">
-        <div class="slider-value-row">
-          <span class="slider-value" id="sv-${q.id}">${v}</span>
-          <span style="color: var(--muted); font-size: .9rem">/ ${q.max}</span>
-        </div>
-        <input type="range" name="${q.id}" id="f-${q.id}" min="${q.min}" max="${q.max}" value="${v}">
-        <div class="slider-anchors">
-          <span>${q.anchorLow[state.lang]}</span>
-          <span>${q.anchorHigh[state.lang]}</span>
-        </div>
-      </div>
-    `;
-  } else if (q.type === 'contacto') {
-    const phone = state.answers.telefono || '';
-    const email = state.answers.email || '';
-    body = `
-      <div class="input-row split">
-        <input type="tel" name="telefono" id="f-telefono" placeholder="${state.lang === 'es' ? 'Telefono *' : 'Phone *'}" value="${esc(phone)}">
-        <input type="email" name="email" id="f-email" placeholder="${state.lang === 'es' ? 'Email (opcional)' : 'Email (optional)'}" value="${esc(email)}">
-      </div>
-      <p class="form-error-msg" id="err-email">${t('form.error_email')}</p>
-    `;
-  } else if (q.type === 'fuente_notas') {
-    const opts = q.options.map(o =>
-      `<option value="${esc(o.value)}" ${value === o.value ? 'selected' : ''}>${esc(o[state.lang])}</option>`
-    ).join('');
-    const notas = state.answers.notas || '';
-    body = `
-      <select name="${q.id}" id="f-${q.id}"><option value="">—</option>${opts}</select>
-      <p class="q-help" style="margin-top: 14px">${state.lang === 'es' ? 'Cualquier comentario adicional (opcional):' : 'Any additional comments (optional):'}</p>
-      <textarea name="notas" id="f-notas" placeholder="${state.lang === 'es' ? 'Lo que quieras decirnos...' : 'Anything else you want to share...'}">${esc(notas)}</textarea>
-    `;
-  }
-
-  if (q.type === 'pitch') return body;
-
-  return `
-    <div class="question" data-q="${q.id}">
-      <label class="q-label" for="f-${q.id}">${esc(label)}${reqTag}</label>
-      ${help}
-      ${body}
-      ${errorMsg}
-    </div>
-  `;
-}
-
-function renderForm() {
-  const questions = getQuestions();
-  const currentSection = SECTION_ORDER[state.sectionIndex];
-  const sectionQuestions = questions.filter(q => q.section === currentSection);
-
-  $('#progress-section').textContent = `${t('section.code')} ${currentSection}`;
-  $('#progress-section-name').textContent = getSectionTitle(currentSection);
-  const pct = Math.round(((state.sectionIndex) / SECTION_ORDER.length) * 100);
-  $('#progress-pct').textContent = `${pct}%`;
-  $('#progress-fill').style.width = `${pct}%`;
-
-  const isLast = state.sectionIndex === SECTION_ORDER.length - 1;
-  $('#btn-next').style.display = isLast ? 'none' : '';
-  $('#btn-submit').style.display = isLast ? '' : 'none';
-  $('#btn-back').style.visibility = state.sectionIndex === 0 ? 'hidden' : 'visible';
-
-  const sectionHeader = `
-    <div class="section-header">
-      <p class="section-eyebrow">${t('section.code')} ${currentSection} · ${state.sectionIndex + 1}/${SECTION_ORDER.length}</p>
-      <h2>${esc(getSectionTitle(currentSection))}</h2>
-    </div>
-  `;
-
-  $('#form-content').innerHTML = sectionHeader + sectionQuestions.map(renderQuestion).join('');
-  $('#form-error').classList.remove('visible');
-
-  attachInputListeners();
+function showForm(type) {
+  document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+  if (type === 'provider') document.getElementById('provider-form').classList.add('active');
+  else if (type === 'client') document.getElementById('client-form').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function attachInputListeners() {
-  $$('#form-content input, #form-content textarea, #form-content select').forEach(el => {
-    const handler = () => collectInput(el);
-    el.addEventListener('input', handler);
-    el.addEventListener('change', handler);
-    if (el.type === 'range') {
-      el.addEventListener('input', () => {
-        const sv = $(`#sv-${el.name}`);
-        if (sv) sv.textContent = el.value;
+function goHome(e) {
+  if (e) e.preventDefault();
+  document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress(formId, progressId, textId, pctId) {
+  const form = document.getElementById(formId);
+  const inputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select, textarea');
+  let filled = 0;
+  inputs.forEach(i => { if (i.value && i.value.trim()) filled++; });
+  const radios = form.querySelectorAll('input[type="radio"]:checked').length;
+  const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked').length > 0 ? 1 : 0;
+  const total = inputs.length + form.querySelectorAll('[data-radio-group]').length + 1;
+  const score = filled + radios + checkboxes;
+  const pct = Math.min(100, Math.round((score / Math.max(inputs.length * 0.6, 1)) * 100));
+  document.getElementById(progressId).style.width = pct + '%';
+  document.getElementById(pctId).textContent = pct + '%';
+}
+
+['provider-questionnaire', 'client-questionnaire'].forEach(formId => {
+  const form = document.getElementById(formId);
+  if (!form) return;
+  const isPro = formId === 'provider-questionnaire';
+  form.addEventListener('input', () => {
+    updateProgress(
+      formId,
+      isPro ? 'pro-progress' : 'cli-progress',
+      isPro ? 'pro-progress-text' : 'cli-progress-text',
+      isPro ? 'pro-progress-pct' : 'cli-progress-pct'
+    );
+  });
+  form.addEventListener('change', () => {
+    updateProgress(
+      formId,
+      isPro ? 'pro-progress' : 'cli-progress',
+      isPro ? 'pro-progress-text' : 'cli-progress-text',
+      isPro ? 'pro-progress-pct' : 'cli-progress-pct'
+    );
+  });
+});
+
+document.querySelectorAll('.scale').forEach(scale => {
+  scale.addEventListener('click', e => {
+    if (e.target.classList.contains('scale-btn')) {
+      const parent = e.target.parentElement;
+      parent.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+      e.target.classList.add('selected');
+      const hidden = parent.parentElement.querySelector('input[type="hidden"]');
+      if (hidden) hidden.value = e.target.dataset.value;
+    }
+  });
+});
+
+function collectFormData(form, type) {
+  const data = { type, lang: currentLang, submittedAt: new Date().toISOString(), source: window.location.href };
+  const fd = new FormData(form);
+  for (const [key, value] of fd.entries()) {
+    if (data[key]) {
+      if (Array.isArray(data[key])) data[key].push(value);
+      else data[key] = [data[key], value];
+    } else {
+      data[key] = value;
+    }
+  }
+  return data;
+}
+
+const ENDPOINT_URL = '/api/submit';
+
+async function submitForm(form, type, btn) {
+  const errors = [];
+  form.querySelectorAll('.q').forEach(q => q.classList.remove('field-error'));
+  form.querySelectorAll('[required]').forEach(el => {
+    if (!el.value || (el.type === 'radio' && !form.querySelector(`input[name="${el.name}"]:checked`))) {
+      const q = el.closest('.q');
+      if (q) q.classList.add('field-error');
+      errors.push(el.name);
+    }
+  });
+  if (errors.length > 0) {
+    const firstErr = form.querySelector('.field-error');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const data = collectFormData(form, type);
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = TRANSLATIONS[currentLang]['submitting'];
+
+  try {
+    if (ENDPOINT_URL) {
+      const res = await fetch(ENDPOINT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
       });
-    }
-  });
-}
-
-function collectInput(el) {
-  const name = el.name;
-  if (!name) return;
-  if (el.type === 'checkbox') {
-    const all = $$(`#form-content input[name="${name}"]:checked`).map(x => x.value);
-    state.answers[name] = all;
-  } else if (el.type === 'radio') {
-    if (el.checked) state.answers[name] = el.value;
-  } else if (el.type === 'range') {
-    state.answers[name] = parseInt(el.value, 10);
-  } else {
-    state.answers[name] = el.value;
-  }
-  saveDraft();
-}
-
-function collectAll() {
-  // Collect everything currently visible (in case user changed without blur)
-  $$('#form-content input, #form-content textarea, #form-content select').forEach(collectInput);
-}
-
-function esc(s) {
-  return String(s ?? '').replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[c]));
-}
-
-// ============================================================
-// VALIDATION
-// ============================================================
-function validateCurrentSection() {
-  collectAll();
-  const questions = getQuestions();
-  const currentSection = SECTION_ORDER[state.sectionIndex];
-  const sectionQuestions = questions.filter(q => q.section === currentSection && q.type !== 'pitch');
-
-  let firstInvalid = null;
-  sectionQuestions.forEach(q => {
-    const el = document.querySelector(`[data-q="${q.id}"]`);
-    if (!el) return;
-    el.classList.remove('invalid');
-
-    if (!q.required) return;
-
-    const v = state.answers[q.id];
-
-    if (q.type === 'contacto') {
-      const tel = (state.answers.telefono || '').trim();
-      const email = (state.answers.email || '').trim();
-      if (!tel) { el.classList.add('invalid'); firstInvalid = firstInvalid || el; }
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        el.classList.add('invalid');
-        const errEl = el.querySelector('#err-email');
-        if (errEl) errEl.textContent = t('form.error_email');
-        firstInvalid = firstInvalid || el;
-      }
-      return;
+      if (!res.ok) throw new Error('Network error');
+    } else {
+      console.log('Form data (no endpoint configured):', data);
+      await new Promise(r => setTimeout(r, 800));
     }
 
-    if (q.type === 'fuente_notas') {
-      if (!v) { el.classList.add('invalid'); firstInvalid = firstInvalid || el; }
-      return;
-    }
-
-    if (q.type === 'chips') {
-      if (!Array.isArray(v) || v.length === 0) {
-        el.classList.add('invalid');
-        const errEl = el.querySelector('.form-error-msg');
-        if (errEl) errEl.textContent = t('form.error_min_select');
-        firstInvalid = firstInvalid || el;
-      }
-      return;
-    }
-
-    if (v === undefined || v === null || v === '') {
-      el.classList.add('invalid');
-      firstInvalid = firstInvalid || el;
-    }
-  });
-
-  if (firstInvalid) {
-    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-  return !firstInvalid;
-}
-
-// ============================================================
-// FLOW
-// ============================================================
-function startQuestionnaire(tipo) {
-  state.tipo = tipo;
-  state.sectionIndex = 0;
-  if (Object.keys(state.answers).length === 0) {
-    state.answers = {};
-  }
-  showScreen('form');
-  renderForm();
-}
-
-function showScreen(name) {
-  $$('.screen').forEach(s => s.classList.remove('active'));
-  $(`#screen-${name}`).classList.add('active');
-  window.scrollTo(0, 0);
-}
-
-function next() {
-  if (!validateCurrentSection()) return;
-  if (state.sectionIndex < SECTION_ORDER.length - 1) {
-    state.sectionIndex++;
-    saveDraft();
-    renderForm();
+    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('success').classList.add('active');
+    document.getElementById('share-url').textContent = window.location.origin + window.location.pathname;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    form.reset();
+  } catch(err) {
+    btn.disabled = false;
+    btn.textContent = originalText;
+    alert(currentLang === 'es' 
+      ? 'Hubo un problema enviando tus respuestas. Intenta de nuevo o escríbenos directamente a contact@maclorianxgroup.com.' 
+      : 'There was a problem sending your answers. Try again or write to us at contact@maclorianxgroup.com.');
   }
 }
 
-function back() {
-  if (state.sectionIndex > 0) {
-    state.sectionIndex--;
-    saveDraft();
-    renderForm();
-  }
-}
-
-async function submit(e) {
+document.getElementById('provider-questionnaire').addEventListener('submit', e => {
   e.preventDefault();
-  if (!validateCurrentSection()) return;
+  submitForm(e.target, 'provider', e.target.querySelector('button[type="submit"]'));
+});
+document.getElementById('client-questionnaire').addEventListener('submit', e => {
+  e.preventDefault();
+  submitForm(e.target, 'client', e.target.querySelector('button[type="submit"]'));
+});
 
-  const submitBtn = $('#btn-submit');
-  const originalText = submitBtn.textContent;
-  submitBtn.disabled = true;
-  submitBtn.textContent = t('form.sending');
-  $('#form-error').classList.remove('visible');
-
-  const payload = {
-    tipo: state.tipo,
-    lang: state.lang,
-    ...state.answers
-  };
-
-  try {
-    const res = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.ok) {
-      throw new Error(data.error || `HTTP ${res.status}`);
-    }
-    clearDraft();
-    state.answers = {};
-    showScreen('success');
-  } catch (err) {
-    console.error('submit failed:', err);
-    $('#form-error').textContent = t('form.error_submit');
-    $('#form-error').classList.add('visible');
-    submitBtn.disabled = false;
-    submitBtn.textContent = originalText;
-  }
-}
-
-function copyShareLink() {
-  const url = window.location.origin + window.location.pathname;
-  const fallback = () => {
-    const ta = document.createElement('textarea');
-    ta.value = url;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-  };
-  const after = () => {
-    const btn = $('#btn-share');
-    const orig = btn.textContent;
-    btn.textContent = t('success.copied');
-    setTimeout(() => { btn.textContent = orig; }, 1800);
-  };
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(after, () => { fallback(); after(); });
-  } else {
-    fallback(); after();
-  }
-}
-
-// ============================================================
-// INIT
-// ============================================================
-function init() {
-  try {
-    const savedLang = localStorage.getItem(LANG_KEY);
-    if (savedLang === 'es' || savedLang === 'en') state.lang = savedLang;
-  } catch (e) {}
-
-  applyLang();
-
-  $('#lang-toggle').addEventListener('click', toggleLang);
-
-  $$('[data-tipo]').forEach(card => {
-    card.addEventListener('click', () => {
-      const tipo = card.getAttribute('data-tipo');
-      const draft = loadDraft();
-      if (draft && draft.tipo === tipo && draft.answers && Object.keys(draft.answers).length > 0) {
-        const keepIt = confirm(state.lang === 'es'
-          ? '¿Quieres continuar el cuestionario que dejaste a medias?'
-          : 'Want to continue the questionnaire you started before?');
-        if (keepIt) {
-          state.answers = draft.answers;
-          state.sectionIndex = draft.sectionIndex || 0;
-        } else {
-          clearDraft();
-          state.answers = {};
-        }
-      }
-      startQuestionnaire(tipo);
-    });
-  });
-
-  $('#btn-next').addEventListener('click', next);
-  $('#btn-back').addEventListener('click', back);
-  $('#questionnaire').addEventListener('submit', submit);
-  $('#btn-share').addEventListener('click', copyShareLink);
-  $('#btn-again').addEventListener('click', () => {
-    state.answers = {};
-    state.sectionIndex = 0;
-    state.tipo = null;
-    showScreen('home');
-  });
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+window.setLang = setLang;
+window.showForm = showForm;
+window.goHome = goHome;
 </script>
 
 </body>
