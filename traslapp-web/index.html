@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="TRASLAPP — El Uber de los materiales de construcción. Pedí tierra, grava, piedra y asfalto desde una app. Precio fijo, tracking en tiempo real, sin llamadas.">
+<meta name="theme-color" content="#0F1735">
+<meta property="og:title" content="TRASLAPP · El Uber de los materiales de construcción">
+<meta property="og:description" content="Pedí material directo a la obra, sin llamar a 5 transportistas.">
+<meta property="og:type" content="website">
+<title>TRASLAPP · El Uber de los materiales de construcción</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/assets/logos/traslapp.svg">
+
+<style>
+:root {
+  --paper: #0F1735;
+  --surface: #131D43;
+  --surface-elev: #1B2750;
+  --ink: #FFFFFF;
+  --ink-soft: #C5CAE0;
+  --ink-mute: #8A91B0;
+  --rule: rgba(255, 255, 255, 0.08);
+  --navy-deep: #0F1735;
+  --navy: #1F2D5C;
+  --orange: #F39C0F;
+  --orange-light: #FFB938;
+  --orange-glow: rgba(243, 156, 15, 0.45);
+  --gold: #B5803F;
+  --ring: rgba(243, 156, 15, 0.45);
+  --gradient-cta: linear-gradient(135deg, #F39C0F 0%, #FFB938 100%);
+  --gradient-cta-hover: linear-gradient(135deg, #FFB938 0%, #FFCB5A 100%);
+  --gradient-text: linear-gradient(135deg, #FFB938 0%, #F39C0F 100%);
+  --shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 12px 40px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 0 1px rgba(243,156,15,0.4), 0 16px 48px rgba(243,156,15,0.25);
+  --radius: 10px;
+  --radius-lg: 20px;
+  --serif: 'Fraunces', 'Times New Roman', serif;
+  --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  background-image:
+    radial-gradient(ellipse 60% 50% at 8% 8%, rgba(31, 45, 92, 0.85) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 92% 22%, rgba(243, 156, 15, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 50% at 95% 88%, rgba(31, 45, 92, 0.75) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 40% at 25% 95%, rgba(243, 156, 15, 0.15) 0%, transparent 70%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; font-size: inherit; color: inherit; cursor: pointer; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* HEADER */
+header.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--rule);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  background: rgba(15, 23, 53, 0.7);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; max-width: 1100px; margin: 0 auto;
+}
+.brand { display: flex; align-items: center; gap: 12px; font-family: var(--serif); font-weight: 600; font-size: 17px; letter-spacing: -0.01em; color: var(--ink); }
+.brand-mark {
+  width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF;
+  padding: 4px; box-shadow: 0 0 24px var(--orange-glow), 0 0 0 1px rgba(255,255,255,0.12);
+  flex-shrink: 0; display: block; object-fit: contain;
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-name { font-weight: 700; letter-spacing: 0.02em; }
+.brand-subtitle { font-size: 11px; color: var(--orange-light); font-family: var(--sans); font-style: italic; }
+
+.lang-toggle {
+  display: flex; gap: 2px; background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--rule); padding: 3px; border-radius: 999px; font-size: 12px; font-weight: 500;
+}
+.lang-toggle button { border: none; background: transparent; padding: 6px 14px; border-radius: 999px; color: var(--ink-soft); font-weight: 500; transition: all 0.2s; }
+.lang-toggle button.active { background: var(--gradient-cta); color: var(--navy-deep); box-shadow: 0 0 12px var(--orange-glow); }
+
+main { padding: 80px 0 96px; }
+
+/* HERO */
+.hero { text-align: left; margin-bottom: 96px; max-width: 820px; }
+.eyebrow {
+  font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--orange-light); margin-bottom: 28px;
+  display: flex; align-items: center; gap: 12px;
+}
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--orange-light); }
+h1 {
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(40px, 6.5vw, 68px);
+  line-height: 1.05; letter-spacing: -0.025em; color: var(--ink); margin-bottom: 28px;
+}
+h1 em {
+  font-style: italic;
+  background: var(--gradient-text);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.lede { font-size: 19px; line-height: 1.55; color: var(--ink-soft); max-width: 640px; margin-bottom: 36px; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn-primary {
+  background: var(--gradient-cta); color: var(--navy-deep); border: none;
+  padding: 16px 32px; border-radius: var(--radius);
+  font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; gap: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 12px 36px rgba(243, 156, 15, 0.45);
+  transition: all 0.25s; position: relative; overflow: hidden;
+}
+.btn-primary::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--gradient-cta-hover);
+  opacity: 0; transition: opacity 0.25s;
+}
+.btn-primary > * { position: relative; z-index: 1; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 0 1px rgba(255,255,255,0.18), 0 16px 44px rgba(243, 156, 15, 0.55); }
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary::after { content: '→'; transition: transform 0.2s; }
+.btn-primary:hover::after { transform: translateX(4px); }
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.04); color: var(--ink); border: 1px solid var(--rule);
+  padding: 16px 28px; border-radius: var(--radius);
+  font-size: 14px; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 10px; transition: all 0.25s;
+}
+.btn-secondary:hover { border-color: var(--orange-light); background: rgba(243, 156, 15, 0.08); }
+
+.hero-trust { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--ink-mute); }
+.hero-trust-item { display: flex; align-items: center; gap: 8px; }
+.hero-trust-item svg { width: 14px; height: 14px; stroke: var(--orange-light); flex-shrink: 0; }
+
+/* SECTIONS */
+section.block { margin-bottom: 96px; }
+.section-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange-light); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+.section-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--orange-light); }
+h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 16px; }
+.section-lede { font-size: 16px; line-height: 1.6; color: var(--ink-soft); max-width: 640px; margin-bottom: 40px; }
+
+/* STEPS */
+.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 800px) { .steps-grid { grid-template-columns: 1fr; } }
+.step {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-lg);
+  padding: 32px 28px; position: relative; box-shadow: var(--shadow);
+}
+.step-num {
+  font-family: var(--serif); font-style: italic; font-weight: 600;
+  font-size: 32px; color: var(--orange);
+  background: var(--gradient-text);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 8px; line-height: 1;
+}
+.step-title { font-family: var(--serif); font-size: 22px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 8px; }
+.step-desc { font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+
+/* PILLARS */
+.pillars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 800px) { .pillars-grid { grid-template-columns: 1fr; } }
+.pillar {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-lg);
+  padding: 32px 28px; position: relative; overflow: hidden; box-shadow: var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pillar::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; background: linear-gradient(135deg, rgba(243, 156, 15, 0.6), rgba(31, 45, 92, 0.5)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.pillar:hover { transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(243, 156, 15, 0.4), 0 16px 48px rgba(243, 156, 15, 0.25); }
+.pillar:hover::before { opacity: 1; }
+.pillar-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--gradient-cta);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 0 24px var(--orange-glow);
+  font-family: var(--serif); font-weight: 600; color: var(--navy-deep); font-size: 22px;
+}
+.pillar-title { font-family: var(--serif); font-size: 20px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 8px; color: var(--ink); }
+.pillar-desc { font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+
+/* MATERIALS */
+.materials {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-lg);
+  padding: 40px; box-shadow: var(--shadow);
+}
+@media (max-width: 600px) { .materials { padding: 28px; } }
+.materials-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.material-tag {
+  font-size: 14px; font-weight: 500; color: var(--ink);
+  background: rgba(243, 156, 15, 0.10); border: 1px solid rgba(243, 156, 15, 0.30);
+  padding: 10px 18px; border-radius: 999px;
+  transition: all 0.2s;
+}
+.material-tag:hover { background: rgba(243, 156, 15, 0.20); border-color: var(--orange-light); }
+
+/* CTA bottom */
+.cta-card {
+  background: linear-gradient(135deg, rgba(31, 45, 92, 0.55) 0%, rgba(243, 156, 15, 0.20) 100%);
+  border: 1px solid rgba(243, 156, 15, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 56px 40px; text-align: center; position: relative; overflow: hidden;
+}
+.cta-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(243, 156, 15, 0.20) 0%, transparent 60%); pointer-events: none; }
+.cta-card > * { position: relative; z-index: 1; }
+@media (max-width: 600px) { .cta-card { padding: 40px 28px; } }
+.cta-card h2 { margin-bottom: 12px; }
+.cta-card .section-lede { margin-left: auto; margin-right: auto; margin-bottom: 28px; }
+
+/* FOUNDER */
+.founder-card {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-lg);
+  padding: 40px; box-shadow: var(--shadow);
+}
+@media (max-width: 600px) { .founder-card { padding: 28px; } }
+.founder-card p { color: var(--ink-soft); font-size: 16px; line-height: 1.7; margin-bottom: 14px; }
+.founder-card p:last-child { margin-bottom: 0; }
+.founder-card strong { color: var(--ink); font-weight: 500; }
+
+/* FOOTER */
+footer.site-footer {
+  border-top: 1px solid var(--rule); padding: 40px 24px 32px; text-align: center;
+  font-size: 13px; color: var(--ink-mute);
+  background: rgba(15, 23, 53, 0.5);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+footer .footer-meta { margin-top: 10px; font-size: 12px; opacity: 0.7; }
+footer a:hover { color: var(--orange-light); }
+footer .holding-link { font-style: italic; color: var(--orange-light); }
+
+/* ANIMATIONS */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.hero, .block { animation: fadeInUp 0.6s ease-out backwards; }
+.block:nth-of-type(2) { animation-delay: 0.1s; }
+.block:nth-of-type(3) { animation-delay: 0.15s; }
+.block:nth-of-type(4) { animation-delay: 0.2s; }
+.block:nth-of-type(5) { animation-delay: 0.25s; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="brand" aria-label="TRASLAPP">
+      <img src="/assets/logos/traslapp.svg" alt="" class="brand-mark" width="36" height="36">
+      <div class="brand-text">
+        <span class="brand-name">TRASLAPP</span>
+        <span class="brand-subtitle" data-i18n="brand-subtitle">El Uber de los materiales</span>
+      </div>
+    </a>
+    <div class="lang-toggle">
+      <button id="btn-es" class="active" onclick="setLang('es')">ES</button>
+      <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">En desarrollo · Mercado piloto SW Florida</div>
+    <h1 data-i18n="hero">Pedí el material desde la app. <em>Llega cuando lo pediste, no cuando te llamen.</em></h1>
+    <p class="lede" data-i18n="lede">TRASLAPP conecta contractors, builders y paisajistas con conductores que entregan tierra, grava, piedra y asfalto directo a la obra. Precio fijo, tracking en tiempo real, sin llamar a 5 transportistas.</p>
+    <div class="cta-row">
+      <a href="mailto:contact@maclorianxgroup.com?subject=TRASLAPP%20Piloto%20-%20Quiero%20participar" class="btn-primary" data-i18n="cta-pilot">Ser parte del piloto</a>
+      <a href="#como-funciona" class="btn-secondary" data-i18n="cta-learn">Ver cómo funciona</a>
+    </div>
+
+    <div class="hero-trust">
+      <div class="hero-trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+        </svg>
+        <span data-i18n="trust-1">Tracking en tiempo real</span>
+      </div>
+      <div class="hero-trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        <span data-i18n="trust-2">Precio fijo cerrado</span>
+      </div>
+      <div class="hero-trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          <line x1="9" y1="10" x2="15" y2="10"/>
+        </svg>
+        <span data-i18n="trust-3">Sin llamar a nadie</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="como-funciona">
+    <div class="section-eyebrow" data-i18n="steps-eyebrow">Cómo funciona</div>
+    <h2 data-i18n="steps-title">Tres pasos. Diez minutos. Cero llamadas.</h2>
+    <p class="section-lede" data-i18n="steps-lede">El flujo es así de simple. Pensado para que un contractor con las manos llenas de polvo pueda pedir material desde el celular en plena obra.</p>
+
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title" data-i18n="step-1-title">Pedís el material</div>
+        <p class="step-desc" data-i18n="step-1-desc">Elegís tipo de material (tierra, grava, piedra, asfalto), cantidad y dirección de la obra. La app te muestra el precio fijo de entrega antes de confirmar.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title" data-i18n="step-2-title">Asignamos un conductor</div>
+        <p class="step-desc" data-i18n="step-2-desc">El sistema asigna automáticamente al conductor más cercano disponible. Recibís tracking en tiempo real con ETA actualizado.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title" data-i18n="step-3-title">Llega y pagás</div>
+        <p class="step-desc" data-i18n="step-3-desc">El material llega a la obra en la ventana acordada. Pagás desde la app con tarjeta o cuenta empresarial. Factura digital incluida.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-eyebrow" data-i18n="pillars-eyebrow">Por qué TRASLAPP</div>
+    <h2 data-i18n="pillars-title">Diseñado para contractors reales.</h2>
+    <p class="section-lede" data-i18n="pillars-lede">No es otra app de logística. Resolvemos los tres dolores que escuchamos en cada entrevista a contractors en SW Florida.</p>
+
+    <div class="pillars-grid">
+      <div class="pillar">
+        <div class="pillar-icon">$</div>
+        <div class="pillar-title" data-i18n="pillar-1-title">Precio fijo cerrado</div>
+        <p class="pillar-desc" data-i18n="pillar-1-desc">Lo que ves en la app es lo que pagás. Sin "depende del tráfico", sin "más por gasolina", sin sorpresas al llegar la factura.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">⏱</div>
+        <div class="pillar-title" data-i18n="pillar-2-title">Tracking en vivo</div>
+        <p class="pillar-desc" data-i18n="pillar-2-desc">Sabés dónde está el camión y cuánto le falta. Tu cuadrilla puede planear el work al minuto, no esperando "creo que sale en una hora".</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">∅</div>
+        <div class="pillar-title" data-i18n="pillar-3-title">Cero llamadas</div>
+        <p class="pillar-desc" data-i18n="pillar-3-desc">Todo se gestiona desde la app. No más "llamame mañana a las 6", no más números de WhatsApp olvidados, no más esperar que devuelvan la llamada.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-eyebrow" data-i18n="materials-eyebrow">Qué movemos</div>
+    <h2 data-i18n="materials-title">Materiales para construcción y paisajismo.</h2>
+    <div class="materials">
+      <p class="section-lede" style="margin-bottom: 0;" data-i18n="materials-lede">Empezamos con los materiales más demandados en SW Florida. La lista crece según pedidos del piloto.</p>
+      <div class="materials-grid">
+        <span class="material-tag" data-i18n="mat-1">Tierra y relleno</span>
+        <span class="material-tag" data-i18n="mat-2">Grava</span>
+        <span class="material-tag" data-i18n="mat-3">Piedra triturada</span>
+        <span class="material-tag" data-i18n="mat-4">Arena</span>
+        <span class="material-tag" data-i18n="mat-5">Asfalto</span>
+        <span class="material-tag" data-i18n="mat-6">Mulch</span>
+        <span class="material-tag" data-i18n="mat-7">Concreto premezclado</span>
+        <span class="material-tag" data-i18n="mat-8">+ otros (pedinos)</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-eyebrow" data-i18n="founder-eyebrow">Quién está detrás</div>
+    <h2 data-i18n="founder-title">Construido en SW Florida, para SW Florida.</h2>
+    <div class="founder-card">
+      <p data-i18n="founder-1">TRASLAPP nace de algo simple: vimos a contractors en Cape Coral perdiendo medio día llamando a 5 transportistas distintos para conseguir una carga de grava. Y al final, el camión llegaba 3 horas tarde con un precio diferente al acordado.</p>
+      <p data-i18n="founder-2"><strong>Vamos a hacerlo distinto:</strong> tipo Uber pero para materiales. Una app, precio fijo, tracking, sin llamadas. Si funciona en Cape Coral / Fort Myers / Naples, escalamos.</p>
+      <p data-i18n="founder-3"><strong data-i18n="founder-by">Founder:</strong> Miguel Angel Balart Batlle · MacLorian X Group LLC · Cape Coral, Florida.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="cta-card">
+      <div class="section-eyebrow" style="justify-content: center;" data-i18n="bottom-eyebrow">Buscamos pilotos</div>
+      <h2 data-i18n="bottom-title">¿Sos contractor en SW Florida? Probalo gratis.</h2>
+      <p class="section-lede" data-i18n="bottom-lede">Buscamos 5-10 contractors en Cape Coral, Fort Myers y Naples para validar el piloto. Cero costo durante el beta. Tu opinión moldea lo que se construye.</p>
+      <a href="mailto:contact@maclorianxgroup.com?subject=TRASLAPP%20Piloto%20-%20Quiero%20participar" class="btn-primary" data-i18n="bottom-cta">Quiero ser piloto</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>© 2026 TRASLAPP · Una división de <a href="https://maclorianxgroup.com" class="holding-link">MacLorian X Group LLC</a> · Cape Coral, FL</p>
+  <p class="footer-meta"><a href="mailto:contact@maclorianxgroup.com">contact@maclorianxgroup.com</a> · <a href="tel:+12392813073">+1 (239) 281-3073</a></p>
+</footer>
+
+<script>
+const TRANSLATIONS = {
+  es: {
+    "brand-subtitle": "El Uber de los materiales",
+    "eyebrow": "En desarrollo · Mercado piloto SW Florida",
+    "hero": 'Pedí el material desde la app. <em>Llega cuando lo pediste, no cuando te llamen.</em>',
+    "lede": "TRASLAPP conecta contractors, builders y paisajistas con conductores que entregan tierra, grava, piedra y asfalto directo a la obra. Precio fijo, tracking en tiempo real, sin llamar a 5 transportistas.",
+    "cta-pilot": "Ser parte del piloto",
+    "cta-learn": "Ver cómo funciona",
+    "trust-1": "Tracking en tiempo real",
+    "trust-2": "Precio fijo cerrado",
+    "trust-3": "Sin llamar a nadie",
+    "steps-eyebrow": "Cómo funciona",
+    "steps-title": "Tres pasos. Diez minutos. Cero llamadas.",
+    "steps-lede": "El flujo es así de simple. Pensado para que un contractor con las manos llenas de polvo pueda pedir material desde el celular en plena obra.",
+    "step-1-title": "Pedís el material",
+    "step-1-desc": "Elegís tipo de material (tierra, grava, piedra, asfalto), cantidad y dirección de la obra. La app te muestra el precio fijo de entrega antes de confirmar.",
+    "step-2-title": "Asignamos un conductor",
+    "step-2-desc": "El sistema asigna automáticamente al conductor más cercano disponible. Recibís tracking en tiempo real con ETA actualizado.",
+    "step-3-title": "Llega y pagás",
+    "step-3-desc": "El material llega a la obra en la ventana acordada. Pagás desde la app con tarjeta o cuenta empresarial. Factura digital incluida.",
+    "pillars-eyebrow": "Por qué TRASLAPP",
+    "pillars-title": "Diseñado para contractors reales.",
+    "pillars-lede": "No es otra app de logística. Resolvemos los tres dolores que escuchamos en cada entrevista a contractors en SW Florida.",
+    "pillar-1-title": "Precio fijo cerrado",
+    "pillar-1-desc": "Lo que ves en la app es lo que pagás. Sin \"depende del tráfico\", sin \"más por gasolina\", sin sorpresas al llegar la factura.",
+    "pillar-2-title": "Tracking en vivo",
+    "pillar-2-desc": "Sabés dónde está el camión y cuánto le falta. Tu cuadrilla puede planear el work al minuto, no esperando \"creo que sale en una hora\".",
+    "pillar-3-title": "Cero llamadas",
+    "pillar-3-desc": "Todo se gestiona desde la app. No más \"llamame mañana a las 6\", no más números de WhatsApp olvidados, no más esperar que devuelvan la llamada.",
+    "materials-eyebrow": "Qué movemos",
+    "materials-title": "Materiales para construcción y paisajismo.",
+    "materials-lede": "Empezamos con los materiales más demandados en SW Florida. La lista crece según pedidos del piloto.",
+    "mat-1": "Tierra y relleno", "mat-2": "Grava", "mat-3": "Piedra triturada", "mat-4": "Arena",
+    "mat-5": "Asfalto", "mat-6": "Mulch", "mat-7": "Concreto premezclado", "mat-8": "+ otros (pedinos)",
+    "founder-eyebrow": "Quién está detrás",
+    "founder-title": "Construido en SW Florida, para SW Florida.",
+    "founder-1": "TRASLAPP nace de algo simple: vimos a contractors en Cape Coral perdiendo medio día llamando a 5 transportistas distintos para conseguir una carga de grava. Y al final, el camión llegaba 3 horas tarde con un precio diferente al acordado.",
+    "founder-2": "<strong>Vamos a hacerlo distinto:</strong> tipo Uber pero para materiales. Una app, precio fijo, tracking, sin llamadas. Si funciona en Cape Coral / Fort Myers / Naples, escalamos.",
+    "founder-3": "<strong>Founder:</strong> Miguel Angel Balart Batlle · MacLorian X Group LLC · Cape Coral, Florida.",
+    "founder-by": "Founder:",
+    "bottom-eyebrow": "Buscamos pilotos",
+    "bottom-title": "¿Sos contractor en SW Florida? Probalo gratis.",
+    "bottom-lede": "Buscamos 5-10 contractors en Cape Coral, Fort Myers y Naples para validar el piloto. Cero costo durante el beta. Tu opinión moldea lo que se construye.",
+    "bottom-cta": "Quiero ser piloto"
+  },
+  en: {
+    "brand-subtitle": "The Uber for construction materials",
+    "eyebrow": "In development · Pilot market SW Florida",
+    "hero": 'Order material from the app. <em>Arrives when you ordered it, not when they call back.</em>',
+    "lede": "TRASLAPP connects contractors, builders, and landscapers with drivers who deliver soil, gravel, stone, and asphalt straight to the jobsite. Fixed price, real-time tracking, no calling five transporters.",
+    "cta-pilot": "Join the pilot",
+    "cta-learn": "See how it works",
+    "trust-1": "Real-time tracking",
+    "trust-2": "Fixed closed price",
+    "trust-3": "Zero phone calls",
+    "steps-eyebrow": "How it works",
+    "steps-title": "Three steps. Ten minutes. Zero calls.",
+    "steps-lede": "Simple as that. Built so a contractor with dusty hands can order material from a phone right on the jobsite.",
+    "step-1-title": "Order the material",
+    "step-1-desc": "Pick type (soil, gravel, stone, asphalt), quantity, and jobsite address. The app shows you the fixed delivery price before you confirm.",
+    "step-2-title": "We assign a driver",
+    "step-2-desc": "The system automatically assigns the nearest available driver. You get real-time tracking with live ETA updates.",
+    "step-3-title": "Arrives and you pay",
+    "step-3-desc": "The material arrives in the agreed window. You pay from the app with card or business account. Digital invoice included.",
+    "pillars-eyebrow": "Why TRASLAPP",
+    "pillars-title": "Built for real contractors.",
+    "pillars-lede": "Not another logistics app. We solve the three pains we heard in every contractor interview in SW Florida.",
+    "pillar-1-title": "Fixed closed price",
+    "pillar-1-desc": "What you see in the app is what you pay. No \"depends on traffic,\" no \"extra for fuel,\" no surprises when the invoice arrives.",
+    "pillar-2-title": "Live tracking",
+    "pillar-2-desc": "You know where the truck is and how long it'll take. Your crew can plan work to the minute, not waiting on \"I think it'll leave in an hour.\"",
+    "pillar-3-title": "Zero phone calls",
+    "pillar-3-desc": "Everything's managed from the app. No more \"call me tomorrow at 6,\" no more forgotten WhatsApp numbers, no more waiting for callbacks.",
+    "materials-eyebrow": "What we move",
+    "materials-title": "Construction and landscaping materials.",
+    "materials-lede": "We start with the most-demanded materials in SW Florida. The list grows based on pilot requests.",
+    "mat-1": "Soil & fill", "mat-2": "Gravel", "mat-3": "Crushed stone", "mat-4": "Sand",
+    "mat-5": "Asphalt", "mat-6": "Mulch", "mat-7": "Ready-mix concrete", "mat-8": "+ others (ask)",
+    "founder-eyebrow": "Who's behind it",
+    "founder-title": "Built in SW Florida, for SW Florida.",
+    "founder-1": "TRASLAPP comes from something simple: we saw contractors in Cape Coral losing half a day calling 5 different transporters to get a load of gravel. And in the end, the truck arrived 3 hours late at a price different from what was agreed.",
+    "founder-2": "<strong>We're going to do it differently:</strong> Uber-style but for materials. One app, fixed price, tracking, no calls. If it works in Cape Coral / Fort Myers / Naples, we scale.",
+    "founder-3": "<strong>Founder:</strong> Miguel Angel Balart Batlle · MacLorian X Group LLC · Cape Coral, Florida.",
+    "founder-by": "Founder:",
+    "bottom-eyebrow": "Seeking pilots",
+    "bottom-title": "Are you a contractor in SW Florida? Try it free.",
+    "bottom-lede": "We're looking for 5-10 contractors in Cape Coral, Fort Myers, and Naples to validate the pilot. Zero cost during beta. Your input shapes what gets built.",
+    "bottom-cta": "I want to be a pilot"
+  }
+};
+
+let currentLang = 'es';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = TRANSLATIONS[lang][key];
+    if (val !== undefined) {
+      if (val.includes('<')) el.innerHTML = val;
+      else el.textContent = val;
+    }
+  });
+  document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  try { localStorage.setItem('lang', lang); } catch(e) {}
+}
+
+(function loadLang(){
+  try {
+    const stored = localStorage.getItem('lang');
+    if (stored) setLang(stored);
+    else if (navigator.language && navigator.language.startsWith('en')) setLang('en');
+  } catch(e) {}
+})();
+
+window.setLang = setLang;
+</script>
+
+</body>
+</html>
