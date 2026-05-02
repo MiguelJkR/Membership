@@ -1,5 +1,5 @@
 const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const DATABASE_ID = process.env.NOTION_DATABASE_ID || 'a5de9526-4375-41f4-bc7d-475dc16f0264';
+const DATABASE_ID = process.env.NOTION_DATABASE_ID || '6d4735de-69f4-4d8b-b5ce-89bfcdb9f475';
 
 const NOTION_API_VERSION = '2022-06-28';
 const NOTION_API_URL = 'https://api.notion.com/v1/pages';
