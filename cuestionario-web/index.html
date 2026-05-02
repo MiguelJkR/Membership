@@ -471,6 +471,37 @@ input::placeholder, textarea::placeholder {
   background: var(--green-pale);
 }
 
+.other-fields {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--sand);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.other-fields[hidden] { display: none; }
+.other-field-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+.other-fields input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+.other-fields input[type="text"]:focus {
+  outline: none;
+  border-color: var(--green-deep);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
 .radio-group {
   display: flex;
   flex-direction: column;
@@ -874,6 +905,21 @@ footer a:hover { text-decoration: underline; }
           <label class="check-option"><input type="checkbox" name="q2_categorias" value="Handyman"><span>Handyman</span></label>
           <label class="check-option"><input type="checkbox" name="q2_categorias" value="Generator service"><span data-i18n="cat-gen">Servicio de generador</span></label>
           <label class="check-option"><input type="checkbox" name="q2_categorias" value="Tree service"><span data-i18n="cat-tree">Tree service / poda</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Barber & beauty"><span data-i18n="cat-barber">Barbería / Peluquería</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Pet services"><span data-i18n="cat-pet">Servicios para mascotas</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Auto detailing"><span data-i18n="cat-auto">Auto detailing</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Home cleaning"><span data-i18n="cat-home-cleaning">Limpieza de hogar</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Spa & wellness"><span data-i18n="cat-spa">Spa & wellness</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Personal fitness"><span data-i18n="cat-fitness">Personal trainer / Fitness</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Otra (Personalizar)" data-other-toggle="provider"><span data-i18n="cat-other">Otra (Personalizar)</span></label>
+        </div>
+        <div class="other-fields" id="provider-other-fields" hidden>
+          <div class="q-hint" style="margin-top: 8px;" data-i18n="pro-q2-other-hint">Marcaste "Otra". Cuéntanos qué categoría y el nombre legal de tu LLC para validar el negocio.</div>
+          <label class="other-field-label" data-i18n="pro-q2-custom-label">¿Qué categoría?</label>
+          <input type="text" name="q2_categoria_custom" data-other-required data-i18n-placeholder="pro-q2-custom-ph" placeholder="Ej: Mobile car wash, dog walking, etc.">
+          <label class="other-field-label" data-i18n="pro-q2-llc-label">Nombre legal de tu LLC</label>
+          <input type="text" name="q2_llc_name" data-other-required data-i18n-placeholder="pro-q2-llc-ph" placeholder="Ej: ABC Services LLC">
+          <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
         </div>
       </div>
 
@@ -1149,9 +1195,19 @@ footer a:hover { text-decoration: underline; }
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Roof maintenance"><span data-i18n="cat-roof">Mantenimiento de techos</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Pressure washing"><span data-i18n="cat-pw">Pressure washing</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Gutter cleaning"><span data-i18n="cat-gutter">Limpieza de canaletas</span></label>
-          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Limpieza interior"><span data-i18n="cat-clean">Limpieza interior</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Home cleaning"><span data-i18n="cat-home-cleaning">Limpieza de hogar</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Handyman"><span>Handyman</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Tree service"><span data-i18n="cat-tree">Tree service / poda</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Barber & beauty"><span data-i18n="cat-barber">Barbería / Peluquería</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Pet services"><span data-i18n="cat-pet">Servicios para mascotas</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Auto detailing"><span data-i18n="cat-auto">Auto detailing</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Spa & wellness"><span data-i18n="cat-spa">Spa & wellness</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Personal fitness"><span data-i18n="cat-fitness">Personal trainer / Fitness</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Otra (Personalizar)" data-other-toggle="client"><span data-i18n="cat-other">Otra (Personalizar)</span></label>
+        </div>
+        <div class="other-fields" id="client-other-fields" hidden>
+          <label class="other-field-label" data-i18n="cli-q1-custom-label">¿Qué servicio?</label>
+          <input type="text" name="q1_servicio_custom" data-i18n-placeholder="cli-q1-custom-ph" placeholder="Ej: Mobile car wash, dog walking, etc.">
         </div>
       </div>
 
@@ -1392,6 +1448,20 @@ const TRANSLATIONS = {
     "cat-tree": "Tree service / poda",
     "cat-clean": "Limpieza interior",
     "cat-ac-full": "A/C maintenance",
+    "cat-barber": "Barbería / Peluquería",
+    "cat-pet": "Servicios para mascotas",
+    "cat-auto": "Auto detailing",
+    "cat-home-cleaning": "Limpieza de hogar",
+    "cat-spa": "Spa & wellness",
+    "cat-fitness": "Personal trainer / Fitness",
+    "cat-other": "Otra (Personalizar)",
+    "pro-q2-other-hint": "Marcaste \"Otra\". Cuéntanos qué categoría y el nombre legal de tu LLC para validar el negocio.",
+    "pro-q2-custom-label": "¿Qué categoría?",
+    "pro-q2-custom-ph": "Ej: Mobile car wash, dog walking, etc.",
+    "pro-q2-llc-label": "Nombre legal de tu LLC",
+    "pro-q2-llc-ph": "Ej: ABC Services LLC",
+    "cli-q1-custom-label": "¿Qué servicio?",
+    "cli-q1-custom-ph": "Ej: Mobile car wash, dog walking, etc.",
     "pro-q3": "De todos los servicios que ofreces, ¿cuál es el que más te genera ingresos hoy?",
     "pro-q4": "¿Cómo consigues clientes nuevos hoy?",
     "pro-q4-hint": "Referidos, Facebook, NextDoor, Google, anuncios, walk-by, etc.",
@@ -1545,6 +1615,20 @@ const TRANSLATIONS = {
     "cat-tree": "Tree service",
     "cat-clean": "Indoor cleaning",
     "cat-ac-full": "A/C maintenance",
+    "cat-barber": "Barber & beauty",
+    "cat-pet": "Pet services",
+    "cat-auto": "Auto detailing",
+    "cat-home-cleaning": "Home cleaning",
+    "cat-spa": "Spa & wellness",
+    "cat-fitness": "Personal trainer / fitness",
+    "cat-other": "Other (custom)",
+    "pro-q2-other-hint": "You checked \"Other\". Tell us which category and your LLC's legal name so we can validate the business.",
+    "pro-q2-custom-label": "Which category?",
+    "pro-q2-custom-ph": "e.g., Mobile car wash, dog walking, etc.",
+    "pro-q2-llc-label": "Your LLC's legal name",
+    "pro-q2-llc-ph": "e.g., ABC Services LLC",
+    "cli-q1-custom-label": "Which service?",
+    "cli-q1-custom-ph": "e.g., Mobile car wash, dog walking, etc.",
     "pro-q3": "Of all the services you offer, which one generates the most income today?",
     "pro-q4": "How do you find new customers today?",
     "pro-q4-hint": "Referrals, Facebook, NextDoor, Google, ads, walk-by, etc.",
@@ -1742,6 +1826,33 @@ document.querySelectorAll('.scale').forEach(scale => {
     }
   });
 });
+
+document.querySelectorAll('input[data-other-toggle]').forEach(cb => {
+  cb.addEventListener('change', e => {
+    const target = e.target.dataset.otherToggle === 'provider' ? 'provider-other-fields' : 'client-other-fields';
+    const panel = document.getElementById(target);
+    if (!panel) return;
+    panel.hidden = !e.target.checked;
+    panel.querySelectorAll('input[data-other-required]').forEach(input => {
+      if (e.target.checked) input.setAttribute('required', '');
+      else { input.removeAttribute('required'); input.value = ''; }
+    });
+    if (!e.target.checked) {
+      panel.querySelectorAll('input').forEach(input => { input.value = ''; });
+    }
+  });
+});
+
+function applyI18nPlaceholders(lang) {
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    const val = TRANSLATIONS[lang][key];
+    if (val !== undefined) el.placeholder = val;
+  });
+}
+const _origSetLang = setLang;
+setLang = function(lang) { _origSetLang(lang); applyI18nPlaceholders(lang); };
+applyI18nPlaceholders(currentLang);
 
 function collectFormData(form, type) {
   const data = { type, lang: currentLang, submittedAt: new Date().toISOString(), source: window.location.href };

@@ -8,8 +8,12 @@ const ALLOWED_CATEGORIES = [
   'A/C & HVAC', 'Pool service', 'Lawn care', 'Pest control',
   'Roof maintenance', 'Pressure washing', 'Gutter cleaning',
   'Exterior cleaning', 'Hurricane prep', 'Handyman',
-  'Generator service', 'Tree service'
+  'Generator service', 'Tree service',
+  'Barber & beauty', 'Pet services', 'Auto detailing',
+  'Home cleaning', 'Spa & wellness', 'Personal fitness'
 ];
+
+const OTHER_CATEGORY_VALUE = 'Otra (Personalizar)';
 
 const CITY_MAP = {
   'Cape Coral': 'Cape Coral',
@@ -59,6 +63,12 @@ function inferProviderDominant(data) {
   if (lower.includes('handyman') || lower.includes('handy')) return 'Handyman';
   if (lower.includes('generator') || lower.includes('generador')) return 'Generator service';
   if (lower.includes('tree') || lower.includes('árbol') || lower.includes('arbol') || lower.includes('poda')) return 'Tree service';
+  if (lower.includes('barber') || lower.includes('beauty') || lower.includes('peluq')) return 'Barber & beauty';
+  if (lower.includes('pet') || lower.includes('mascota') || lower.includes('grooming')) return 'Pet services';
+  if (lower.includes('auto') || lower.includes('detail') || lower.includes('car wash')) return 'Auto detailing';
+  if (lower.includes('home clean') || lower.includes('limpieza de hogar') || lower.includes('limpieza interior') || lower.includes('cleaning')) return 'Home cleaning';
+  if (lower.includes('spa') || lower.includes('wellness') || lower.includes('massage') || lower.includes('masaje')) return 'Spa & wellness';
+  if (lower.includes('fitness') || lower.includes('trainer') || lower.includes('entrenador')) return 'Personal fitness';
   return null;
 }
 
@@ -189,6 +199,10 @@ function buildNotasPrincipales(data, type) {
     if (data.q1_mes_tipico) lines.push(`Mes típico: ${clamp(data.q1_mes_tipico, 200)}`);
     const cats = filterCategories(data.q2_categorias);
     if (cats.length) lines.push(`Categorías: ${cats.join(', ')}`);
+    if (asArray(data.q2_categorias).includes(OTHER_CATEGORY_VALUE)) {
+      if (data.q2_categoria_custom) lines.push(`Categoría custom: ${clamp(data.q2_categoria_custom, 200)}`);
+      if (data.q2_llc_name) lines.push(`LLC: ${clamp(data.q2_llc_name, 200)}`);
+    }
     if (data.q3_dominante) lines.push(`Dominante: ${data.q3_dominante}`);
     if (data.q4_lead_gen) lines.push(`Lead gen: ${clamp(data.q4_lead_gen, 200)}`);
     if (data.q5_estabilidad) lines.push(`Estabilidad: ${clamp(data.q5_estabilidad, 200)}`);
@@ -214,6 +228,9 @@ function buildNotasPrincipales(data, type) {
     if (data.anos_florida) lines.push(`Años en FL: ${data.anos_florida}`);
     const servs = filterCategories(data.q1_servicios);
     if (servs.length) lines.push(`Servicios: ${servs.join(', ')}`);
+    if (asArray(data.q1_servicios).includes(OTHER_CATEGORY_VALUE) && data.q1_servicio_custom) {
+      lines.push(`Servicio custom: ${clamp(data.q1_servicio_custom, 200)}`);
+    }
     if (data.q2_lealtad) lines.push(`Lealtad: ${data.q2_lealtad}`);
     if (data.q3_handyman_confianza) lines.push(`Handyman confianza: ${clamp(data.q3_handyman_confianza, 200)}`);
     if (data.q4_gasto_mensual) lines.push(`Gasto/mes: ${data.q4_gasto_mensual}`);
@@ -338,7 +355,22 @@ function buildProperties(data, type) {
     
     props['Proximo paso'] = { select: { name: 'Sin accion' } };
   }
-  
+
+  const otherCats = type === 'provider' ? data.q2_categorias : data.q1_servicios;
+  if (asArray(otherCats).includes(OTHER_CATEGORY_VALUE)) {
+    const customField = type === 'provider' ? data.q2_categoria_custom : data.q1_servicio_custom;
+    if (customField) {
+      props['Categoria custom'] = {
+        rich_text: [{ text: { content: clamp(customField, 1990) } }]
+      };
+    }
+    if (type === 'provider' && data.q2_llc_name) {
+      props['LLC name'] = {
+        rich_text: [{ text: { content: clamp(data.q2_llc_name, 1990) } }]
+      };
+    }
+  }
+
   return props;
 }
 
