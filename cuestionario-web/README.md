@@ -41,7 +41,8 @@ cuestionario-web/
 > Necesario para que la integración tenga permiso de escribir en la database.
 
 1. Abrir la database **"Entrevistas de Validación"** en Notion
-   - Database ID: `a5de9526-4375-41f4-bc7d-475dc16f0264`
+   - Database ID (el que la API REST necesita): `6d4735de-69f4-4d8b-b5ce-89bfcdb9f475`
+   - Nota: el data source / collection ID interno (`a5de9526-…`) NO sirve para la API REST. Usar siempre el database ID de arriba.
 2. Click los **tres puntos `...`** en la esquina superior derecha
 3. Scroll hasta **"Connections"** → **"Connect to"**
 4. Buscar **"MacLorian Cuestionario Web"** y seleccionarla
@@ -77,8 +78,8 @@ vercel
    - **Save**
 3. Agregar variable 2:
    - **Key:** `NOTION_DATABASE_ID`
-   - **Value:** `a5de9526-4375-41f4-bc7d-475dc16f0264`
-   - **Environments:** las tres
+   - **Value:** `6d4735de-69f4-4d8b-b5ce-89bfcdb9f475`
+   - **Environments:** las tres (Production, Preview, Development)
    - **Save**
 4. Volver a Deployments → click "..." en el último → **Redeploy**
 
