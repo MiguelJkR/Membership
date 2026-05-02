@@ -106,14 +106,16 @@ header.site-header {
   color: var(--ink);
 }
 .brand-mark {
-  width: 36px;
-  height: 36px;
+  width: auto;
+  height: 40px;
+  max-width: 160px;
   border-radius: 8px;
   background: #FFFFFF;
-  padding: 4px;
+  padding: 4px 8px;
   box-shadow: 0 0 24px rgba(139, 92, 246, 0.55), 0 0 0 1px rgba(255,255,255,0.12);
   flex-shrink: 0;
   display: block;
+  object-fit: contain;
   object-fit: contain;
 }
 
@@ -342,8 +344,11 @@ h2 {
   gap: 12px;
 }
 .product-icon {
-  width: 60px;
+  width: auto;
+  min-width: 60px;
+  max-width: 160px;
   height: 60px;
+  padding: 6px 10px;
   border-radius: 14px;
   background: #FFFFFF;
   display: flex;
@@ -545,7 +550,7 @@ footer a:hover { color: var(--violet-light); }
 <header class="site-header">
   <div class="header-inner">
     <a href="#" class="brand">
-      <img src="/assets/logos/maclorian-x-group.svg" alt="" class="brand-mark" width="32" height="32">
+      <img src="/assets/logos/maclorian-x-group.png" alt="" class="brand-mark" width="32" height="32">
       <span data-i18n="brand">MacLorian X Group</span>
     </a>
     <div class="lang-toggle">
@@ -576,7 +581,7 @@ footer a:hover { color: var(--violet-light); }
 
       <div class="product">
         <div class="product-header">
-          <div class="product-icon"><img src="/assets/logos/deduth-academy.svg" alt="DEDUTH ACADEMY" loading="lazy"></div>
+          <div class="product-icon"><img src="/assets/logos/deduth-academy.png" alt="DEDUTH ACADEMY" loading="lazy"></div>
           <span class="product-status live" data-i18n="status-live">Activo</span>
         </div>
         <div>
@@ -593,7 +598,7 @@ footer a:hover { color: var(--violet-light); }
 
       <div class="product">
         <div class="product-header">
-          <div class="product-icon"><img src="/assets/logos/deduth-kids.svg" alt="DEDUTH ACADEMY KIDS" loading="lazy"></div>
+          <div class="product-icon"><img src="/assets/logos/deduth-kids.png" alt="DEDUTH ACADEMY KIDS" loading="lazy"></div>
           <span class="product-status soon" data-i18n="status-soon">Próximamente</span>
         </div>
         <div>
@@ -609,7 +614,7 @@ footer a:hover { color: var(--violet-light); }
 
       <div class="product">
         <div class="product-header">
-          <div class="product-icon"><img src="/assets/logos/traslapp.svg" alt="TRASLAPP" loading="lazy"></div>
+          <div class="product-icon"><img src="/assets/logos/traslapp.png" alt="TRASLAPP" loading="lazy"></div>
           <span class="product-status dev" data-i18n="status-dev">En desarrollo</span>
         </div>
         <div>
