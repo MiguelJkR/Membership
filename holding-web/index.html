@@ -106,19 +106,15 @@ header.site-header {
   color: var(--ink);
 }
 .brand-mark {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--gradient-cta);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 500;
-  font-size: 14px;
-  box-shadow: 0 0 24px rgba(139, 92, 246, 0.7), 0 0 0 1px rgba(255,255,255,0.12);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #FFFFFF;
+  padding: 4px;
+  box-shadow: 0 0 24px rgba(139, 92, 246, 0.55), 0 0 0 1px rgba(255,255,255,0.12);
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
 }
 
 .lang-toggle {
@@ -346,20 +342,34 @@ h2 {
   gap: 12px;
 }
 .product-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: var(--gradient-cta);
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 0 24px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 24px rgba(0,0,0,0.4);
+  padding: 6px;
+  overflow: hidden;
+}
+.product-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* Para productos sin logo (App de Membresías) - mantener gradient con letra */
+.product-icon-text {
+  background: var(--gradient-cta);
+  padding: 0;
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
   color: #fff;
-  font-size: 18px;
+  font-size: 24px;
+  box-shadow: 0 0 24px rgba(139, 92, 246, 0.4);
 }
 .product-status {
   font-size: 10px;
@@ -535,7 +545,7 @@ footer a:hover { color: var(--violet-light); }
 <header class="site-header">
   <div class="header-inner">
     <a href="#" class="brand">
-      <span class="brand-mark">M</span>
+      <img src="/assets/logos/maclorian-x-group.svg" alt="" class="brand-mark" width="32" height="32">
       <span data-i18n="brand">MacLorian X Group</span>
     </a>
     <div class="lang-toggle">
@@ -549,7 +559,7 @@ footer a:hover { color: var(--violet-light); }
 
   <section class="hero">
     <div class="eyebrow" data-i18n="eyebrow">Florida · 2026</div>
-    <h1 data-i18n="hero">Tecnología que se construye en <em>Cape Coral</em>, para SW Florida y para el mundo hispano.</h1>
+    <h1 data-i18n="hero">Tecnología que se construye en <em>Cape Coral</em>, para SW Florida y el mundo.</h1>
     <p class="lede" data-i18n="lede">MacLorian X Group LLC es una empresa de tecnología enfocada en aplicaciones móviles y plataformas digitales en educación financiera, logística y servicios.</p>
     <div class="cta-row">
       <a href="#productos" class="btn-primary" data-i18n="cta-products">Ver productos</a>
@@ -566,24 +576,24 @@ footer a:hover { color: var(--violet-light); }
 
       <div class="product">
         <div class="product-header">
-          <div class="product-icon">D</div>
+          <div class="product-icon"><img src="/assets/logos/deduth-academy.svg" alt="DEDUTH ACADEMY" loading="lazy"></div>
           <span class="product-status live" data-i18n="status-live">Activo</span>
         </div>
         <div>
           <div class="product-title">DEDUTH ACADEMY</div>
           <div class="product-tagline" data-i18n="prod-deduth-tagline">Tu plata. Tu juego. Tu nivel.</div>
         </div>
-        <p class="product-desc" data-i18n="prod-deduth-desc">Plataforma de educación financiera para adultos hispanos. Cursos, asesorías y contenido premium en español, sin tecnicismos.</p>
+        <p class="product-desc" data-i18n="prod-deduth-desc">Plataforma de educación financiera en español para adultos. Cursos, asesorías y contenido premium, sin tecnicismos.</p>
         <div class="product-meta">
           <span class="product-tag" data-i18n="div-edtech">MacLorian EdTech</span>
-          <span class="product-tag" data-i18n="market-global">Mercado global hispano</span>
+          <span class="product-tag" data-i18n="market-global">Mercado global</span>
         </div>
         <a href="https://deduthacademy.com" target="_blank" rel="noopener" class="product-link"><span data-i18n="visit">Visitar</span> →</a>
       </div>
 
       <div class="product">
         <div class="product-header">
-          <div class="product-icon">K</div>
+          <div class="product-icon"><img src="/assets/logos/deduth-kids.svg" alt="DEDUTH ACADEMY KIDS" loading="lazy"></div>
           <span class="product-status soon" data-i18n="status-soon">Próximamente</span>
         </div>
         <div>
@@ -593,29 +603,29 @@ footer a:hover { color: var(--violet-light); }
         <p class="product-desc" data-i18n="prod-kids-desc">Educación financiera para niños de 6 a 14 años. Contenido interactivo, juegos y lecciones cortas. Diseñado bajo cumplimiento COPPA.</p>
         <div class="product-meta">
           <span class="product-tag" data-i18n="div-edtech">MacLorian EdTech</span>
-          <span class="product-tag" data-i18n="audience-parents">Padres hispanos</span>
+          <span class="product-tag" data-i18n="audience-parents">Familias hispanohablantes</span>
         </div>
       </div>
 
       <div class="product">
         <div class="product-header">
-          <div class="product-icon">T</div>
+          <div class="product-icon"><img src="/assets/logos/traslapp.svg" alt="TRASLAPP" loading="lazy"></div>
           <span class="product-status dev" data-i18n="status-dev">En desarrollo</span>
         </div>
         <div>
           <div class="product-title">TRASLAPP</div>
           <div class="product-tagline" data-i18n="prod-traslapp-tagline">El Uber de los materiales de construcción.</div>
         </div>
-        <p class="product-desc" data-i18n="prod-traslapp-desc">Plataforma de transporte para materiales de construcción — tierra, grava, piedra, asfalto. Conecta contratistas con conductores en SW Florida y Latinoamérica.</p>
+        <p class="product-desc" data-i18n="prod-traslapp-desc">Plataforma de transporte para materiales de construcción — tierra, grava, piedra, asfalto. Conecta contratistas con conductores en SW Florida y a nivel global.</p>
         <div class="product-meta">
           <span class="product-tag" data-i18n="div-mobility">MacLorian Mobility</span>
-          <span class="product-tag" data-i18n="market-swfl">SW Florida + Latam</span>
+          <span class="product-tag" data-i18n="market-swfl">SW Florida + global</span>
         </div>
       </div>
 
       <div class="product">
         <div class="product-header">
-          <div class="product-icon">A</div>
+          <div class="product-icon product-icon-text">A</div>
           <span class="product-status validation" data-i18n="status-validation">En validación</span>
         </div>
         <div>
@@ -638,7 +648,7 @@ footer a:hover { color: var(--violet-light); }
     <h2 data-i18n="about-title">Una empresa de tecnología, con sede en Florida.</h2>
     <div class="about-card">
       <p data-i18n="about-1"><strong>MacLorian X Group LLC</strong> fue fundada en marzo de 2026 en el estado de Florida. Nos dedicamos al desarrollo, gestión y operación de aplicaciones móviles, plataformas digitales y servicios tecnológicos.</p>
-      <p data-i18n="about-2">Nuestro foco está en construir productos útiles para el mercado hispano (Estados Unidos y Latinoamérica) y para SW Florida como mercado piloto. Cada división opera como una unidad de negocio independiente, con su propio mercado y métricas, bajo el paraguas corporativo del holding.</p>
+      <p data-i18n="about-2">Nuestro foco está en construir productos útiles a nivel global, con SW Florida como mercado piloto. Cada división opera como una unidad de negocio independiente, con su propio mercado y métricas, bajo el paraguas corporativo del holding.</p>
       <p data-i18n="about-3"><strong data-i18n="about-founder">Founder & CEO:</strong> Miguel Angel Balart Batlle.</p>
     </div>
   </section>
@@ -676,7 +686,7 @@ const TRANSLATIONS = {
   es: {
     "brand": "MacLorian X Group",
     "eyebrow": "Florida · 2026",
-    "hero": 'Tecnología que se construye en <em>Cape Coral</em>, para SW Florida y para el mundo hispano.',
+    "hero": 'Tecnología que se construye en <em>Cape Coral</em>, para SW Florida y el mundo.',
     "lede": "MacLorian X Group LLC es una empresa de tecnología enfocada en aplicaciones móviles y plataformas digitales en educación financiera, logística y servicios.",
     "cta-products": "Ver productos",
     "cta-contact": "Contacto",
@@ -690,15 +700,15 @@ const TRANSLATIONS = {
     "div-edtech": "MacLorian EdTech",
     "div-mobility": "MacLorian Mobility",
     "div-innovation": "MacLorian Innovation",
-    "market-global": "Mercado global hispano",
-    "market-swfl": "SW Florida + Latam",
-    "audience-parents": "Padres hispanos",
+    "market-global": "Mercado global",
+    "market-swfl": "SW Florida + global",
+    "audience-parents": "Familias hispanohablantes",
     "prod-deduth-tagline": "Tu plata. Tu juego. Tu nivel.",
-    "prod-deduth-desc": "Plataforma de educación financiera para adultos hispanos. Cursos, asesorías y contenido premium en español, sin tecnicismos.",
+    "prod-deduth-desc": "Plataforma de educación financiera en español para adultos. Cursos, asesorías y contenido premium, sin tecnicismos.",
     "prod-kids-tagline": "Aprender de plata jugando, desde chiquitos.",
     "prod-kids-desc": "Educación financiera para niños de 6 a 14 años. Contenido interactivo, juegos y lecciones cortas. Diseñado bajo cumplimiento COPPA.",
     "prod-traslapp-tagline": "El Uber de los materiales de construcción.",
-    "prod-traslapp-desc": "Plataforma de transporte para materiales de construcción — tierra, grava, piedra, asfalto. Conecta contratistas con conductores en SW Florida y Latinoamérica.",
+    "prod-traslapp-desc": "Plataforma de transporte para materiales de construcción — tierra, grava, piedra, asfalto. Conecta contratistas con conductores en SW Florida y a nivel global.",
     "prod-app-title": "App de Membresías por Invitación",
     "prod-app-tagline": "Convierte tu servicio en una membresía.",
     "prod-app-desc": "Marketplace cerrado de servicios por suscripción. Cada proveedor tiene su mini-tienda con catálogo y cobra membresías mensuales. Mercado piloto: SW Florida.",
@@ -707,7 +717,7 @@ const TRANSLATIONS = {
     "about-eyebrow": "Sobre nosotros",
     "about-title": "Una empresa de tecnología, con sede en Florida.",
     "about-1": "<strong>MacLorian X Group LLC</strong> fue fundada en marzo de 2026 en el estado de Florida. Nos dedicamos al desarrollo, gestión y operación de aplicaciones móviles, plataformas digitales y servicios tecnológicos.",
-    "about-2": "Nuestro foco está en construir productos útiles para el mercado hispano (Estados Unidos y Latinoamérica) y para SW Florida como mercado piloto. Cada división opera como una unidad de negocio independiente, con su propio mercado y métricas, bajo el paraguas corporativo del holding.",
+    "about-2": "Nuestro foco está en construir productos útiles a nivel global, con SW Florida como mercado piloto. Cada división opera como una unidad de negocio independiente, con su propio mercado y métricas, bajo el paraguas corporativo del holding.",
     "about-3": "<strong>Founder & CEO:</strong> Miguel Angel Balart Batlle.",
     "about-founder": "Founder & CEO:",
     "contact-eyebrow": "Contacto",
@@ -721,7 +731,7 @@ const TRANSLATIONS = {
   en: {
     "brand": "MacLorian X Group",
     "eyebrow": "Florida · 2026",
-    "hero": 'Technology built in <em>Cape Coral</em>, for SW Florida and the Hispanic world.',
+    "hero": 'Technology built in <em>Cape Coral</em>, for SW Florida and the world.',
     "lede": "MacLorian X Group LLC is a technology company focused on mobile applications and digital platforms in financial education, logistics, and services.",
     "cta-products": "See products",
     "cta-contact": "Contact",
@@ -735,15 +745,15 @@ const TRANSLATIONS = {
     "div-edtech": "MacLorian EdTech",
     "div-mobility": "MacLorian Mobility",
     "div-innovation": "MacLorian Innovation",
-    "market-global": "Global Hispanic market",
-    "market-swfl": "SW Florida + Latam",
-    "audience-parents": "Hispanic parents",
+    "market-global": "Global market",
+    "market-swfl": "SW Florida + global",
+    "audience-parents": "Spanish-speaking families",
     "prod-deduth-tagline": "Your money. Your game. Your level.",
-    "prod-deduth-desc": "Financial education platform for Hispanic adults. Courses, advisory, and premium content in Spanish, without jargon.",
+    "prod-deduth-desc": "Spanish-language financial education platform for adults. Courses, advisory, and premium content, without jargon.",
     "prod-kids-tagline": "Learning about money by playing, from a young age.",
     "prod-kids-desc": "Financial education for children ages 6 to 14. Interactive content, games, and short lessons. Designed for COPPA compliance.",
     "prod-traslapp-tagline": "The Uber for construction materials.",
-    "prod-traslapp-desc": "Transport platform for construction materials — soil, gravel, stone, asphalt. Connects contractors with drivers in SW Florida and Latin America.",
+    "prod-traslapp-desc": "Transport platform for construction materials — soil, gravel, stone, asphalt. Connects contractors with drivers in SW Florida and worldwide.",
     "prod-app-title": "Invitation-only Membership App",
     "prod-app-tagline": "Turn your service into a membership.",
     "prod-app-desc": "Closed marketplace of subscription-based services. Each provider has their mini storefront with catalog and charges monthly memberships. Pilot market: SW Florida.",
@@ -752,7 +762,7 @@ const TRANSLATIONS = {
     "about-eyebrow": "About us",
     "about-title": "A technology company, headquartered in Florida.",
     "about-1": "<strong>MacLorian X Group LLC</strong> was founded in March 2026 in the state of Florida. We focus on the development, management, and operation of mobile applications, digital platforms, and technology services.",
-    "about-2": "Our focus is on building useful products for the Hispanic market (United States and Latin America) and for SW Florida as our pilot market. Each division operates as an independent business unit with its own market and metrics, under the corporate umbrella of the holding.",
+    "about-2": "Our focus is on building useful products for the entire world, with SW Florida as our pilot market. Each division operates as an independent business unit with its own market and metrics, under the corporate umbrella of the holding.",
     "about-3": "<strong>Founder & CEO:</strong> Miguel Angel Balart Batlle.",
     "about-founder": "Founder & CEO:",
     "contact-eyebrow": "Contact",

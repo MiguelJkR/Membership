@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" aria-label="MacLorian X Group LLC">
+  <!-- 3 cubos hexagonales en composicion trinity (navy oscuro) -->
+  <g fill="#2A2257" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round">
+    <!-- Cubo izquierdo -->
+    <path d="M 50 110 L 50 70 L 85 50 L 120 70 L 120 110 L 85 130 Z"/>
+    <!-- Cubo derecho -->
+    <path d="M 80 110 L 80 70 L 115 50 L 150 70 L 150 110 L 115 130 Z"/>
+    <!-- Cubo central detras -->
+    <path d="M 65 145 L 65 105 L 100 85 L 135 105 L 135 145 L 100 165 Z"/>
+  </g>
+  <!-- Rayos dorados desde el centro -->
+  <g stroke="#C8A059" stroke-width="3" stroke-linecap="round" opacity="0.85">
+    <line x1="100" y1="40" x2="100" y2="65"/>
+    <line x1="60" y1="55" x2="78" y2="73"/>
+    <line x1="140" y1="55" x2="122" y2="73"/>
+    <line x1="45" y1="100" x2="68" y2="105"/>
+    <line x1="155" y1="100" x2="132" y2="105"/>
+    <line x1="60" y1="145" x2="78" y2="135"/>
+    <line x1="140" y1="145" x2="122" y2="135"/>
+    <line x1="100" y1="160" x2="100" y2="140"/>
+  </g>
+  <!-- Icosaedro/diamante dorado central -->
+  <g>
+    <polygon points="100,75 122,90 122,118 100,133 78,118 78,90"
+             fill="#C8A059" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Facetas internas -->
+    <line x1="100" y1="75" x2="100" y2="133" stroke="#FFFFFF" stroke-width="1" opacity="0.6"/>
+    <line x1="78" y1="90" x2="122" y2="118" stroke="#FFFFFF" stroke-width="1" opacity="0.6"/>
+    <line x1="122" y1="90" x2="78" y2="118" stroke="#FFFFFF" stroke-width="1" opacity="0.6"/>
+  </g>
+</svg>
