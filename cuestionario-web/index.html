@@ -272,6 +272,81 @@ h1 em {
   flex-shrink: 0;
 }
 
+.faq {
+  margin-top: 64px;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+}
+.faq-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.faq-item {
+  border-bottom: 1px solid var(--rule);
+  padding: 16px 0;
+}
+.faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  padding-right: 32px;
+  position: relative;
+  user-select: none;
+  outline: none;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  top: -2px;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--green-deep);
+  transition: transform 0.2s ease;
+  line-height: 1;
+}
+.faq-item[open] summary::after {
+  content: "−";
+}
+.faq-item summary:hover {
+  color: var(--green-deep);
+}
+.faq-item summary:focus-visible {
+  box-shadow: 0 0 0 3px var(--ring);
+  border-radius: 4px;
+}
+.faq-item p {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.faq-item p code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  background: var(--sand-warm);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.faq-item p a {
+  color: var(--green-deep);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 2px;
+}
+.faq-item p a:hover {
+  text-decoration-color: var(--green-deep);
+}
+
 .form-section { display: none; }
 .form-section.active { display: block; animation: fadeIn 0.4s ease-out; }
 
@@ -802,6 +877,42 @@ footer a:hover { text-decoration: underline; }
       <span data-i18n="trust-3">Sin venta, solo investigación</span>
     </div>
   </div>
+
+  <section class="faq">
+    <h2 class="faq-title" data-i18n="faq-title">¿Tienes dudas? Estas son las preguntas que más nos hacen.</h2>
+    <details class="faq-item">
+      <summary data-i18n="faq-q1">¿Quiénes son MacLorian X Group?</summary>
+      <p data-i18n="faq-a1">Somos una empresa de tecnología basada en Cape Coral, fundada por Miguel Angel Balart Batlle. Estamos diseñando una nueva plataforma para profesionales de servicios y homeowners de SW Florida. La empresa está registrada como LLC en Florida.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q2">¿Para qué van a usar mis respuestas?</summary>
+      <p data-i18n="faq-a2">Para entender cómo trabajan los proveedores reales y qué necesitan los homeowners reales en SW Florida, antes de construir el producto. Tus respuestas moldean directamente las decisiones de qué construimos y qué descartamos. Si lo que diseñamos te sirve, serás de los primeros en probarlo.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q3">¿Es confidencial? ¿Mis datos son anónimos?</summary>
+      <p data-i18n="faq-a3">Tus respuestas se guardan en nuestra base de datos privada y no se comparten con terceros, ni se publican, ni se venden. Los reportes y conclusiones que hagamos son agregados (sin identificar a personas específicas). Tu nombre y contacto solo los usamos si elegiste que te avisemos cuando esté listo.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q4">¿Me van a vender algo después de responder?</summary>
+      <p data-i18n="faq-a4">No. Esto es investigación, no es un funnel de ventas. Si al final del cuestionario marcaste que querés que te avisemos, te escribiremos UNA sola vez cuando el producto esté listo para probar. Si dijiste que no, no te contactamos.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q5">¿Cuánto me toma realmente?</summary>
+      <p data-i18n="faq-a5">8-12 minutos si vas leyendo y respondiendo sin pensar mucho. Más si querés dar respuestas detalladas (ideal para nosotros, pero no obligatorio). Las preguntas con asterisco son obligatorias; el resto las podés saltar.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q6">¿Por qué debería darle 10 minutos a alguien que no conozco?</summary>
+      <p data-i18n="faq-a6">Porque tu opinión real puede cambiar el producto antes de que existan errores caros. La mayoría de productos de servicios fracasan porque nunca preguntaron a la gente del campo cómo trabaja. Estamos haciendo lo opuesto: preguntar antes de construir.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q7">¿Esto es legítimo o phishing?</summary>
+      <p data-i18n="faq-a7">Legítimo. La URL <code>investigacion.maclorianxgroup.com</code> está bajo nuestro dominio corporativo registrado. No te pedimos contraseñas, número de tarjeta, ni nada sensible — solo info de tu negocio (proveedor) o tus hábitos de mantenimiento (homeowner). Si tenés dudas, escribime directo a <a href="mailto:contact@maclorianxgroup.com">contact@maclorianxgroup.com</a>.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q8">¿Qué pasa si dejo respuestas en blanco o me equivoco?</summary>
+      <p data-i18n="faq-a8">Las preguntas marcadas con asterisco (*) son obligatorias. El resto las podés saltar si no aplican o no querés contestar. Tu respuesta cuenta igual aunque dejes algunas en blanco — preferimos respuestas honestas-incompletas a respuestas inventadas-completas.</p>
+    </details>
+  </section>
 </section>
 
 <!-- ============================== PROVEEDOR ============================== -->
@@ -1418,6 +1529,23 @@ const TRANSLATIONS = {
     "trust-1": "Tus respuestas son confidenciales",
     "trust-2": "Toma 10–12 minutos",
     "trust-3": "Sin venta, solo investigación",
+    "faq-title": "¿Tienes dudas? Estas son las preguntas que más nos hacen.",
+    "faq-q1": "¿Quiénes son MacLorian X Group?",
+    "faq-a1": "Somos una empresa de tecnología basada en Cape Coral, fundada por Miguel Angel Balart Batlle. Estamos diseñando una nueva plataforma para profesionales de servicios y homeowners de SW Florida. La empresa está registrada como LLC en Florida.",
+    "faq-q2": "¿Para qué van a usar mis respuestas?",
+    "faq-a2": "Para entender cómo trabajan los proveedores reales y qué necesitan los homeowners reales en SW Florida, antes de construir el producto. Tus respuestas moldean directamente las decisiones de qué construimos y qué descartamos. Si lo que diseñamos te sirve, serás de los primeros en probarlo.",
+    "faq-q3": "¿Es confidencial? ¿Mis datos son anónimos?",
+    "faq-a3": "Tus respuestas se guardan en nuestra base de datos privada y no se comparten con terceros, ni se publican, ni se venden. Los reportes y conclusiones que hagamos son agregados (sin identificar a personas específicas). Tu nombre y contacto solo los usamos si elegiste que te avisemos cuando esté listo.",
+    "faq-q4": "¿Me van a vender algo después de responder?",
+    "faq-a4": "No. Esto es investigación, no es un funnel de ventas. Si al final del cuestionario marcaste que querés que te avisemos, te escribiremos UNA sola vez cuando el producto esté listo para probar. Si dijiste que no, no te contactamos.",
+    "faq-q5": "¿Cuánto me toma realmente?",
+    "faq-a5": "8-12 minutos si vas leyendo y respondiendo sin pensar mucho. Más si querés dar respuestas detalladas (ideal para nosotros, pero no obligatorio). Las preguntas con asterisco son obligatorias; el resto las podés saltar.",
+    "faq-q6": "¿Por qué debería darle 10 minutos a alguien que no conozco?",
+    "faq-a6": "Porque tu opinión real puede cambiar el producto antes de que existan errores caros. La mayoría de productos de servicios fracasan porque nunca preguntaron a la gente del campo cómo trabaja. Estamos haciendo lo opuesto: preguntar antes de construir.",
+    "faq-q7": "¿Esto es legítimo o phishing?",
+    "faq-a7": "Legítimo. La URL <code>investigacion.maclorianxgroup.com</code> está bajo nuestro dominio corporativo registrado. No te pedimos contraseñas, número de tarjeta, ni nada sensible — solo info de tu negocio (proveedor) o tus hábitos de mantenimiento (homeowner). Si tenés dudas, escribime directo a <a href=\"mailto:contact@maclorianxgroup.com\">contact@maclorianxgroup.com</a>.",
+    "faq-q8": "¿Qué pasa si dejo respuestas en blanco o me equivoco?",
+    "faq-a8": "Las preguntas marcadas con asterisco (*) son obligatorias. El resto las podés saltar si no aplican o no querés contestar. Tu respuesta cuenta igual aunque dejes algunas en blanco — preferimos respuestas honestas-incompletas a respuestas inventadas-completas.",
     "back": "Volver",
     "pro-title": "Cuéntanos cómo trabajas hoy.",
     "pro-intro": "20 preguntas. Lo importante son los detalles concretos: tus servicios reales, tus precios reales, tus dolores reales. Cuanto más honesto, más útil para ti y para nosotros.",
@@ -1585,6 +1713,23 @@ const TRANSLATIONS = {
     "trust-1": "Your answers are confidential",
     "trust-2": "Takes 10–12 minutes",
     "trust-3": "No sales, just research",
+    "faq-title": "Got questions? These are the ones we hear most.",
+    "faq-q1": "Who is MacLorian X Group?",
+    "faq-a1": "We're a tech company based in Cape Coral, founded by Miguel Angel Balart Batlle. We're designing a new platform for service professionals and homeowners in SW Florida. The company is registered as an LLC in Florida.",
+    "faq-q2": "What will you use my answers for?",
+    "faq-a2": "To understand how real service providers work and what real homeowners need in SW Florida, before we build the product. Your answers directly shape what we build and what we drop. If what we design is useful to you, you'll be among the first to try it.",
+    "faq-q3": "Is it confidential? Is my data anonymous?",
+    "faq-a3": "Your answers are stored in our private database and are not shared with third parties, nor published, nor sold. Any reports and conclusions we share are aggregated (without identifying specific people). We only use your name and contact info if you chose to be notified when it's ready.",
+    "faq-q4": "Will you try to sell me something after I answer?",
+    "faq-a4": "No. This is research, not a sales funnel. If at the end of the questionnaire you opted in to be notified, we'll write you ONCE when the product is ready to try. If you opted out, we won't contact you.",
+    "faq-q5": "How long does it really take?",
+    "faq-a5": "8-12 minutes if you read and answer without overthinking. Longer if you want to give detailed answers (ideal for us, not required). Questions with an asterisk are required; the rest you can skip.",
+    "faq-q6": "Why should I give 10 minutes to someone I don't know?",
+    "faq-a6": "Because your real opinion can change the product before expensive mistakes happen. Most service products fail because nobody asked the people in the field how they actually work. We're doing the opposite: asking before building.",
+    "faq-q7": "Is this legit or phishing?",
+    "faq-a7": "Legit. The URL <code>investigacion.maclorianxgroup.com</code> is under our registered corporate domain. We don't ask for passwords, card numbers, or anything sensitive — just info about your business (provider) or maintenance habits (homeowner). If in doubt, email me directly at <a href=\"mailto:contact@maclorianxgroup.com\">contact@maclorianxgroup.com</a>.",
+    "faq-q8": "What if I leave answers blank or get something wrong?",
+    "faq-a8": "Questions marked with an asterisk (*) are required. The rest you can skip if they don't apply or you'd rather not answer. Your response still counts even with blanks — we prefer honest-and-incomplete over made-up-and-complete.",
     "back": "Back",
     "pro-title": "Tell us how you work today.",
     "pro-intro": "20 questions. The details matter: your real services, your real prices, your real pains. The more honest, the more useful for you and for us.",
