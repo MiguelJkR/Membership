@@ -1,0 +1,7 @@
+{
+  "name": "maclorian-holding-web",
+  "version": "1.0.0",
+  "description": "Landing del holding MacLorian X Group LLC",
+  "type": "module",
+  "private": true
+}
