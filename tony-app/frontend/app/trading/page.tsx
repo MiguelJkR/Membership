@@ -20,17 +20,17 @@ export default function TradingPage() {
 
   return (
     <div className="p-5 space-y-4">
-      <PageHeader title="Trading Terminal" subtitle="MULTI-EXCHANGE · MOOMOO + OANDA · LIVE" />
+      <PageHeader title="Terminal de Trading" subtitle="MULTI-EXCHANGE · MOOMOO + OANDA · EN VIVO" />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <MiniMetric label="MOOMOO P/L" value={fmt(m.total_pl)} tone={(m.total_pl || 0) >= 0 ? "green" : "red"} />
-        <MiniMetric label="OANDA P/L" value={fmt(t.oanda?.total_pl)} tone="amber" />
-        <MiniMetric label="OPEN POS" value={`${(m.positions_count || 0) + (o.open_trades_count || 0)}`} />
-        <MiniMetric label="PENDING SIGS" value={`${(data.signals?.signals || []).length}`} tone="cyan" />
+        <MiniMetric label="G/P MOOMOO" value={fmt(m.total_pl)} tone={(m.total_pl || 0) >= 0 ? "green" : "red"} />
+        <MiniMetric label="G/P OANDA" value={fmt(t.oanda?.total_pl)} tone="amber" />
+        <MiniMetric label="POS. ABIERTAS" value={`${(m.positions_count || 0) + (o.open_trades_count || 0)}`} />
+        <MiniMetric label="SEÑALES PENDIENTES" value={`${(data.signals?.signals || []).length}`} tone="cyan" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card title="MOOMOO POSITIONS · REAL $" glow="green">
+        <Card title="POSICIONES MOOMOO · DINERO REAL" glow="green">
           <div className="flex flex-col gap-1.5">
             {(t.moomoo_positions || []).map((p: any, i: number) => (
               <div key={i} className="flex items-center justify-between px-3 py-2 bg-black/40 rounded border border-[var(--color-border)] hover:border-[var(--color-border-bright)]">
@@ -50,10 +50,10 @@ export default function TradingPage() {
           </div>
         </Card>
 
-        <Card title="OANDA POSITIONS · DEMO" glow="cyan">
+        <Card title="POSICIONES OANDA · DEMO" glow="cyan">
           <div className="mb-2 text-[9px] tracking-widest text-[var(--color-amber)] flex items-center gap-2">
             <span className="px-2 py-0.5 rounded border border-[var(--color-amber)]">SIN DINERO REAL</span>
-            forex/crypto practice
+            forex/crypto práctica
           </div>
           <div className="flex flex-col gap-1.5">
             {(o.open_positions || []).map((p: any, i: number) => (
@@ -72,21 +72,23 @@ export default function TradingPage() {
         </Card>
       </div>
 
-      <Card title="TRADINGVIEW LIVE CHART" glow="cyan">
+      <Card title="GRÁFICO TRADINGVIEW EN VIVO" glow="cyan">
         <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ%3AAAL&interval=D&theme=dark&style=1&locale=en"
+          src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ%3AAAL&interval=D&theme=dark&style=1&locale=es"
           className="w-full h-[420px] rounded border border-[var(--color-border)]"
           title="TradingView"
           allow="clipboard-write"
         />
       </Card>
 
-      <Card title="PENDING SIGNALS · APPROVAL FLOW">
+      <Card title="SEÑALES PENDIENTES · APROBACIÓN MANUAL">
         <div className="flex flex-col gap-1.5">
           {(data.signals?.signals || []).map((s: any) => (
             <div key={s.id} className="flex items-center justify-between px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
               <span className="text-sm">
-                <span className={`font-bold ${s.action === "BUY" ? "text-[var(--color-green)]" : "text-[var(--color-red)]"}`}>{s.action}</span>
+                <span className={`font-bold ${s.action === "BUY" ? "text-[var(--color-green)]" : "text-[var(--color-red)]"}`}>
+                  {s.action === "BUY" ? "COMPRAR" : s.action === "SELL" ? "VENDER" : s.action}
+                </span>
                 <span className="text-[var(--color-text)] ml-2">{s.shares} {s.symbol}</span>
                 {s.price && <span className="text-[var(--color-text-dim)] ml-2">@ ${s.price}</span>}
               </span>
@@ -96,7 +98,7 @@ export default function TradingPage() {
               </div>
             </div>
           ))}
-          {!(data.signals?.signals || []).length && <div className="text-[10px] text-[var(--color-text-dim)] py-4">Sin signals pending</div>}
+          {!(data.signals?.signals || []).length && <div className="text-[10px] text-[var(--color-text-dim)] py-4">Sin señales pendientes</div>}
         </div>
       </Card>
     </div>

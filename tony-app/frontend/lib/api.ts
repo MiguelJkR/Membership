@@ -65,7 +65,76 @@ export const api = {
   company: () => fetchJson<any>("/api/company"),
   socialPostDraft: (brand: string, topic: string, platform = "twitter") =>
     fetchJson<any>("/api/social_post_draft", { method: "POST", body: JSON.stringify({ brand, topic, platform }) }),
+  watchlist: () => fetchJson<any>("/api/watchlist"),
+  workflowDetail: (id: string) => fetchJson<any>(`/api/workflow_detail?id=${encodeURIComponent(id)}`),
+  vaultList: () => fetchJson<{ ok: boolean; exists: boolean; entries?: any[]; salt_b64?: string; iterations?: number }>("/api/vault/list"),
+  vaultSave: (entries: any[], salt_b64: string, iterations: number) =>
+    fetchJson<any>("/api/vault/save", { method: "POST", body: JSON.stringify({ entries, salt_b64, iterations }) }),
+  socialQueue: () => fetchJson<{ ok: boolean; queue: any[] }>("/api/social_queue"),
+  socialQueueAdd: (posts: any[]) =>
+    fetchJson<any>("/api/social_queue/add", { method: "POST", body: JSON.stringify({ posts }) }),
+  socialQueueUpdate: (id: string, updates: any) =>
+    fetchJson<any>("/api/social_queue/update", { method: "POST", body: JSON.stringify({ id, updates }) }),
+  socialQueueDelete: (id: string) =>
+    fetchJson<any>("/api/social_queue/delete", { method: "POST", body: JSON.stringify({ id }) }),
+  // === Tony Agent (autonomous tool-using agent) ===
+  agentTools: () =>
+    fetchJson<{ ok: boolean; tools: Array<{ name: string; description: string; parameters: Record<string, string>; requires_approval: boolean }> }>(
+      "/api/tony_agent/tools"
+    ),
+  agentRun: (goal: string) =>
+    fetchJson<AgentSessionResponse>("/api/tony_agent/run", {
+      method: "POST",
+      body: JSON.stringify({ goal }),
+    }),
+  agentApprove: (id: string, action: "approve_once" | "approve_always" | "deny") =>
+    fetchJson<AgentSessionResponse>("/api/tony_agent/approve", {
+      method: "POST",
+      body: JSON.stringify({ id, action }),
+    }),
+  agentSessions: () =>
+    fetchJson<{ ok: boolean; sessions: Array<{ id: string; goal: string; status: string; iterations: number; created_at: number }> }>(
+      "/api/tony_agent/sessions"
+    ),
+  agentSessionDetail: (id: string) =>
+    fetchJson<{ ok: boolean; session: any }>(`/api/tony_agent/session/${encodeURIComponent(id)}`),
 };
+
+export type AgentTraceEntry =
+  | { type: "assistant"; content: string | null; tool_calls?: Array<{ id: string; function: { name: string; arguments: string } }>; model: string; iteration: number }
+  | { type: "tool_result"; tool: string; ok: boolean; preview: string; full_count?: number | null }
+  | { type: "approval_pause"; pending: { tool: string; args: Record<string, any>; description: string; tool_call_id: string } }
+  | { type: "approval"; decision: string; tool: string; ok?: boolean; preview?: string }
+  | { type: "llm_error"; error: string };
+
+export type AgentSessionResponse = {
+  ok: boolean;
+  id: string;
+  status: "running" | "complete" | "needs_approval" | "error" | "max_iterations";
+  iterations: number;
+  trace: AgentTraceEntry[];
+  final_answer?: string | null;
+  pending_approval?: { tool: string; args: Record<string, any>; description: string; tool_call_id: string } | null;
+  error?: string | null;
+};
+
+// Helper: build platform-native composer intent URL
+export function buildIntentUrl(platform: string, text: string, url?: string): string {
+  const enc = encodeURIComponent(text + (url ? "\n" + url : ""));
+  switch (platform) {
+    case "twitter":
+      return `https://twitter.com/intent/tweet?text=${enc}`;
+    case "linkedin":
+      return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url || "")}&summary=${enc}`;
+    case "instagram":
+      // IG no acepta intent URL — abrir compose web
+      return "https://www.instagram.com/";
+    case "tiktok":
+      return "https://www.tiktok.com/upload";
+    default:
+      return "#";
+  }
+}
 
 export const fmt = (n: number | undefined) =>
   "$" + (n || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");

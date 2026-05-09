@@ -5,28 +5,29 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, TrendingUp, Bot, Workflow, Zap, BarChart3,
   ShieldCheck, Settings, Brain, Eye, ChevronLeft, ChevronRight,
-  Mail, MessageCircle, Library, Newspaper, Building2, Megaphone
+  Mail, MessageCircle, Library, Newspaper, Building2, Megaphone, KeyRound
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/", icon: LayoutDashboard, label: "DASHBOARD" },
-  { href: "/chat", icon: MessageCircle, label: "TONY CHAT" },
-  { href: "/company", icon: Building2, label: "COMPANY" },
-  { href: "/social-manager", icon: Megaphone, label: "SOCIAL POST" },
+  { href: "/", icon: LayoutDashboard, label: "PANEL" },
+  { href: "/chat", icon: MessageCircle, label: "CHAT TONY" },
+  { href: "/company", icon: Building2, label: "EMPRESA" },
+  { href: "/social-manager", icon: Megaphone, label: "POSTS SOCIALES" },
   { href: "/trading", icon: TrendingUp, label: "TRADING" },
-  { href: "/agents", icon: Bot, label: "AI AGENTS" },
-  { href: "/workflows", icon: Workflow, label: "WORKFLOWS" },
+  { href: "/agents", icon: Bot, label: "AGENTES IA" },
+  { href: "/workflows", icon: Workflow, label: "FLUJOS N8N" },
   { href: "/email", icon: Mail, label: "EMAIL" },
-  { href: "/news", icon: Newspaper, label: "NEWS" },
-  { href: "/research", icon: Library, label: "RESEARCH" },
-  { href: "/matrix", icon: Brain, label: "MATRIX MODE" },
-  { href: "/social", icon: Eye, label: "SOCIAL INTEL" },
-  { href: "/analytics", icon: BarChart3, label: "ANALYTICS" },
-  { href: "/security", icon: ShieldCheck, label: "SECURITY" },
-  { href: "/automation", icon: Zap, label: "AUTOMATION" },
-  { href: "/settings", icon: Settings, label: "SETTINGS" },
+  { href: "/news", icon: Newspaper, label: "NOTICIAS" },
+  { href: "/research", icon: Library, label: "INVESTIGACIÓN" },
+  { href: "/matrix", icon: Brain, label: "MODO MATRIX" },
+  { href: "/social", icon: Eye, label: "INTEL SOCIAL" },
+  { href: "/analytics", icon: BarChart3, label: "ANÁLISIS" },
+  { href: "/security", icon: ShieldCheck, label: "SEGURIDAD" },
+  { href: "/vault", icon: KeyRound, label: "BÓVEDA" },
+  { href: "/automation", icon: Zap, label: "AUTOMATIZACIÓN" },
+  { href: "/settings", icon: Settings, label: "AJUSTES" },
 ];
 
 export function Sidebar() {
@@ -84,7 +85,7 @@ export function Sidebar() {
         onClick={() => setCollapsed(!collapsed)}
         className="flex items-center justify-center gap-2 p-3 border-t border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-cyan)]"
       >
-        {collapsed ? <ChevronRight size={14} /> : <><ChevronLeft size={14} /><span className="text-[9px] tracking-widest font-mono">COLLAPSE</span></>}
+        {collapsed ? <ChevronRight size={14} /> : <><ChevronLeft size={14} /><span className="text-[9px] tracking-widest font-mono">COLAPSAR</span></>}
       </button>
     </aside>
   );

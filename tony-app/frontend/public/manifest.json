@@ -1,0 +1,15 @@
+{
+  "name": "TONY AI · MacLorian X Group",
+  "short_name": "TONY AI",
+  "description": "AI Autonomous Trading & Automation Operating System",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#050810",
+  "theme_color": "#050810",
+  "icons": [
+    { "src": "/tony-character-1.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/tony-character-1.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["finance", "productivity", "utilities"]
+}

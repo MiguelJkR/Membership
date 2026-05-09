@@ -5,53 +5,53 @@ import { User, Wallet, Bell, Cpu, Database, Globe } from "lucide-react";
 
 const SECTIONS = [
   {
-    icon: User, title: "PROFILE",
+    icon: User, title: "PERFIL",
     items: [
-      { label: "Name", value: "Miguel A Balart Batlle" },
+      { label: "Nombre", value: "Miguel A Balart Batlle" },
       { label: "Email", value: "contact@maclorianxgroup.com" },
-      { label: "Location", value: "Cape Coral, FL · USA" },
+      { label: "Ubicación", value: "Cape Coral, FL · USA" },
       { label: "Telegram", value: "8604927061" },
     ]
   },
   {
-    icon: Wallet, title: "BROKERS · CONNECTED",
+    icon: Wallet, title: "BROKERS · CONECTADOS",
     items: [
-      { label: "Moomoo (real)", value: "OPENAPI 11111 · 4 positions" },
-      { label: "OANDA (demo)", value: "fxpractice · acc 101-001-39012241" },
-      { label: "PDT status", value: "VERIFY in Moomoo app" },
+      { label: "Moomoo (real)", value: "OPENAPI 11111 · 4 posiciones" },
+      { label: "OANDA (demo)", value: "fxpractice · cuenta 101-001-39012241" },
+      { label: "Estado PDT", value: "VERIFICAR en app Moomoo" },
     ]
   },
   {
-    icon: Cpu, title: "LLM PROVIDERS",
+    icon: Cpu, title: "PROVEEDORES LLM",
     items: [
-      { label: "Groq primary", value: "key gsk_5uHJR4...FqMF (rotated 2026-05-08)" },
-      { label: "Ollama fallback", value: "llama3.2:3b · localhost:11434" },
-      { label: "Anthropic Claude", value: "credentials in n8n" },
+      { label: "Groq principal", value: "key gsk_5uHJR4...FqMF (rotada 2026-05-08)" },
+      { label: "Ollama respaldo", value: "llama3.2:3b · localhost:11434" },
+      { label: "Anthropic Claude", value: "credenciales en n8n" },
     ]
   },
   {
-    icon: Bell, title: "NOTIFICATIONS",
+    icon: Bell, title: "NOTIFICACIONES",
     items: [
-      { label: "Telegram bot", value: "@MaclorianxBot · webhook OK" },
-      { label: "Voice TTS", value: "Spanish · enabled" },
-      { label: "Email auto-classify", value: "100% reliability (Groq+Ollama)" },
+      { label: "Bot Telegram", value: "@MaclorianxBot · webhook OK" },
+      { label: "Voz TTS", value: "Español · habilitada" },
+      { label: "Auto-clasificación email", value: "100% confiabilidad (Groq+Ollama)" },
     ]
   },
   {
-    icon: Database, title: "STORAGE",
+    icon: Database, title: "ALMACENAMIENTO",
     items: [
-      { label: "n8n DB", value: "C:/Users/migue/.n8n/database.sqlite (97MB)" },
+      { label: "DB n8n", value: "C:/Users/migue/.n8n/database.sqlite (97MB)" },
       { label: "Vector store", value: "chromadb · 74 chunks YouTube + 2 approvals" },
-      { label: "GitHub vault", value: "MiguelJkR/claude-agent-vault (private)" },
+      { label: "Bóveda GitHub", value: "MiguelJkR/claude-agent-vault (privado)" },
     ]
   },
   {
-    icon: Globe, title: "INFRASTRUCTURE",
+    icon: Globe, title: "INFRAESTRUCTURA",
     items: [
-      { label: "n8n", value: ":5678 · 47 active workflows" },
-      { label: "Tony Dashboard (legacy)", value: ":8765 Flask" },
-      { label: "Tony AI (new)", value: ":3000 Next.js (this app)" },
-      { label: "ngrok tunnel", value: "tradition-donor-rummage.ngrok-free.dev" },
+      { label: "n8n", value: ":5678 · 47 flujos activos" },
+      { label: "Panel Tony (legado)", value: ":8765 Flask" },
+      { label: "Tony AI (nuevo)", value: ":3000 Next.js (esta app)" },
+      { label: "Túnel ngrok", value: "tradition-donor-rummage.ngrok-free.dev" },
     ]
   }
 ];
@@ -59,7 +59,7 @@ const SECTIONS = [
 export default function SettingsPage() {
   return (
     <div className="p-5 space-y-4">
-      <PageHeader title="Settings" subtitle="ACCOUNT · INFRASTRUCTURE · PREFERENCES" />
+      <PageHeader title="Ajustes" subtitle="CUENTA · INFRAESTRUCTURA · PREFERENCIAS" />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {SECTIONS.map((s) => {

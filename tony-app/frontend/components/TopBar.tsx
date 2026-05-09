@@ -1,9 +1,12 @@
 "use client";
-import { Activity, Bell, User, Wifi, WifiOff } from "lucide-react";
+import { Activity, Bell, User, Wifi, WifiOff, Volume2, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api, fmt } from "@/lib/api";
+import { signOut, useSession } from "next-auth/react";
 
 export function TopBar() {
+  const session = useSession();
+  const userName = session.data?.user?.name?.split(" ")[0] || "MIGUEL";
   const [aiStatus, setAiStatus] = useState<"online" | "offline" | "checking">("checking");
   const [capital, setCapital] = useState<number | undefined>();
   const [pl, setPl] = useState<number | undefined>();
@@ -41,13 +44,13 @@ export function TopBar() {
         }`}>
           {aiStatus === "online" ? <Wifi size={12} /> : <WifiOff size={12} />}
           <span className="text-[9px] tracking-widest font-mono">
-            {aiStatus === "online" ? "SYSTEM ONLINE" : aiStatus === "offline" ? "SYSTEM OFFLINE" : "CHECKING..."}
+            {aiStatus === "online" ? "SISTEMA EN LÍNEA" : aiStatus === "offline" ? "SISTEMA OFFLINE" : "VERIFICANDO..."}
           </span>
           {aiStatus === "online" && <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-green)] animate-pulse" />}
         </div>
         <div className="hidden sm:flex items-center gap-2 text-[var(--color-text-dim)]">
           <Activity size={12} />
-          <span className="text-[9px] font-mono tracking-widest">AUTONOMOUS · MULTI-AGENT</span>
+          <span className="text-[9px] font-mono tracking-widest">AUTÓNOMO · MULTI-AGENTE</span>
         </div>
       </div>
 
@@ -65,8 +68,18 @@ export function TopBar() {
         </div>
       </div>
 
-      {/* Right: Alerts + Profile */}
+      {/* Right: Voice + Alerts + Profile */}
       <div className="flex items-center gap-3">
+        <button
+          onClick={async () => {
+            const text = prompt("¿Qué le digo a Tony para hablar?", "Sistema operativo, Miguel.");
+            if (text) await api.voice(text);
+          }}
+          className="p-2 rounded text-[var(--color-text-dim)] hover:text-[var(--color-green)] transition-colors"
+          title="Tony habla (TTS spanish)"
+        >
+          <Volume2 size={16} strokeWidth={1.5} />
+        </button>
         <button className="relative p-2 rounded text-[var(--color-text-dim)] hover:text-[var(--color-amber)] transition-colors">
           <Bell size={16} strokeWidth={1.5} />
           {alerts > 0 && (
@@ -77,7 +90,14 @@ export function TopBar() {
         </button>
         <button className="flex items-center gap-2 px-3 py-1.5 rounded border border-[var(--color-border)] hover:border-[var(--color-cyan)]/40 transition-colors">
           <User size={12} className="text-[var(--color-cyan)]" />
-          <span className="text-[10px] tracking-widest font-mono text-[var(--color-text)]">MIGUEL</span>
+          <span className="text-[10px] tracking-widest font-mono text-[var(--color-text)]">{userName.toUpperCase()}</span>
+        </button>
+        <button
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="p-2 rounded text-[var(--color-text-dim)] hover:text-[var(--color-red)] transition-colors"
+          title="Cerrar sesión"
+        >
+          <LogOut size={16} strokeWidth={1.5} />
         </button>
       </div>
     </header>

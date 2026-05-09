@@ -1,0 +1,8 @@
+.env.local
+.env
+node_modules
+.next
+.git
+*.log
+.vault.enc.json*
+.workflow_backups/
