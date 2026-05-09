@@ -32,57 +32,57 @@ export default function Home() {
     <div className="p-5 space-y-4">
       <div className="flex items-baseline justify-between">
         <h1 className="text-2xl font-bold tracking-tight">
-          <span className="text-[var(--color-cyan)]">▸</span> Command Center
+          <span className="text-[var(--color-cyan)]">▸</span> Centro de Comando
         </h1>
         <div className="text-[10px] font-mono tracking-widest text-[var(--color-text-dim)]">
-          MACLORIAN_X · TRADING SYSTEM
+          MACLORIAN_X · SISTEMA DE TRADING
         </div>
       </div>
 
       {/* Hero metrics row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <MiniMetric label="NAV REAL" value={fmt(realMoney.total_value)} tone="cyan" />
-        <MiniMetric label="P/L UNREAL" value={fmt(pl)} tone={pl >= 0 ? "green" : "red"} />
+        <MiniMetric label="CAPITAL REAL" value={fmt(realMoney.total_value)} tone="cyan" />
+        <MiniMetric label="GANANCIA NO REALIZADA" value={fmt(pl)} tone={pl >= 0 ? "green" : "red"} />
         <MiniMetric label="RIESGO" value={`${(data.risk?.total_score || 0).toFixed(0)}/100`} tone={data.risk?.total_score >= 65 ? "red" : data.risk?.total_score < 40 ? "green" : "amber"} />
-        <MiniMetric label="HEALTH" value={`${(data.health?.composite_score || 0).toFixed(0)}/100`} tone="green" />
+        <MiniMetric label="SALUD SISTEMA" value={`${(data.health?.composite_score || 0).toFixed(0)}/100`} tone="green" />
       </div>
 
       {/* Top row: portfolio + risk + matrix */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card title="PORTFOLIO REAL" glow="green" scanline className="lg:col-span-2">
+        <Card title="PORTAFOLIO REAL" glow="green" scanline className="lg:col-span-2">
           <PortfolioSparkline rows={data.perf?.rows} series="combined" />
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
             <MiniMetric label="MOOMOO" value={fmt(m.total_value)} tone="cyan" />
             <MiniMetric label="POSICIONES" value={`${m.positions_count || 0}`} />
-            <MiniMetric label="UNREAL" value={fmt(m.unrealized_pl)} tone={(m.unrealized_pl || 0) >= 0 ? "green" : "red"} />
-            <MiniMetric label="REAL" value={fmt(m.realized_pl)} tone={(m.realized_pl || 0) >= 0 ? "green" : "red"} />
+            <MiniMetric label="NO REALIZADO" value={fmt(m.unrealized_pl)} tone={(m.unrealized_pl || 0) >= 0 ? "green" : "red"} />
+            <MiniMetric label="REALIZADO" value={fmt(m.realized_pl)} tone={(m.realized_pl || 0) >= 0 ? "green" : "red"} />
           </div>
           {/* DEMO PAPER section */}
           <div className="mt-3 px-3 py-2 rounded border-l-2 border-[var(--color-amber)] bg-[var(--color-amber)]/5">
             <div className="flex items-center justify-between">
-              <span className="text-[9px] font-mono tracking-widest text-[var(--color-amber)]">DEMO PAPER · OANDA</span>
+              <span className="text-[9px] font-mono tracking-widest text-[var(--color-amber)]">CUENTA DEMO · OANDA</span>
               <span className="text-[8px] px-2 py-0.5 rounded border border-[var(--color-amber)] text-[var(--color-amber)] tracking-widest">SIN DINERO REAL</span>
             </div>
             <div className="text-[10px] text-[var(--color-text-dim)] mt-1 font-mono">
-              NAV virtual {fmt(o.total_value)} · P/L <span className={`${(o.total_pl || 0) >= 0 ? "text-[var(--color-green)]" : "text-[var(--color-red)]"}`}>{fmt(o.total_pl)}</span>
+              Capital virtual {fmt(o.total_value)} · G/P <span className={`${(o.total_pl || 0) >= 0 ? "text-[var(--color-green)]" : "text-[var(--color-red)]"}`}>{fmt(o.total_pl)}</span>
             </div>
           </div>
         </Card>
-        <Card title="RIESGO COMPOSITE" glow="cyan">
+        <Card title="RIESGO COMPUESTO" glow="cyan">
           <RiskGauge score={data.risk?.total_score} label={data.risk?.label} />
           <div className="grid grid-cols-2 gap-2 mt-2">
             <MiniMetric label="VIX" value={(data.vix?.vix || 0).toFixed(1)} tone="amber" />
-            <MiniMetric label="REGIME" value={data.vix?.regime || "—"} />
+            <MiniMetric label="RÉGIMEN" value={data.vix?.regime || "—"} />
           </div>
         </Card>
       </div>
 
       {/* Middle row: 3 columns */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card title={`AI AGENTS · ${data.agents?.count || 0}`}>
+        <Card title={`AGENTES IA · ${data.agents?.count || 0}`}>
           <AgentsList agents={data.agents?.agents} />
         </Card>
-        <Card title="MATRIX MODE" glow="green">
+        <Card title="MODO MATRIX" glow="green">
           <MatrixStream />
         </Card>
         <Card title="EVENTOS RECIENTES">

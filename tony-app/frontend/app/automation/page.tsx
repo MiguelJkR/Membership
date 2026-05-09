@@ -27,16 +27,16 @@ export default function AutomationPage() {
 
   return (
     <div className="p-5 space-y-4">
-      <PageHeader title="Automation Center" subtitle="SCHEDULED TASKS · N8N CRONS · WATCHDOG" />
+      <PageHeader title="Centro de Automatización" subtitle="TAREAS PROGRAMADAS · CRONS N8N · WATCHDOG" />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <MiniMetric label="SCHEDULED" value={`${SCHEDULED.length}`} tone="cyan" />
-        <MiniMetric label="N8N CRONS" value={`${N8N_CRONS.length}`} tone="green" />
-        <MiniMetric label="WATCHDOG" value="ACTIVE" tone="green" />
-        <MiniMetric label="LAST FIRE" value="60s" tone="amber" />
+        <MiniMetric label="PROGRAMADAS" value={`${SCHEDULED.length}`} tone="cyan" />
+        <MiniMetric label="CRONS N8N" value={`${N8N_CRONS.length}`} tone="green" />
+        <MiniMetric label="WATCHDOG" value="ACTIVO" tone="green" />
+        <MiniMetric label="ÚLTIMO DISPARO" value="60s" tone="amber" />
       </div>
 
-      <Card title="CLAUDE SCHEDULED TASKS · ONE-TIME + RECURRING" glow="cyan">
+      <Card title="TAREAS PROGRAMADAS CLAUDE · ÚNICAS + RECURRENTES" glow="cyan">
         <div className="flex flex-col gap-1.5">
           {SCHEDULED.map((t: any) => {
             const isRecurring = !!t.cron;
@@ -61,13 +61,13 @@ export default function AutomationPage() {
           })}
           {!SCHEDULED.length && (
             <div className="text-[10px] text-[var(--color-text-dim)] py-4 flex items-center gap-2">
-              <Clock size={12} />Cargando tasks...
+              <Clock size={12} />Cargando tareas...
             </div>
           )}
         </div>
       </Card>
 
-      <Card title="N8N · CRON WORKFLOWS" glow="green">
+      <Card title="N8N · FLUJOS CRON" glow="green">
         <div className="flex flex-col gap-1.5">
           {N8N_CRONS.map((c) => (
             <div key={c.name} className="flex items-center justify-between px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">

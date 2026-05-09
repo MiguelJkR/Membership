@@ -80,10 +80,10 @@ export default function MatrixPage() {
     <div className="relative min-h-full">
       <canvas ref={canvasRef} className="fixed inset-0 z-0 opacity-50" />
       <div className="relative z-10 p-5 space-y-4">
-        <PageHeader title="Matrix Mode" subtitle="AUTONOMOUS EXECUTION FEED · NEURAL ACTIVITY · LIVE" />
+        <PageHeader title="Modo Matrix" subtitle="FEED DE EJECUCIÓN AUTÓNOMA · ACTIVIDAD NEURAL · EN VIVO" />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <Card title="EXECUTION FEED" glow="green">
+          <Card title="FEED DE EJECUCIÓN" glow="green">
             <div className="matrix-stream max-h-[60vh] overflow-y-auto px-3 py-2 bg-black/80 rounded">
               {lines.map((l, i) => (
                 <div key={i} className="leading-relaxed" style={{ opacity: 0.3 + (i / lines.length) * 0.7 }}>
@@ -94,7 +94,7 @@ export default function MatrixPage() {
             </div>
           </Card>
 
-          <Card title="AI THOUGHT PROCESS" glow="cyan">
+          <Card title="PROCESO MENTAL DE LA IA" glow="cyan">
             <div className="font-mono text-[11px] text-[var(--color-cyan)] space-y-3 max-h-[60vh] overflow-y-auto px-3 py-2 bg-black/80 rounded">
               <div>
                 <span className="text-[var(--color-text-dim)]">// strategy_ai · {new Date().toISOString().substr(11, 8)}</span>

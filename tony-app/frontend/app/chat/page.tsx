@@ -27,13 +27,13 @@ export default function ChatPage() {
     setLoading(true);
     try {
       const r = await api.tonyChat(userMsg.text);
-      // Wrapper output is wrapped in stdout from safe_run; parse if needed
-      const responseText = r.response || (r as any).stdout?.match(/"response":\s*"([^"]+)"/)?.[1] || "(sin respuesta)";
-      const cleanText = String(responseText).replace(/\\n/g, "\n").replace(/^"/, "").replace(/"$/, "");
+      // safe_run returns parsed JSON directly; response is at top level
+      const responseText = r.response || (r as any).reason || (r as any).error || "(sin respuesta)";
+      const cleanText = String(responseText).trim();
       setMessages((m) => [...m, {
         role: "tony", text: cleanText,
         source: r.source || "llm",
-        model: r.model,
+        model: r.model || "?",
         ts: new Date().toISOString()
       }]);
     } catch (e) {
@@ -53,13 +53,13 @@ export default function ChatPage() {
   return (
     <div className="p-5 flex flex-col h-[calc(100vh-60px)]">
       <PageHeader
-        title="Tony Chat"
-        subtitle="DIRECT LLM · GROQ + OLLAMA FALLBACK · NO TELEGRAM ROUNDTRIP"
+        title="Chat con Tony"
+        subtitle="LLM DIRECTO · GROQ + OLLAMA RESPALDO · SIN PASAR POR TELEGRAM"
         action={
           llmStatus && (
             <div className="flex items-center gap-2 text-[10px] font-mono">
               <span className={`px-2 py-1 rounded border ${llmStatus.groq_key ? "border-[var(--color-green)] text-[var(--color-green)]" : "border-[var(--color-red)] text-[var(--color-red)]"}`}>
-                GROQ {llmStatus.groq_key ? "OK" : "DOWN"}
+                GROQ {llmStatus.groq_key ? "OK" : "CAÍDO"}
               </span>
               <span className={`px-2 py-1 rounded border ${llmStatus.ollama_running ? "border-[var(--color-green)] text-[var(--color-green)]" : "border-[var(--color-amber)] text-[var(--color-amber)]"}`}>
                 OLLAMA {llmStatus.ollama_running ? "OK" : "OFF"}
@@ -130,7 +130,7 @@ export default function ChatPage() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") send(); }}
             disabled={loading}
-            placeholder="Preguntale a Tony..."
+            placeholder="Preguntale a Tony lo que necesites..."
             className="flex-1 px-4 py-2 bg-black/40 border border-[var(--color-border)] rounded text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-dim)] focus:outline-none focus:border-[var(--color-cyan)] font-mono"
           />
           <button

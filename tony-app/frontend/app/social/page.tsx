@@ -23,7 +23,7 @@ const FEAR_GREED = 47;
 export default function SocialPage() {
   return (
     <div className="p-5 space-y-4">
-      <PageHeader title="Social Intelligence" subtitle="MULTI-PLATFORM SENTIMENT · WHALE ALERTS · TREND DETECTION" />
+      <PageHeader title="Inteligencia Social" subtitle="SENTIMIENTO MULTI-PLATAFORMA · ALERTAS WHALE · DETECCIÓN DE TENDENCIAS" />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {PLATFORMS.map((p) => (
@@ -39,7 +39,7 @@ export default function SocialPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card title="FEAR & GREED INDEX" glow="cyan" className="lg:col-span-1">
+        <Card title="ÍNDICE MIEDO Y CODICIA" glow="cyan" className="lg:col-span-1">
           <div className="flex flex-col items-center py-4">
             <div className="text-5xl font-mono font-bold text-[var(--color-amber)]">{FEAR_GREED}</div>
             <div className="text-[10px] tracking-widest text-[var(--color-text-dim)] mt-2">NEUTRAL</div>
@@ -50,19 +50,19 @@ export default function SocialPage() {
               }} />
             </div>
             <div className="flex justify-between w-full text-[8px] tracking-widest text-[var(--color-text-dim)] mt-1">
-              <span>FEAR</span><span>GREED</span>
+              <span>MIEDO</span><span>CODICIA</span>
             </div>
           </div>
         </Card>
 
-        <Card title="TRENDING TICKERS" glow="green" className="lg:col-span-2">
+        <Card title="TICKERS EN TENDENCIA" glow="green" className="lg:col-span-2">
           <div className="flex flex-col gap-1.5">
             {TRENDING.map((t) => (
               <div key={t.ticker} className="flex items-center justify-between px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
                 <div className="flex items-center gap-3">
                   <TrendingUp size={14} className="text-[var(--color-cyan)]" />
                   <span className="text-sm font-bold text-[var(--color-text)]">{t.ticker}</span>
-                  <span className="text-[10px] font-mono text-[var(--color-text-dim)]">{t.mentions} mentions</span>
+                  <span className="text-[10px] font-mono text-[var(--color-text-dim)]">{t.mentions} menciones</span>
                 </div>
                 <span className={`text-[11px] font-mono ${t.change >= 0 ? "text-[var(--color-green)]" : "text-[var(--color-red)]"}`}>
                   {t.change >= 0 ? "+" : ""}{(t.change * 100).toFixed(1)}%
@@ -73,13 +73,13 @@ export default function SocialPage() {
         </Card>
       </div>
 
-      <Card title="WHALE ALERTS" glow="cyan">
+      <Card title="ALERTAS WHALE" glow="cyan">
         <div className="flex items-start gap-2 p-3 bg-black/40 rounded border border-[var(--color-amber)]/40">
           <AlertCircle size={16} className="text-[var(--color-amber)] shrink-0 mt-0.5" />
           <div>
-            <div className="text-[10px] tracking-widest text-[var(--color-amber)] font-mono">PLACEHOLDER · INTEGRATION PENDING</div>
+            <div className="text-[10px] tracking-widest text-[var(--color-amber)] font-mono">PLACEHOLDER · INTEGRACIÓN PENDIENTE</div>
             <div className="text-[11px] text-[var(--color-text-dim)] mt-1">
-              Conectar a Whale Alert API + on-chain Etherscan/BSCscan + Twitter trending coin mentions. Outputs: tx grandes, walls de buy/sell, accumulation patterns.
+              Conectar a Whale Alert API + on-chain Etherscan/BSCscan + menciones trending Twitter. Salidas: transacciones grandes, walls de compra/venta, patrones de acumulación.
             </div>
           </div>
         </div>

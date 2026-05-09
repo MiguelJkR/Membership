@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, MiniMetric } from "@/components/Card";
 import { PageHeader } from "@/components/PageHeader";
-import { Globe, ExternalLink, AlertCircle, CheckCircle2, Building2, Banknote, FileText, Mail, Github } from "lucide-react";
+import { Globe, ExternalLink, AlertCircle, CheckCircle2, Building2, Banknote, FileText, Mail } from "lucide-react";
 
 const STATUS_COLOR: Record<string, string> = {
   LIVE: "text-[var(--color-green)] border-[var(--color-green)]/40 bg-[var(--color-green)]/10",
@@ -33,17 +33,17 @@ export default function CompanyPage() {
 
   return (
     <div className="p-5 space-y-4">
-      <PageHeader title="Company Control" subtitle={`${c.legal_name || "—"} · FOUNDER ${c.founder || "—"} · ${c.location || "—"}`} />
+      <PageHeader title="Control de Empresa" subtitle={`${c.legal_name || "—"} · FUNDADOR ${c.founder || "—"} · ${c.location || "—"}`} />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <MiniMetric label="PRODUCTOS LIVE" value={`${liveCount}/${products.length}`} tone="green" />
-        <MiniMetric label="ACTION ITEMS HIGH" value={`${highPriority}`} tone={highPriority > 0 ? "red" : "green"} />
-        <MiniMetric label="WORKFLOWS" value={String(infra.n8n_workflows || "—").replace(" active", "")} tone="cyan" />
+        <MiniMetric label="PRODUCTOS EN VIVO" value={`${liveCount}/${products.length}`} tone="green" />
+        <MiniMetric label="PENDIENTES URGENTES" value={`${highPriority}`} tone={highPriority > 0 ? "red" : "green"} />
+        <MiniMetric label="FLUJOS N8N" value={String(infra.n8n_workflows || "—").replace(" active", "")} tone="cyan" />
         <MiniMetric label="EIN" value={c.ein || "—"} tone="green" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card title="PRODUCTOS · 5 LINES" glow="green">
+        <Card title="PRODUCTOS · 5 LÍNEAS" glow="green">
           <div className="flex flex-col gap-2">
             {products.map((p: any) => (
               <div key={p.id} className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
@@ -76,7 +76,7 @@ export default function CompanyPage() {
           </div>
         </Card>
 
-        <Card title="ACTION ITEMS · TODO" glow="cyan">
+        <Card title="PENDIENTES · TODO" glow="cyan">
           <div className="flex flex-col gap-1.5">
             {items.map((it: any, i: number) => (
               <div key={i} className="flex items-start justify-between gap-2 px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
@@ -98,7 +98,7 @@ export default function CompanyPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card title="BANKING" glow="green">
+        <Card title="BANCO" glow="green">
           <div className="flex items-center gap-3 mb-3">
             <Banknote size={24} className="text-[var(--color-green)]" />
             <div>
@@ -107,11 +107,11 @@ export default function CompanyPage() {
             </div>
           </div>
           <div className="text-[9px] text-[var(--color-text-dim)] font-mono">
-            Mercury page in Notion = obsolete (pre-pivot artifact). Real banking = BoA only.
+            Página Mercury en Notion = obsoleta (pre-pivot). Banco real = solo BoA.
           </div>
         </Card>
 
-        <Card title="INFRASTRUCTURE" glow="cyan">
+        <Card title="INFRAESTRUCTURA" glow="cyan">
           <div className="space-y-1.5">
             {Object.entries(infra).map(([k, v]) => (
               <div key={k} className="flex items-center justify-between px-2 py-1.5 bg-black/40 rounded border border-[var(--color-border)]">
@@ -122,7 +122,7 @@ export default function CompanyPage() {
           </div>
         </Card>
 
-        <Card title="SOCIAL HANDLES · RESERVED">
+        <Card title="HANDLES SOCIALES · RESERVADOS">
           <div className="space-y-1">
             {Object.entries(handles).map(([k, v]) => (
               <div key={k} className="flex items-center justify-between text-[10px] font-mono">

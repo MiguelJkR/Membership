@@ -49,8 +49,8 @@ export default function EmailPage() {
   return (
     <div className="p-5 space-y-4">
       <PageHeader
-        title="Email · Gmail Integration"
-        subtitle="contact@maclorianxgroup.com · IMAP + Groq classifier + Ollama fallback"
+        title="Email · Integración Gmail"
+        subtitle="contact@maclorianxgroup.com · IMAP + Groq clasificador + Ollama respaldo"
         action={
           <button
             onClick={processNow}
@@ -58,22 +58,22 @@ export default function EmailPage() {
             className="flex items-center gap-2 px-4 py-2 rounded border border-[var(--color-cyan)] text-[var(--color-cyan)] hover:bg-[var(--color-cyan)]/10 disabled:opacity-50 transition-colors"
           >
             {processing ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
-            <span className="text-[10px] tracking-widest font-mono">PROCESAR INBOX</span>
+            <span className="text-[10px] tracking-widest font-mono">PROCESAR BANDEJA</span>
           </button>
         }
       />
 
       {/* Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <MiniMetric label="DRAFTS PENDING" value={`${drafts.count || 0}`} tone="cyan" />
-        <MiniMetric label="HIGH URGENCY" value={`${byUrgency.high || 0}`} tone="red" />
+        <MiniMetric label="BORRADORES PENDIENTES" value={`${drafts.count || 0}`} tone="cyan" />
+        <MiniMetric label="ALTA URGENCIA" value={`${byUrgency.high || 0}`} tone="red" />
         <MiniMetric label="CONSULTAS" value={`${byCategory.consulta_cliente || 0}`} tone="green" />
         <MiniMetric label="TRANSACCIONAL" value={`${byCategory.transaccional || 0}`} />
         <MiniMetric label="SPAM" value={`${byCategory.spam || 0}`} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card title={`DRAFTS PENDING · ${drafts.count || 0}`} glow="cyan">
+        <Card title={`BORRADORES PENDIENTES · ${drafts.count || 0}`} glow="cyan">
           <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
             {(drafts.drafts || []).length > 0 ? (
               (drafts.drafts || []).map((d: any) => (
@@ -99,13 +99,13 @@ export default function EmailPage() {
             ) : (
               <div className="flex items-center gap-2 text-[var(--color-green)] text-[11px] font-mono py-4">
                 <Inbox size={14} />
-                Sin drafts pendientes — todos los emails recientes son automated/spam
+                Sin borradores pendientes — todos los emails recientes son automatizados/spam
               </div>
             )}
           </div>
         </Card>
 
-        <Card title={`INBOX RECIENTE · ${inbox.count || 0}`} glow="green">
+        <Card title={`BANDEJA RECIENTE · ${inbox.count || 0}`} glow="green">
           <div className="flex flex-col gap-1.5 max-h-[60vh] overflow-y-auto">
             {(inbox.emails || []).slice(0, 20).map((e: any) => (
               <div key={e.uid} className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)] text-[10px]">
@@ -122,17 +122,17 @@ export default function EmailPage() {
             ))}
             {!(inbox.emails || []).length && (
               <div className="text-[10px] text-[var(--color-text-dim)] py-4 flex items-center gap-2">
-                <AlertCircle size={12} />Sin inbox cargada — click "PROCESAR INBOX" para refresh
+                <AlertCircle size={12} />Bandeja vacía — click "PROCESAR BANDEJA" para refrescar
               </div>
             )}
           </div>
         </Card>
       </div>
 
-      <Card title="PIPELINE ARCHITECTURE">
+      <Card title="ARQUITECTURA DEL PIPELINE">
         <div className="overflow-x-auto">
           <div className="flex items-center gap-2 min-w-max py-3">
-            {["IMAP\nFETCH", "NO-REPLY\nHEURISTIC", "GROQ\nCLASSIFY", "OLLAMA\nFALLBACK", "DRAFT\nGENERATE", "TELEGRAM\nALERT"].map((step, i, arr) => (
+            {["IMAP\nFETCH", "NO-REPLY\nHEURÍSTICA", "GROQ\nCLASIFICA", "OLLAMA\nRESPALDO", "BORRADOR\nGENERAR", "TELEGRAM\nALERTA"].map((step, i, arr) => (
               <div key={i} className="flex items-center gap-2">
                 <div className="w-20 h-16 flex items-center justify-center text-center px-2 py-2 rounded border-2 border-[var(--color-cyan)]/40 bg-[var(--color-cyan)]/5 text-[9px] tracking-widest text-[var(--color-cyan)] font-mono whitespace-pre-line">
                   {step}
@@ -142,7 +142,7 @@ export default function EmailPage() {
             ))}
           </div>
           <div className="text-[9px] text-[var(--color-text-dim)] font-mono mt-2">
-            Cron horario en n8n · Workflow id: H2YSiSYgXc2bSxMa · 100% reliability via wrapper LLM
+            Cron horario en n8n · Flujo id: H2YSiSYgXc2bSxMa · 100% confiabilidad vía wrapper LLM
           </div>
         </div>
       </Card>
