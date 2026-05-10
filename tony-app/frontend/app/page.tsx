@@ -6,6 +6,9 @@ import { PortfolioSparkline } from "@/components/PortfolioSparkline";
 import { RiskGauge } from "@/components/RiskGauge";
 import { AgentsList } from "@/components/AgentsList";
 import { MatrixStream } from "@/components/MatrixStream";
+import { TonyHero } from "@/components/TonyHero";
+import { SystemStatusPanel } from "@/components/SystemStatusPanel";
+import { Radar } from "@/components/Radar";
 
 export default function Home() {
   const [data, setData] = useState<any>({});
@@ -30,14 +33,8 @@ export default function Home() {
 
   return (
     <div className="p-5 space-y-4">
-      <div className="flex items-baseline justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">
-          <span className="text-[var(--color-cyan)]">▸</span> Centro de Comando
-        </h1>
-        <div className="text-[10px] font-mono tracking-widest text-[var(--color-text-dim)]">
-          MACLORIAN_X · SISTEMA DE TRADING
-        </div>
-      </div>
+      {/* Hero principal estilo Watch Dogs */}
+      <TonyHero />
 
       {/* Hero metrics row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -77,10 +74,16 @@ export default function Home() {
         </Card>
       </div>
 
-      {/* Middle row: 3 columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card title={`AGENTES IA · ${data.agents?.count || 0}`}>
-          <AgentsList agents={data.agents?.agents} />
+      {/* Middle row: 4 columns (Tactical) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <SystemStatusPanel />
+        <Card title="ESCÁNER TÁCTICO" glow="cyan">
+          <div className="flex flex-col items-center justify-center h-full py-2">
+            <Radar size={200} showLabels />
+            <div className="mt-2 text-[8px] tracking-widest font-mono text-[var(--color-text-dim)] text-center">
+              SCAN ACTIVO · 4s SWEEP · OBJETIVOS EN TIEMPO REAL
+            </div>
+          </div>
         </Card>
         <Card title="MODO MATRIX" glow="green">
           <MatrixStream />

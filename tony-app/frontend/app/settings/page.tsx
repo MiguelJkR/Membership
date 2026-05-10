@@ -1,7 +1,8 @@
 "use client";
 import { Card } from "@/components/Card";
 import { PageHeader } from "@/components/PageHeader";
-import { User, Wallet, Bell, Cpu, Database, Globe } from "lucide-react";
+import { AccentPicker } from "@/components/AccentPicker";
+import { User, Wallet, Bell, Cpu, Database, Globe, Palette } from "lucide-react";
 
 const SECTIONS = [
   {
@@ -60,6 +61,12 @@ export default function SettingsPage() {
   return (
     <div className="p-5 space-y-4">
       <PageHeader title="Ajustes" subtitle="CUENTA · INFRAESTRUCTURA · PREFERENCIAS" />
+
+      {/* Accent color picker */}
+      <Card title="APARIENCIA" glow="cyan">
+        <Palette size={20} className="text-[var(--color-cyan)] mb-2" strokeWidth={1.5} />
+        <AccentPicker />
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {SECTIONS.map((s) => {
