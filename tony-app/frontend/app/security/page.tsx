@@ -1,7 +1,6 @@
 "use client";
-import { Card, MiniMetric } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
-import { Lock, Activity, Cpu, Database, Wifi, AlertTriangle } from "lucide-react";
+import { Card } from "@/components/Card";
+import { Lock, Activity, Cpu, Database, Wifi, AlertTriangle, ShieldCheck } from "lucide-react";
 
 const STATUS = [
   { label: "FLUJOS N8N", value: "OK", icon: Activity, status: "green" },
@@ -22,8 +21,16 @@ const VAULT = [
 
 export default function SecurityPage() {
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader title="Centro de Seguridad" subtitle="MONITOREO API · BÓVEDA · DETECCIÓN DE AMENAZAS · FAILOVER" />
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center gap-2">
+          <ShieldCheck size={14} className="text-[var(--color-green)]" />
+          <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+            CENTRO DE SEGURIDAD · MONITOREO API · BÓVEDA · DETECCIÓN DE AMENAZAS · FAILOVER
+          </span>
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {STATUS.map((s) => {

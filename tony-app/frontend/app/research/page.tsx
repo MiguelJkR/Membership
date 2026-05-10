@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, MiniMetric } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
-import { Search, Loader2, Library, Plus, ExternalLink } from "lucide-react";
+import { Search, Loader2, Library, Plus, ExternalLink, BookOpen } from "lucide-react";
 
 export default function ResearchPage() {
   const [list, setList] = useState<any>({});
@@ -59,8 +58,16 @@ export default function ResearchPage() {
   ];
 
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader title="Investigación · YouTube RAG" subtitle="VECTOR STORE LOCAL · EMBEDDINGS 384-DIM · SÍNTESIS GROQ" />
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center gap-2">
+          <BookOpen size={14} className="text-[var(--color-green)]" />
+          <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+            YOUTUBE RAG · VECTOR STORE LOCAL · EMBEDDINGS 384-DIM · SÍNTESIS GROQ
+          </span>
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <MiniMetric label="VIDEOS INDEXADOS" value={`${list.transcripts_count || 0}`} tone="cyan" />

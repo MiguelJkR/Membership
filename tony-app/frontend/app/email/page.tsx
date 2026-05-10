@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, MiniMetric } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
 import { Mail, AlertCircle, Inbox, Loader2, Play } from "lucide-react";
 
 const URGENCY_COLOR: Record<string, string> = {
@@ -47,11 +46,16 @@ export default function EmailPage() {
   const byUrgency = stats.by_urgency || {};
 
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader
-        title="Email · Integración Gmail"
-        subtitle="contact@maclorianxgroup.com · IMAP + Groq clasificador + Ollama respaldo"
-        action={
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-2">
+            <Mail size={14} className="text-[var(--color-green)]" />
+            <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+              GMAIL · contact@maclorianxgroup.com · IMAP + GROQ + OLLAMA RESPALDO
+            </span>
+          </div>
           <button
             onClick={processNow}
             disabled={processing}
@@ -60,8 +64,8 @@ export default function EmailPage() {
             {processing ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
             <span className="text-[10px] tracking-widest font-mono">PROCESAR BANDEJA</span>
           </button>
-        }
-      />
+        </div>
+      </div>
 
       {/* Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">

@@ -1,8 +1,16 @@
 /**
  * TONY AI API client.
- * Uses NEXT_PUBLIC_API_URL env var or fallback to local Flask dashboard.
+ *
+ * In production (built with `next start`), API_BASE is empty so all `/api/*`
+ * calls are SAME-ORIGIN — they go to the Next.js server which then proxies
+ * (via next.config.ts rewrites) to the Flask backend. This works regardless
+ * of where the frontend is being accessed from (PC localhost, LAN IP, tunnel
+ * HTTPS, mobile PWA): the client just hits the same host that served the page.
+ *
+ * Override only if you really need direct cross-origin access:
+ *   NEXT_PUBLIC_API_URL=http://other-host:8765
  */
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8765";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export type FetchResult<T> = T & { ok?: boolean; error?: string };
 
@@ -56,9 +64,69 @@ export const api = {
   news: (symbol?: string) =>
     fetchJson<any>(symbol ? `/api/news?symbol=${encodeURIComponent(symbol)}` : "/api/news"),
   sentiment: () => fetchJson<any>("/api/sentiment"),
-  tonyChat: (text: string) =>
-    fetchJson<{ ok: boolean; response?: string; source?: string; model?: string }>(
-      "/api/tony_chat", { method: "POST", body: JSON.stringify({ text }) }),
+  tonyChat: (
+    text: string,
+    history?: Array<{ role: string; text: string }>,
+    images?: Array<{ data_b64: string; media_type: string }>
+  ) =>
+    fetchJson<{
+      ok: boolean;
+      response?: string;
+      source?: string;
+      model?: string;
+      usage?: any;
+      specialist?: { name: string; matched_keyword: string };
+      images_analyzed?: number;
+    }>(
+      "/api/tony_chat",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          text,
+          history: history || [],
+          images: images || [],
+        }),
+      }
+    ),
+
+  voiceSpeak: async (text: string, voice = "es-US-AlonsoNeural"): Promise<Blob | null> => {
+    try {
+      const r = await fetch("/api/voice/speak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, voice }),
+      });
+      if (!r.ok) return null;
+      return await r.blob();
+    } catch {
+      return null;
+    }
+  },
+
+  chatPendingAlerts: (since: number) =>
+    fetchJson<{
+      ok: boolean;
+      alerts: Array<{
+        kind: string;
+        id?: string;
+        symbol?: string;
+        action?: string;
+        priority?: string;
+        ts: string;
+        ts_epoch: number;
+        message: string;
+        event_type?: string;
+      }>;
+      count: number;
+      now: number;
+    }>(`/api/chat/pending_alerts?since=${since}`),
+
+  voiceTranscribe: async (audioBlob: Blob): Promise<{ ok: boolean; text?: string; error?: string }> => {
+    const form = new FormData();
+    form.append("audio", audioBlob, "audio.webm");
+    const r = await fetch("/api/voice/transcribe", { method: "POST", body: form });
+    return r.json();
+  },
   n8nTrigger: (path: string, payload: any = {}) =>
     fetchJson("/api/n8n_trigger", { method: "POST", body: JSON.stringify({ path, payload }) }),
   scheduledTasks: () => fetchJson<{ ok: boolean; count: number; tasks: Array<{ id: string; description: string; fireAt: string; cron: string }> }>("/api/scheduled_tasks"),
@@ -126,6 +194,224 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ triggers }),
     }),
+
+  // ===== Keystore (DPAPI-encrypted secrets for API keys) =====
+  keystoreList: () =>
+    fetchJson<{
+      ok: boolean;
+      secrets: Array<{
+        name: string;
+        description: string;
+        scope: string;
+        created_ts: number;
+        updated_ts: number;
+        value_length: number;
+      }>;
+    }>("/api/keystore/list"),
+
+  keystoreSet: (name: string, value: string, description = "", scope = "api") =>
+    fetchJson<{ ok: boolean; name: string }>("/api/keystore/set", {
+      method: "POST",
+      body: JSON.stringify({ name, value, description, scope }),
+    }),
+
+  keystoreDelete: (name: string) =>
+    fetchJson<{ ok: boolean; name: string }>("/api/keystore/delete", {
+      method: "POST",
+      body: JSON.stringify({ name }),
+    }),
+
+  keystoreTest: (name: string) =>
+    fetchJson<{ ok: boolean; name?: string; value_length?: number; prefix?: string }>(
+      "/api/keystore/test",
+      { method: "POST", body: JSON.stringify({ name }) }
+    ),
+
+  /** Export keystore secrets DECRYPTED (for backup-to-vault flow).
+   * Browser is responsible for re-encrypting with vault master password. */
+  keystoreExportDecrypted: () =>
+    fetchJson<{
+      ok: boolean;
+      count?: number;
+      secrets?: Array<{
+        name: string;
+        description: string;
+        scope: string;
+        value: string;
+        updated_ts: number;
+      }>;
+      error?: string;
+    }>("/api/keystore/export_decrypted", {
+      method: "POST",
+      body: JSON.stringify({ confirm: "EXPORT_DECRYPTED" }),
+    }),
+
+  // ===== Real symbol history (Yahoo Finance via backend proxy) =====
+  symbolHistory: (symbol: string, days = 30) =>
+    fetchJson<{
+      ok: boolean;
+      symbol: string;
+      yf_symbol?: string;
+      days: number;
+      points?: Array<{ date: string; close: number }>;
+      first_close?: number;
+      last_close?: number;
+      error?: string;
+    }>(`/api/symbol_history?symbol=${encodeURIComponent(symbol)}&days=${days}`),
+
+  // ===== Specialist agent rooms (cross-ref with n8n workflows) =====
+  specialistAgentsLive: () =>
+    fetchJson<{
+      ok: boolean;
+      agent_count: number;
+      agents: Array<{
+        id: string;
+        name: string;
+        role: string;
+        accent: string;
+        icon: string;
+        trigger_keywords: string[];
+        tools_count: number;
+        workflows: Array<{
+          name: string;
+          active: boolean;
+          found: boolean;
+          workflow_id?: string;
+          last_status: string;
+          last_started?: string;
+        }>;
+        stats: {
+          linked_total: number;
+          active: number;
+          inactive: number;
+          missing: number;
+          errors_recent: number;
+          successes_recent: number;
+          health_pct: number;
+          last_execution_ts: string | null;
+        };
+      }>;
+    }>("/api/specialist_agents_live"),
+
+  // ===== System diagnostics (RAM, CPU, disk, processes, latencies) =====
+  systemDiagnostics: () =>
+    fetchJson<{
+      ok: boolean;
+      memory?: { total_gb: number; available_gb: number; used_gb: number; used_pct: number };
+      cpu?: { percent_avg: number; cores_logical: number; cores_physical: number };
+      disks?: Array<{ label: string; path: string; total_gb: number; used_gb: number; free_gb: number; used_pct: number }>;
+      processes?: Array<{
+        pid: number; name: string; label: string;
+        ram_mb: number; cpu_pct: number; uptime: string; cmdline_short: string;
+      }>;
+      endpoint_latencies_ms?: Record<string, number | null>;
+      ts: number;
+    }>("/api/system_diagnostics"),
+
+  systemLogs: (source: string, n = 30) =>
+    fetchJson<{
+      ok: boolean;
+      source: string;
+      path?: string;
+      size_bytes?: number;
+      exists?: boolean;
+      lines: string[];
+    }>(`/api/system_logs?source=${source}&n=${n}`),
+
+  // ===== LLM cost + latency + mood metrics =====
+  llmMetrics: () =>
+    fetchJson<{
+      ok: boolean;
+      mood: "FRESH" | "OK" | "MIXED" | "RUSHED" | "DEGRADED" | "IDLE";
+      mood_label: string;
+      mood_color: "green" | "amber" | "red" | "default";
+      totals: {
+        sessions_7d: number;
+        cost_usd_7d_est: number;
+        cost_usd_30d_est: number;
+        errors_24h: number;
+        budget_month_usd: number;
+        budget_used_pct: number;
+      };
+      shares_7d: { groq: number; anthropic: number; ollama: number };
+      by_provider_7d: Record<string, {
+        sessions: number; iterations: number; complete: number;
+        success_rate: number; cost_usd_est: number;
+      }>;
+    }>("/api/llm_metrics"),
+
+  // ===== Tony semantic memory (chromadb) — recent sessions =====
+  memoryRecent: (n = 5) =>
+    fetchJson<{
+      ok: boolean;
+      total?: number;
+      items?: Array<{
+        id: string;
+        goal: string;
+        final_answer: string;
+        status: string;
+        iterations: number;
+        tools_used: string;
+        stored_at: number;
+        created_at: number;
+      }>;
+    }>(`/api/memory_recent?n=${n}`),
+
+  // ===== System cron tasks (Windows Scheduled + n8n cron triggers) =====
+  systemCronTasks: () =>
+    fetchJson<{
+      ok: boolean;
+      items: Array<{
+        kind: "windows" | "n8n";
+        name: string;
+        state: string;
+        last_run?: string;
+        next_run?: string;
+        last_result_code?: number;
+        last_ok?: boolean;
+        schedule?: string;
+        workflow_id?: string;
+      }>;
+      windows_count: number;
+      n8n_count: number;
+      total: number;
+    }>("/api/system_cron_tasks"),
+
+  // ===== n8n workflows status (compact for Dashboard widget) =====
+  n8nWorkflowsStatus: () =>
+    fetchJson<{
+      ok: boolean;
+      total: number;
+      active: number;
+      inactive: number;
+      executions_24h: { success: number; error: number; running: number; total: number };
+      top_error_workflows: Array<{ workflow_id: string; name: string; errors: number }>;
+      last_success_ts: string | null;
+      last_error_ts: string | null;
+      ts: number;
+    }>("/api/n8n_workflows_status"),
+
+  // ===== LLM provider real-time status (Groq / Anthropic / Ollama cascade) =====
+  llmProviderStatus: () =>
+    fetchJson<{
+      ok: boolean;
+      active: "groq" | "anthropic" | "ollama" | "none";
+      active_label: string;
+      active_color: "green" | "amber" | "cyan" | "red";
+      providers: {
+        groq: { available: boolean; in_cooldown: boolean; cooldown_remaining_s: number };
+        anthropic: { available: boolean };
+        ollama: { available: boolean };
+      };
+      recent_sessions: Array<{
+        session_id: string;
+        provider: string;
+        model: string;
+        status: string;
+        iterations: number;
+      }>;
+      provider_counts_last_5: { groq: number; anthropic: number; ollama: number; unknown: number };
+    }>("/api/llm_provider_status"),
   watchlistTriggers: () =>
     fetchJson<{
       ok: boolean;

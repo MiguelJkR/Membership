@@ -30,39 +30,54 @@ export function EstadoSistemaCard() {
   const sub = data?.subsystems || {};
   const health = data?.health || {};
 
-  // Map real subsystems to UI rows
+  // Helper: a subsystem is "up" if it's listening on its port OR marked available
+  const isUp = (key: string) => {
+    const s = sub[key];
+    if (!s) return false;
+    return s.listening === true || s.available === true || s.running === true;
+  };
+
+  // Map real subsystems to UI rows (matched against actual backend keys)
+  // Backend exposes: flask, n8n, nextjs, moomoo_opend, ollama, cloudflared, tony_agent, memory
   const rows: SubsystemRow[] = [
     {
-      label: "Servidor",
-      status: sub.flask?.listening ? "OK" : sub.flask?.available ? "OK" : "DOWN",
+      label: "Servidor Flask",
+      status: isUp("flask") ? "OK" : "DOWN",
     },
     {
-      label: "Base de datos",
-      status: sub.firestore?.available || sub.sqlite?.available ? "OK" : "DOWN",
+      label: "Frontend Next.js",
+      status: isUp("nextjs") ? "OK" : "DOWN",
     },
     {
       label: "API n8n",
-      status: sub.n8n?.listening || sub.n8n?.available ? "OK" : "DOWN",
+      status: isUp("n8n") ? "OK" : "DOWN",
     },
     {
-      label: "Servicios IA",
-      status: sub.ollama?.available || sub.groq?.available ? "OK" : "DOWN",
+      label: "LLM Ollama",
+      status: isUp("ollama") ? "OK" : "DOWN",
     },
     {
-      label: "Exchanges",
-      status: sub.opend?.listening ? "OK" : "DOWN",
-      count: sub.opend?.listening ? 6 : undefined,
+      label: "Moomoo OpenD",
+      status: isUp("moomoo_opend") ? "OK" : "DOWN",
     },
     {
-      label: "Webhooks",
-      status: sub.webhooks?.available !== false ? "OK" : "DOWN",
-      count: sub.webhooks?.count || 5,
+      label: "Tony Agent",
+      status: isUp("tony_agent") ? "OK" : "DOWN",
+      count: sub.tony_agent?.session_count,
+    },
+    {
+      label: "Memoria semántica",
+      status: isUp("memory") ? "OK" : "DOWN",
+      count: sub.memory?.total_indexed,
     },
   ];
 
   const allOk = rows.every((r) => r.status === "OK");
+  const downCount = rows.filter((r) => r.status === "DOWN").length;
   const compositeScore = health.composite_score ?? 0;
-  const isActive = compositeScore >= 70;
+  // Badge state reflects ACTUAL subsystem health, not composite (which penalizes disk %)
+  const isActive = allOk;
+  const isPartial = !allOk && downCount < rows.length;
 
   return (
     <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/80 backdrop-blur p-5 h-full flex flex-col">

@@ -1,9 +1,8 @@
 "use client";
 import { Card, MiniMetric } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
 import { useEffect, useRef, useState } from "react";
 import { api, fmt } from "@/lib/api";
-import { TrendingUp, BarChart3, Activity } from "lucide-react";
+import { TrendingUp, BarChart3, Activity, LineChart } from "lucide-react";
 
 type ChartInstance = {
   data: { datasets: Array<{ data: number[]; label?: string }> };
@@ -274,8 +273,16 @@ export default function AnalyticsPage() {
   }, [data.chartReady, perfData]);
 
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader title="Análisis" subtitle="MÉTRICAS PERFORMANCE · BACKTESTING · TONY AGENT TIMELINE" />
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center gap-2">
+          <LineChart size={14} className="text-[var(--color-green)]" />
+          <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+            ANÁLISIS · MÉTRICAS PERFORMANCE · BACKTESTING · TONY AGENT TIMELINE
+          </span>
+        </div>
+      </div>
 
       <Card title="PERFORMANCE DE LA CUENTA" glow="green">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">

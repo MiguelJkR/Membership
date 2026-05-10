@@ -134,70 +134,56 @@ export default function AgentsPage() {
   }
 
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader
-        title="Tony Autónomo · Agentes IA"
-        subtitle="ACCESO TOTAL · TOOLS DE SHELL/FS/WEB/N8N · APPROVAL EN TIEMPO REAL"
-        action={
-          <div className="flex gap-1">
-            <button
-              onClick={() => setTab("agent")}
-              className={`px-3 py-1.5 rounded text-[10px] font-mono tracking-widest border ${
-                tab === "agent"
-                  ? "border-[var(--color-cyan)] text-[var(--color-cyan)] bg-[var(--color-cyan)]/10"
-                  : "border-[var(--color-border)] text-[var(--color-text-dim)]"
-              }`}
-            >
-              <Bot size={12} className="inline mr-1" />TONY
-            </button>
-            <button
-              onClick={() => setTab("specialized")}
-              className={`px-3 py-1.5 rounded text-[10px] font-mono tracking-widest border ${
-                tab === "specialized"
-                  ? "border-[var(--color-cyan)] text-[var(--color-cyan)] bg-[var(--color-cyan)]/10"
-                  : "border-[var(--color-border)] text-[var(--color-text-dim)]"
-              }`}
-            >
-              <Brain size={12} className="inline mr-1" />ESPECIALIZADOS
-            </button>
-            <button
-              onClick={() => setTab("errors")}
-              className={`px-3 py-1.5 rounded text-[10px] font-mono tracking-widest border ${
-                tab === "errors"
-                  ? "border-[var(--color-red)] text-[var(--color-red)] bg-[var(--color-red)]/10"
-                  : "border-[var(--color-border)] text-[var(--color-text-dim)]"
-              }`}
-            >
-              <AlertTriangle size={12} className="inline mr-1" />ERRORES
-              {errorsData?.total_errors_last_30 > 0 && (
-                <span className="ml-1 px-1.5 rounded-full bg-[var(--color-red)] text-black text-[8px]">
-                  {errorsData.total_errors_last_30}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => setTab("metrics")}
-              className={`px-3 py-1.5 rounded text-[10px] font-mono tracking-widest border ${
-                tab === "metrics"
-                  ? "border-[var(--color-cyan)] text-[var(--color-cyan)] bg-[var(--color-cyan)]/10"
-                  : "border-[var(--color-border)] text-[var(--color-text-dim)]"
-              }`}
-            >
-              <Activity size={12} className="inline mr-1" />MÉTRICAS
-            </button>
-            <button
-              onClick={() => setTab("feedback")}
-              className={`px-3 py-1.5 rounded text-[10px] font-mono tracking-widest border ${
-                tab === "feedback"
-                  ? "border-purple-400 text-purple-400 bg-purple-400/10"
-                  : "border-[var(--color-border)] text-[var(--color-text-dim)]"
-              }`}
-            >
-              <Eye size={12} className="inline mr-1" />FEEDBACK
-            </button>
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-2">
+            <Bot size={14} className="text-[var(--color-green)]" />
+            <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+              CONSOLA AGÉNTICA · TOOLS SHELL/FS/WEB/N8N · APPROVAL EN VIVO
+            </span>
           </div>
-        }
-      />
+          <div className="flex gap-1 flex-wrap">
+            <TabPill
+              active={tab === "agent"}
+              onClick={() => setTab("agent")}
+              icon={Bot}
+              label="TONY"
+              tone="green"
+            />
+            <TabPill
+              active={tab === "specialized"}
+              onClick={() => setTab("specialized")}
+              icon={Brain}
+              label="ESPECIALIZADOS"
+              tone="cyan"
+            />
+            <TabPill
+              active={tab === "errors"}
+              onClick={() => setTab("errors")}
+              icon={AlertTriangle}
+              label="ERRORES"
+              tone="red"
+              badge={errorsData?.total_errors_last_30 > 0 ? errorsData.total_errors_last_30 : undefined}
+            />
+            <TabPill
+              active={tab === "metrics"}
+              onClick={() => setTab("metrics")}
+              icon={Activity}
+              label="MÉTRICAS"
+              tone="cyan"
+            />
+            <TabPill
+              active={tab === "feedback"}
+              onClick={() => setTab("feedback")}
+              icon={Eye}
+              label="FEEDBACK"
+              tone="purple"
+            />
+          </div>
+        </div>
+      </div>
 
       {tab === "agent" && (
         <>
@@ -1152,4 +1138,41 @@ function TraceEntry({ entry }: { entry: AgentTraceEntry }) {
     );
   }
   return null;
+}
+
+function TabPill({
+  active, onClick, icon: Icon, label, tone, badge,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: any;
+  label: string;
+  tone: "green" | "cyan" | "red" | "amber" | "purple";
+  badge?: number | string;
+}) {
+  const toneStyles: Record<string, string> = {
+    green: "border-[var(--color-green)] text-[var(--color-green)] bg-[var(--color-green)]/10",
+    cyan: "border-[var(--color-cyan)] text-[var(--color-cyan)] bg-[var(--color-cyan)]/10",
+    red: "border-[var(--color-red)] text-[var(--color-red)] bg-[var(--color-red)]/10",
+    amber: "border-[var(--color-amber)] text-[var(--color-amber)] bg-[var(--color-amber)]/10",
+    purple: "border-purple-400 text-purple-400 bg-purple-400/10",
+  };
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono tracking-widest border transition-colors ${
+        active
+          ? toneStyles[tone]
+          : "border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-text)] hover:border-[var(--color-border-bright)]"
+      }`}
+    >
+      <Icon size={11} />
+      {label}
+      {badge !== undefined && (
+        <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-[var(--color-red)] text-white text-[8px] font-bold leading-none">
+          {badge}
+        </span>
+      )}
+    </button>
+  );
 }

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, MiniMetric } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
 import { Globe, ExternalLink, AlertCircle, CheckCircle2, Building2, Banknote, FileText, Mail } from "lucide-react";
 
 const STATUS_COLOR: Record<string, string> = {
@@ -32,8 +31,16 @@ export default function CompanyPage() {
   const highPriority = items.filter((i: any) => i.priority === "HIGH").length;
 
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader title="Control de Empresa" subtitle={`${c.legal_name || "—"} · FUNDADOR ${c.founder || "—"} · ${c.location || "—"}`} />
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center gap-2">
+          <Building2 size={14} className="text-[var(--color-green)]" />
+          <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+            {(c.legal_name || "MACLORIAN X GROUP").toUpperCase()} · FUNDADOR {(c.founder || "—").toUpperCase()} · {(c.location || "—").toUpperCase()}
+          </span>
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <MiniMetric label="PRODUCTOS EN VIVO" value={`${liveCount}/${products.length}`} tone="green" />

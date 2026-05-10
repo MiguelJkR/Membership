@@ -1,8 +1,7 @@
 "use client";
 import { Card } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
 import { AccentPicker } from "@/components/AccentPicker";
-import { User, Wallet, Bell, Cpu, Database, Globe, Palette } from "lucide-react";
+import { User, Wallet, Bell, Cpu, Database, Globe, Palette, Settings as SettingsIcon } from "lucide-react";
 
 const SECTIONS = [
   {
@@ -59,8 +58,16 @@ const SECTIONS = [
 
 export default function SettingsPage() {
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader title="Ajustes" subtitle="CUENTA · INFRAESTRUCTURA · PREFERENCIAS" />
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center gap-2">
+          <SettingsIcon size={14} className="text-[var(--color-green)]" />
+          <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+            AJUSTES · CUENTA · INFRAESTRUCTURA · PREFERENCIAS
+          </span>
+        </div>
+      </div>
 
       {/* Accent color picker */}
       <Card title="APARIENCIA" glow="cyan">

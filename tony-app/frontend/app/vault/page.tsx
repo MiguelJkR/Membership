@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, MiniMetric } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
 import {
   Lock, Unlock, KeyRound, Plus, Loader2, Eye, EyeOff, Copy, Check,
   Trash2, Edit2, Save, X, Shuffle, ExternalLink, AlertTriangle, Search,
@@ -13,6 +12,7 @@ import {
   type VaultEntry, type DecryptedEntry,
 } from "@/lib/crypto-vault";
 import { parseAuto, type ImportedEntry, type ParseResult } from "@/lib/vault-import";
+import { TonyKeystoreSection } from "@/components/TonyKeystoreSection";
 
 const CATEGORIES = ["Trading/Brokers", "Banking", "Email/Cloud", "APIs/Dev", "Personal", "Otro"];
 const CATEGORY_COLORS: Record<string, string> = {
@@ -136,6 +136,44 @@ export default function VaultPage() {
     setUnlocking(false);
   }
 
+  async function backupKeystoreToVault(): Promise<{ ok: boolean; count?: number; error?: string }> {
+    try {
+      // 1. Get decrypted keystore from backend (localhost-only, DPAPI)
+      const dump = await api.keystoreExportDecrypted();
+      if (!dump.ok || !dump.secrets || dump.secrets.length === 0) {
+        return { ok: false, error: dump.error || "no secrets to backup" };
+      }
+      // 2. Build DecryptedEntries (label/category match what user expects in vault)
+      const newEntries: DecryptedEntry[] = dump.secrets.map((s) => {
+        const existing = decrypted.find(
+          (d) => d.label === `Tony Keystore: ${s.name}` && d.category === "APIs/Dev"
+        );
+        const now = new Date().toISOString();
+        return {
+          id: existing?.id || crypto.randomUUID(),
+          label: `Tony Keystore: ${s.name}`,
+          username: s.scope || "api",
+          password: s.value,
+          url: "",
+          notes: s.description || `Backup desde Tony keystore (DPAPI). Re-encriptado ZK.`,
+          category: "APIs/Dev",
+          created_at: existing?.created_at || now,
+          updated_at: now,
+        };
+      });
+      // 3. Merge: replace existing Tony Keystore entries, keep the rest
+      const others = decrypted.filter(
+        (d) => !(d.category === "APIs/Dev" && d.label.startsWith("Tony Keystore:"))
+      );
+      const merged = [...others, ...newEntries];
+      // 4. Encrypt + persist
+      await persistEntries(merged);
+      return { ok: true, count: newEntries.length };
+    } catch (e: any) {
+      return { ok: false, error: e?.message || String(e) };
+    }
+  }
+
   async function persistEntries(updatedDecrypted: DecryptedEntry[]) {
     setSaving(true);
     try {
@@ -185,7 +223,8 @@ export default function VaultPage() {
   // ============ LOCK SCREEN ============
   if (locked) {
     return (
-      <div className="p-5 flex flex-col h-[calc(100vh-100px)] items-center justify-center">
+      <div className="p-4 md:p-5 space-y-4">
+        <div className="flex flex-col items-center justify-center pt-8 pb-4">
         <Card className="w-full max-w-md" glow="cyan" scanline>
           <div className="flex flex-col items-center text-center py-6">
             <div className="w-16 h-16 rounded-full border-2 border-[var(--color-cyan)] bg-[var(--color-cyan)]/10 flex items-center justify-center mb-4 glow-cyan">
@@ -234,17 +273,26 @@ export default function VaultPage() {
             </div>
           </div>
         </Card>
+        </div>
+
+        {/* Tony API keys (server-side, DPAPI) — accesibles SIN master password */}
+        <TonyKeystoreSection />
       </div>
     );
   }
 
   // ============ UNLOCKED VIEW ============
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader
-        title="Bóveda de Contraseñas"
-        subtitle={`${decrypted.length} ENTRADAS · DESCIFRADAS EN MEMORIA · AUTO-LOCK 5min`}
-        action={
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-2">
+            <Unlock size={14} className="text-[var(--color-green)]" />
+            <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+              BÓVEDA · {decrypted.length} ENTRADAS · DESCIFRADAS EN MEMORIA · AUTO-LOCK 5min
+            </span>
+          </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowImport(true)}
@@ -269,8 +317,8 @@ export default function VaultPage() {
               <span className="text-[10px] tracking-widest font-mono">BLOQUEAR</span>
             </button>
           </div>
-        }
-      />
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
         <MiniMetric label="TOTAL" value={`${decrypted.length}`} tone="cyan" />
@@ -377,6 +425,9 @@ export default function VaultPage() {
           saving={saving}
         />
       )}
+
+      {/* Tony Keystore — DPAPI server-side API keys, with optional backup to ZK vault */}
+      <TonyKeystoreSection onBackupToVault={backupKeystoreToVault} />
     </div>
   );
 }

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, MiniMetric } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
 import {
   Eye, AlertTriangle, TrendingUp, TrendingDown, Clock, Loader2,
   CheckCircle2, AlertCircle, Activity, Edit2, Save, X as XIcon,
@@ -117,8 +116,15 @@ export default function WatchlistPage() {
 
   if (!data) {
     return (
-      <div className="p-5">
-        <PageHeader title="Watchlist" subtitle="ALERTS POR PRECIO · COOLDOWNS · MARKET HOURS" />
+      <div className="p-4 md:p-5 space-y-4">
+        <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+          <div className="flex items-center gap-2">
+            <Eye size={14} className="text-[var(--color-green)]" />
+            <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+              ALERTS POR PRECIO · COOLDOWNS · MARKET HOURS
+            </span>
+          </div>
+        </div>
         <Card>
           <div className="flex items-center gap-2 py-4 text-[var(--color-text-dim)] text-[11px] font-mono">
             <Loader2 size={14} className="animate-spin" /> cargando triggers...
@@ -141,11 +147,18 @@ export default function WatchlistPage() {
   const cooldowns = triggers.filter((t: any) => t.in_cooldown);
 
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader
-        title="Watchlist"
-        subtitle="ALERTS POR PRECIO · COOLDOWNS · MARKET HOURS · AUTO-REFRESH 30s"
-      />
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-2">
+            <Eye size={14} className="text-[var(--color-green)]" />
+            <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+              ALERTS POR PRECIO · COOLDOWNS · MARKET HOURS · AUTO-REFRESH 30s
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* Top metrics */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
