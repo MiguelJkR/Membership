@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { api, type AgentSessionResponse, type AgentTraceEntry } from "@/lib/api";
+import { api, type AgentSessionResponse, type AgentTraceEntry, type AgentConfig } from "@/lib/api";
 import { Card } from "@/components/Card";
 import { PageHeader } from "@/components/PageHeader";
 import {
   Activity, AlertTriangle, Eye, Newspaper, Brain, Zap, Play, Send,
   Loader2, CheckCircle2, XCircle, ShieldAlert, Wrench, FileText,
-  Globe, Terminal, Sparkles, Pause, ChevronRight, Bot, History
+  Globe, Terminal, Sparkles, Pause, ChevronRight, Bot, History,
+  Edit2, Save, Plus as PlusIcon, X as XIcon, Trash2
 } from "lucide-react";
 
 const SPEC_AGENTS = [
@@ -45,19 +46,51 @@ const TOOL_ICONS: Record<string, typeof FileText> = {
 
 export default function AgentsPage() {
   const [agents, setAgents] = useState<any>({});
-  const [tab, setTab] = useState<"agent" | "specialized">("agent");
+  const [tab, setTab] = useState<"agent" | "specialized" | "errors" | "metrics" | "feedback">("agent");
   const [tools, setTools] = useState<any[]>([]);
   const [goal, setGoal] = useState("");
   const [session, setSession] = useState<AgentSessionResponse | null>(null);
   const [running, setRunning] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [errorsData, setErrorsData] = useState<any>(null);
+  const [timelineData, setTimelineData] = useState<any>(null);
+  const [perfData, setPerfData] = useState<any>(null);
+  const [feedbackData, setFeedbackData] = useState<any>(null);
+  const [feedbackRecent, setFeedbackRecent] = useState<any[]>([]);
   const traceEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     api.agents().then(setAgents);
     api.agentTools().then((d) => d.ok && setTools(d.tools));
   }, []);
+
+  useEffect(() => {
+    if (tab === "errors") {
+      const refresh = () => {
+        api.n8nErrors().then(setErrorsData);
+        api.n8nErrorTimeline().then(setTimelineData);
+      };
+      refresh();
+      const i = setInterval(refresh, 30000);
+      return () => clearInterval(i);
+    }
+    if (tab === "metrics") {
+      const refresh = () => api.agentPerformance().then(setPerfData);
+      refresh();
+      const i = setInterval(refresh, 60000);
+      return () => clearInterval(i);
+    }
+    if (tab === "feedback") {
+      const refresh = () => {
+        api.feedbackInsights().then(setFeedbackData);
+        api.feedbackRecent(20).then((r) => r.ok && setFeedbackRecent(r.entries));
+      };
+      refresh();
+      const i = setInterval(refresh, 60000);
+      return () => clearInterval(i);
+    }
+  }, [tab]);
 
   useEffect(() => {
     if (showHistory) api.agentSessions().then((d) => d.ok && setHistory(d.sessions));
@@ -127,12 +160,50 @@ export default function AgentsPage() {
             >
               <Brain size={12} className="inline mr-1" />ESPECIALIZADOS
             </button>
+            <button
+              onClick={() => setTab("errors")}
+              className={`px-3 py-1.5 rounded text-[10px] font-mono tracking-widest border ${
+                tab === "errors"
+                  ? "border-[var(--color-red)] text-[var(--color-red)] bg-[var(--color-red)]/10"
+                  : "border-[var(--color-border)] text-[var(--color-text-dim)]"
+              }`}
+            >
+              <AlertTriangle size={12} className="inline mr-1" />ERRORES
+              {errorsData?.total_errors_last_30 > 0 && (
+                <span className="ml-1 px-1.5 rounded-full bg-[var(--color-red)] text-black text-[8px]">
+                  {errorsData.total_errors_last_30}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setTab("metrics")}
+              className={`px-3 py-1.5 rounded text-[10px] font-mono tracking-widest border ${
+                tab === "metrics"
+                  ? "border-[var(--color-cyan)] text-[var(--color-cyan)] bg-[var(--color-cyan)]/10"
+                  : "border-[var(--color-border)] text-[var(--color-text-dim)]"
+              }`}
+            >
+              <Activity size={12} className="inline mr-1" />MÉTRICAS
+            </button>
+            <button
+              onClick={() => setTab("feedback")}
+              className={`px-3 py-1.5 rounded text-[10px] font-mono tracking-widest border ${
+                tab === "feedback"
+                  ? "border-purple-400 text-purple-400 bg-purple-400/10"
+                  : "border-[var(--color-border)] text-[var(--color-text-dim)]"
+              }`}
+            >
+              <Eye size={12} className="inline mr-1" />FEEDBACK
+            </button>
           </div>
         }
       />
 
       {tab === "agent" && (
         <>
+          {/* Tony explica — quick status summary */}
+          <ExplicaPanel />
+
           {/* Goal input */}
           <Card glow="cyan" scanline>
             <div className="flex items-start gap-3">
@@ -219,8 +290,14 @@ export default function AgentsPage() {
               title={`Sesión ${session.id} · ${session.iterations} iteración${session.iterations !== 1 ? "es" : ""}`}
             >
               {/* Status banner */}
-              <div className="mb-3 flex items-center gap-2">
+              <div className="mb-3 flex items-center gap-2 flex-wrap">
                 <StatusBadge status={session.status} />
+                {(session as any).memory_used && (
+                  <span className="inline-flex items-center gap-1 text-[9px] font-mono tracking-widest px-2 py-0.5 rounded border border-purple-400/40 text-purple-400 bg-purple-400/10">
+                    <Brain size={10} />
+                    MEMORIA · {(session as any).memory_meta?.match_count || 0} matches
+                  </span>
+                )}
                 {session.error && (
                   <span className="text-[10px] font-mono text-[var(--color-red)] truncate">{session.error.substring(0, 200)}</span>
                 )}
@@ -323,36 +400,8 @@ export default function AgentsPage() {
 
       {tab === "specialized" && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {SPEC_AGENTS.map((a) => {
-              const Icon = a.icon;
-              const linkedActive = (agents.agents || []).filter((w: any) =>
-                a.workflows.some((needle) => w.name.toLowerCase().includes(needle.toLowerCase().split(" ")[0]))
-              );
-              return (
-                <Card key={a.id} className={`border-2 ${ACCENT[a.accent].split(" ")[0]}`} title={a.name}>
-                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full border-2 ${ACCENT[a.accent]} mb-3`}>
-                    <Icon size={24} strokeWidth={1.5} />
-                  </div>
-                  <div className="text-sm text-[var(--color-text)] font-semibold mb-1">{a.role}</div>
-                  <div className="text-[10px] text-[var(--color-text-dim)] font-mono mb-3">
-                    {linkedActive.length} flujo{linkedActive.length !== 1 ? "s" : ""} activo{linkedActive.length !== 1 ? "s" : ""}
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    {linkedActive.slice(0, 3).map((w: any, i: number) => (
-                      <div key={i} className="flex items-center gap-2 text-[10px] text-[var(--color-text-dim)] font-mono">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-green)] animate-pulse" />
-                        {w.name}
-                      </div>
-                    ))}
-                    {linkedActive.length === 0 && (
-                      <div className="text-[10px] text-[var(--color-text-dim)]">Sin coincidencias en flujos</div>
-                    )}
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
+          <SpecialistAgentsEditor agentsApi={agents} />
+
 
           <Card title="PROVEEDORES LLM · ACTIVOS">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -375,6 +424,623 @@ export default function AgentsPage() {
           </Card>
         </>
       )}
+
+      {tab === "feedback" && (
+        <Card title="Telegram Replies · Feedback aprendido">
+          {!feedbackData ? (
+            <div className="flex items-center gap-2 py-4 text-[var(--color-text-dim)]">
+              <Loader2 size={14} className="animate-spin" /><span className="text-[10px] font-mono">cargando...</span>
+            </div>
+          ) : feedbackData.total === 0 ? (
+            <div className="text-center py-8 text-[11px] text-[var(--color-text-dim)] font-mono">
+              <Eye size={32} className="mx-auto mb-3 opacity-40" />
+              Sin feedback capturado todavía.<br />
+              <span className="text-[10px]">
+                Cuando respondas a un mensaje del bot en Telegram, Tony lo captura aquí
+                y aprende de tu intent.
+              </span>
+            </div>
+          ) : (
+            <>
+              {/* KPI tiles */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                  <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">TOTAL FEEDBACKS</div>
+                  <div className="text-2xl font-bold text-purple-400">{feedbackData.total}</div>
+                </div>
+                <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                  <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">POSITIVE RATE</div>
+                  <div className="text-2xl font-bold text-[var(--color-green)]">{feedbackData.positive_rate_pct}%</div>
+                </div>
+                <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                  <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">REJECTION RATE</div>
+                  <div className="text-2xl font-bold text-[var(--color-red)]">{feedbackData.rejection_rate_pct}%</div>
+                </div>
+                <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                  <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">CATEGORÍAS</div>
+                  <div className="text-2xl font-bold text-[var(--color-cyan)]">
+                    {Object.keys(feedbackData.by_category || {}).length}
+                  </div>
+                </div>
+              </div>
+
+              {/* Breakdown */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <div className="text-[10px] tracking-widest text-[var(--color-text-dim)] font-mono mb-2">POR CATEGORÍA</div>
+                  <div className="space-y-1">
+                    {Object.entries(feedbackData.by_category || {}).map(([k, v]) => (
+                      <div key={k} className="flex justify-between text-[10px] font-mono px-2 py-1 bg-black/40 rounded">
+                        <span className="text-[var(--color-text)]">{k}</span>
+                        <span className="text-[var(--color-cyan)]">{v as number}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[10px] tracking-widest text-[var(--color-text-dim)] font-mono mb-2">POR INTENT</div>
+                  <div className="space-y-1">
+                    {Object.entries(feedbackData.by_intent || {}).map(([k, v]) => (
+                      <div key={k} className="flex justify-between text-[10px] font-mono px-2 py-1 bg-black/40 rounded">
+                        <span className="text-[var(--color-text)]">{k}</span>
+                        <span className="text-[var(--color-amber)]">{v as number}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[10px] tracking-widest text-[var(--color-text-dim)] font-mono mb-2">POR SENTIMENT</div>
+                  <div className="space-y-1">
+                    {Object.entries(feedbackData.by_sentiment || {}).map(([k, v]) => (
+                      <div key={k} className="flex justify-between text-[10px] font-mono px-2 py-1 bg-black/40 rounded">
+                        <span className="text-[var(--color-text)]">{k}</span>
+                        <span className={k === "positive" ? "text-[var(--color-green)]" : k === "negative" ? "text-[var(--color-red)]" : "text-[var(--color-text-dim)]"}>{v as number}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent entries */}
+              <div className="text-[10px] tracking-widest text-[var(--color-text-dim)] font-mono mb-2">ÚLTIMOS REPLIES</div>
+              <div className="space-y-2 max-h-[40vh] overflow-y-auto">
+                {feedbackRecent.map((e: any, i: number) => (
+                  <div key={i} className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2 text-[9px] font-mono">
+                        <span className="text-[var(--color-text-dim)]">{e.ts.replace("T", " ").substring(0, 19)}</span>
+                        <span className="text-[var(--color-cyan)]">{e.category}</span>
+                        <span className="text-[var(--color-amber)]">{e.intent}</span>
+                        <span className={
+                          e.sentiment === "positive" ? "text-[var(--color-green)]" :
+                          e.sentiment === "negative" ? "text-[var(--color-red)]" :
+                          "text-[var(--color-text-dim)]"
+                        }>{e.sentiment}</span>
+                      </div>
+                    </div>
+                    <div className="text-[11px] text-[var(--color-text)]">{e.reply_text}</div>
+                    {e.original_preview && (
+                      <div className="text-[9px] text-[var(--color-text-dim)] mt-1 italic">
+                        ↳ original: {e.original_preview}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </Card>
+      )}
+
+      {tab === "metrics" && (
+        <Card title="Tony Agent Performance · 7d">
+          {!perfData ? (
+            <div className="flex items-center gap-2 py-4 text-[var(--color-text-dim)]">
+              <Loader2 size={14} className="animate-spin" /><span className="text-[10px] font-mono">cargando...</span>
+            </div>
+          ) : (
+            <>
+              {/* Top metrics */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+                <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                  <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">SESIONES</div>
+                  <div className="text-2xl font-bold text-[var(--color-cyan)]">{perfData.total_sessions}</div>
+                </div>
+                <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                  <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">COMPLETION</div>
+                  <div className={`text-2xl font-bold ${perfData.completion_rate_pct >= 70 ? "text-[var(--color-green)]" : perfData.completion_rate_pct >= 40 ? "text-[var(--color-amber)]" : "text-[var(--color-red)]"}`}>
+                    {perfData.completion_rate_pct}%
+                  </div>
+                </div>
+                <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                  <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">AVG ITER</div>
+                  <div className="text-2xl font-bold text-[var(--color-text)]">{perfData.avg_iterations}</div>
+                </div>
+                <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                  <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">MEMORIA USO</div>
+                  <div className="text-2xl font-bold text-purple-400">{perfData.memory_usage_pct}%</div>
+                </div>
+                <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                  <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">TOOLS USED</div>
+                  <div className="text-2xl font-bold text-[var(--color-amber)]">{perfData.top_tools?.length || 0}</div>
+                </div>
+              </div>
+
+              {/* Timeline 7d */}
+              <div className="mb-4">
+                <div className="text-[10px] tracking-widest text-[var(--color-text-dim)] font-mono mb-2">TIMELINE 7 DÍAS</div>
+                <div className="flex items-end gap-1 h-24 px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                  {perfData.timeline_7d.map((d: any) => {
+                    const maxT = Math.max(...perfData.timeline_7d.map((x: any) => x.total), 1);
+                    const completePct = (d.complete / maxT) * 100;
+                    const errorPct = (d.error / maxT) * 100;
+                    return (
+                      <div key={d.day} className="flex-1 flex flex-col items-center gap-0.5" title={`${d.day}: ${d.total} sesiones (${d.complete} ok, ${d.error} err)`}>
+                        <div className="w-full flex flex-col-reverse" style={{ height: "100%" }}>
+                          <div className="bg-[var(--color-green)]/60 rounded-b" style={{ height: `${completePct}%` }} />
+                          <div className="bg-[var(--color-red)]/60" style={{ height: `${errorPct}%` }} />
+                        </div>
+                        <div className="text-[7px] font-mono text-[var(--color-text-dim)]">{d.day.slice(-5)}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="flex gap-3 text-[8px] font-mono text-[var(--color-text-dim)] mt-1">
+                  <span><span className="inline-block w-2 h-2 bg-[var(--color-green)]/60 rounded mr-1"></span>complete</span>
+                  <span><span className="inline-block w-2 h-2 bg-[var(--color-red)]/60 rounded mr-1"></span>error</span>
+                </div>
+              </div>
+
+              {/* Top tools */}
+              <div>
+                <div className="text-[10px] tracking-widest text-[var(--color-text-dim)] font-mono mb-2">TOP TOOLS USADAS</div>
+                <div className="space-y-1">
+                  {perfData.top_tools?.slice(0, 10).map(([name, count]: [string, number]) => {
+                    const max = perfData.top_tools[0][1];
+                    const pct = (count / max) * 100;
+                    return (
+                      <div key={name} className="flex items-center gap-2 text-[10px] font-mono">
+                        <span className="w-32 truncate text-[var(--color-text)]">{name}</span>
+                        <div className="flex-1 h-3 bg-black/40 rounded overflow-hidden">
+                          <div className="h-full bg-[var(--color-cyan)]/60" style={{ width: `${pct}%` }} />
+                        </div>
+                        <span className="w-8 text-right text-[var(--color-text-dim)]">{count}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+        </Card>
+      )}
+
+      {tab === "errors" && (
+        <>
+          <Card title="ERRORES n8n · ÚLTIMOS 30" glow={errorsData?.total_errors_last_30 > 5 ? undefined : "green"}>
+            {!errorsData ? (
+              <div className="flex items-center gap-2 text-[var(--color-text-dim)] text-[11px] font-mono py-4">
+                <Loader2 size={14} className="animate-spin" /> cargando...
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                  <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                    <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">TOTAL ERRORES</div>
+                    <div className={`text-2xl font-bold ${errorsData.total_errors_last_30 > 5 ? "text-[var(--color-red)]" : "text-[var(--color-green)]"}`}>
+                      {errorsData.total_errors_last_30}
+                    </div>
+                  </div>
+                  <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                    <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">WORKFLOWS AFECTADOS</div>
+                    <div className="text-2xl font-bold text-[var(--color-amber)]">{errorsData.by_workflow?.length || 0}</div>
+                  </div>
+                  <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                    <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">MÁS RECIENTE</div>
+                    <div className="text-[11px] font-mono text-[var(--color-text)] mt-1">
+                      {errorsData.errors?.[0]?.started_at?.replace("T", " ").substring(0, 19) || "—"}
+                    </div>
+                  </div>
+                  <div className="px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                    <div className="text-[9px] tracking-widest text-[var(--color-text-dim)] font-mono">AUTO-REFRESH</div>
+                    <div className="text-[11px] font-mono text-[var(--color-cyan)] mt-1">cada 30s</div>
+                  </div>
+                </div>
+
+                {/* Timeline 24h */}
+                {timelineData?.timeline && (
+                  <div className="mb-4">
+                    <div className="text-[10px] tracking-widest text-[var(--color-text-dim)] font-mono mb-2">
+                      TIMELINE 24H · {timelineData.total_24h || 0} errores
+                    </div>
+                    <div className="flex items-end gap-0.5 h-20 px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]">
+                      {timelineData.timeline.map((b: any) => {
+                        const max = Math.max(...timelineData.timeline.map((x: any) => x.count), 1);
+                        const heightPct = (b.count / max) * 100;
+                        return (
+                          <div
+                            key={b.hour}
+                            className="flex-1 flex flex-col items-center justify-end gap-1 group relative"
+                            title={`${b.label}: ${b.count} errores`}
+                          >
+                            <div
+                              className={`w-full rounded-t transition-colors ${
+                                b.count === 0
+                                  ? "bg-[var(--color-green)]/20"
+                                  : b.count <= 3
+                                  ? "bg-[var(--color-amber)]/60"
+                                  : "bg-[var(--color-red)]/80"
+                              }`}
+                              style={{ height: `${Math.max(heightPct, 2)}%` }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="flex justify-between text-[8px] font-mono text-[var(--color-text-dim)] mt-1 px-3">
+                      <span>{timelineData.timeline[0]?.label}</span>
+                      <span>{timelineData.timeline[Math.floor(timelineData.timeline.length / 2)]?.label}</span>
+                      <span>{timelineData.timeline[timelineData.timeline.length - 1]?.label}</span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="text-[10px] tracking-widest text-[var(--color-text-dim)] font-mono mb-2">POR WORKFLOW</div>
+                <div className="space-y-1 mb-4">
+                  {errorsData.by_workflow?.map((w: any) => (
+                    <div
+                      key={w.workflow_name}
+                      className="flex items-center justify-between gap-3 px-3 py-2 bg-black/40 rounded border border-[var(--color-border)]"
+                    >
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <AlertTriangle size={12} className="text-[var(--color-red)] shrink-0" />
+                        <span className="text-[12px] text-[var(--color-text)] truncate">{w.workflow_name}</span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-[9px] font-mono text-[var(--color-text-dim)]">
+                          {w.most_recent.replace("T", " ").substring(0, 19)}
+                        </span>
+                        <span className="px-2 py-0.5 rounded bg-[var(--color-red)]/20 border border-[var(--color-red)]/40 text-[var(--color-red)] text-[10px] font-mono">
+                          {w.error_count}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                  {errorsData.by_workflow?.length === 0 && (
+                    <div className="text-center py-6 text-[11px] font-mono text-[var(--color-green)]">
+                      ✓ Sin errores recientes
+                    </div>
+                  )}
+                </div>
+
+                <div className="text-[10px] tracking-widest text-[var(--color-text-dim)] font-mono mb-2">TIMELINE</div>
+                <div className="space-y-1 max-h-[40vh] overflow-y-auto">
+                  {errorsData.errors?.slice(0, 15).map((e: any) => (
+                    <div key={e.id} className="flex items-center gap-2 text-[10px] font-mono px-2 py-1 hover:bg-white/5 rounded">
+                      <XCircle size={10} className="text-[var(--color-red)]" />
+                      <span className="text-[var(--color-text-dim)] w-32">{e.started_at.replace("T", " ").substring(0, 19)}</span>
+                      <span className="text-[var(--color-text)] truncate">{e.workflow_name}</span>
+                      <span className="text-[var(--color-text-dim)] ml-auto shrink-0">{e.mode}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </Card>
+        </>
+      )}
+    </div>
+  );
+}
+
+function SpecialistAgentsEditor({ agentsApi }: { agentsApi: any }) {
+  const [config, setConfig] = useState<{ agents: AgentConfig[]; _metadata?: any } | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<AgentConfig[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [savedFlash, setSavedFlash] = useState(false);
+
+  useEffect(() => {
+    api.agentsConfig().then((r) => r.ok && setConfig(r.config));
+  }, []);
+
+  function startEdit() {
+    setDraft(config?.agents ? JSON.parse(JSON.stringify(config.agents)) : []);
+    setEditing(true);
+  }
+
+  async function save() {
+    if (saving) return;
+    setSaving(true);
+    const r = await api.agentsConfigSave({ ...config, agents: draft });
+    if (r.ok) {
+      setConfig({ ...(config || {}), agents: draft });
+      setEditing(false);
+      setSavedFlash(true);
+      setTimeout(() => setSavedFlash(false), 2500);
+    }
+    setSaving(false);
+  }
+
+  function cancel() { setEditing(false); setDraft([]); }
+
+  function updateAgent(idx: number, field: keyof AgentConfig, value: any) {
+    const next = [...draft];
+    (next[idx] as any)[field] = value;
+    setDraft(next);
+  }
+
+  function addAgent() {
+    setDraft([
+      ...draft,
+      {
+        id: `custom_${Date.now()}`,
+        name: "NEW_AGENT",
+        enabled: true,
+        role: "Define el rol aquí",
+        accent: "cyan",
+        responsibilities: [],
+        trigger_keywords: [],
+      },
+    ]);
+  }
+
+  function removeAgent(idx: number) {
+    if (!confirm(`Eliminar agente ${draft[idx].name}?`)) return;
+    setDraft(draft.filter((_, i) => i !== idx));
+  }
+
+  if (!config) {
+    return (
+      <Card>
+        <div className="flex items-center gap-2 py-4 text-[var(--color-text-dim)] text-[11px] font-mono">
+          <Loader2 size={14} className="animate-spin" /> cargando agents config...
+        </div>
+      </Card>
+    );
+  }
+
+  const agents = editing ? draft : config.agents;
+  const enabledCount = agents.filter((a) => a.enabled).length;
+
+  return (
+    <div className="space-y-4">
+      {/* Header bar */}
+      <div className="flex items-center justify-between gap-3 px-3 py-2 bg-black/40 border border-[var(--color-border)] rounded">
+        <div className="text-[10px] font-mono text-[var(--color-text-dim)]">
+          {agents.length} agentes definidos · <span className="text-[var(--color-green)]">{enabledCount} activos</span>
+          {savedFlash && <span className="ml-2 text-[var(--color-green)]">✓ guardado</span>}
+        </div>
+        <div className="flex gap-2">
+          {!editing ? (
+            <button
+              onClick={startEdit}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-[var(--color-cyan)] text-[var(--color-cyan)] hover:bg-[var(--color-cyan)]/10"
+            >
+              <Edit2 size={12} />
+              <span className="text-[10px] font-mono tracking-widest">EDITAR</span>
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={addAgent}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-[var(--color-green)] text-[var(--color-green)] hover:bg-[var(--color-green)]/10"
+              >
+                <PlusIcon size={12} />
+                <span className="text-[10px] font-mono tracking-widest">AÑADIR</span>
+              </button>
+              <button
+                onClick={cancel}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-text)]"
+              >
+                <XIcon size={12} />
+                <span className="text-[10px] font-mono tracking-widest">CANCELAR</span>
+              </button>
+              <button
+                onClick={save}
+                disabled={saving}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[var(--color-green)]/20 border border-[var(--color-green)] text-[var(--color-green)] hover:bg-[var(--color-green)]/40 disabled:opacity-40"
+              >
+                {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                <span className="text-[10px] font-mono tracking-widest">GUARDAR</span>
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Agents grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {agents.map((a, idx) => (
+          <AgentCard
+            key={a.id}
+            agent={a}
+            editing={editing}
+            agentsApi={agentsApi}
+            onUpdate={(field, value) => updateAgent(idx, field, value)}
+            onRemove={() => removeAgent(idx)}
+          />
+        ))}
+      </div>
+
+      {/* Help (visible only when editing) */}
+      {editing && (
+        <Card title="📖 GUÍA EDICIÓN">
+          <div className="text-[11px] text-[var(--color-text-dim)] space-y-2 font-mono leading-relaxed">
+            <div><strong className="text-[var(--color-text)]">enabled</strong>: si está OFF el agente no responde a goals (queda como referencia)</div>
+            <div><strong className="text-[var(--color-text)]">trigger_keywords</strong>: palabras que activan el agente (separadas por coma)</div>
+            <div><strong className="text-[var(--color-text)]">tools_needed</strong>: tools del catálogo que el agente puede usar</div>
+            <div><strong className="text-[var(--color-text)]">accent</strong>: color del card · cyan / green / red / amber / purple</div>
+            <div className="text-[var(--color-amber)]">⚠ Cambios aplican al GUARDAR. Backup automático en .json.bak.</div>
+          </div>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+function AgentCard({
+  agent, editing, agentsApi, onUpdate, onRemove,
+}: {
+  agent: AgentConfig;
+  editing: boolean;
+  agentsApi: any;
+  onUpdate: (field: keyof AgentConfig, value: any) => void;
+  onRemove: () => void;
+}) {
+  const accent = agent.accent || "cyan";
+  const accentClass = ACCENT[accent] || ACCENT.cyan;
+  const linkedActive = (agentsApi?.agents || []).filter((w: any) =>
+    (agent.linked_workflows || []).some((needle: string) =>
+      w.name.toLowerCase().includes(needle.toLowerCase().split(" ")[0])
+    )
+  );
+
+  if (editing) {
+    return (
+      <Card className={`border-2 ${accentClass.split(" ")[0]}`} title={`Editar · ${agent.name}`}>
+        <div className="space-y-2 text-[10px] font-mono">
+          <label className="block">
+            <span className="text-[var(--color-text-dim)]">name</span>
+            <input
+              value={agent.name}
+              onChange={(e) => onUpdate("name", e.target.value)}
+              className="w-full mt-0.5 px-2 py-1 bg-black/40 border border-[var(--color-border)] rounded text-[var(--color-text)] focus:outline-none focus:border-[var(--color-cyan)]"
+            />
+          </label>
+          <label className="block">
+            <span className="text-[var(--color-text-dim)]">role</span>
+            <input
+              value={agent.role}
+              onChange={(e) => onUpdate("role", e.target.value)}
+              className="w-full mt-0.5 px-2 py-1 bg-black/40 border border-[var(--color-border)] rounded text-[var(--color-text)] focus:outline-none focus:border-[var(--color-cyan)]"
+            />
+          </label>
+          <label className="block">
+            <span className="text-[var(--color-text-dim)]">accent</span>
+            <select
+              value={agent.accent}
+              onChange={(e) => onUpdate("accent", e.target.value)}
+              className="w-full mt-0.5 px-2 py-1 bg-black/40 border border-[var(--color-border)] rounded text-[var(--color-text)]"
+            >
+              {["cyan", "green", "red", "amber", "purple"].map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className="text-[var(--color-text-dim)]">trigger_keywords (coma separated)</span>
+            <input
+              value={(agent.trigger_keywords || []).join(", ")}
+              onChange={(e) => onUpdate("trigger_keywords", e.target.value.split(",").map((s) => s.trim()).filter(Boolean))}
+              className="w-full mt-0.5 px-2 py-1 bg-black/40 border border-[var(--color-border)] rounded text-[var(--color-text)]"
+            />
+          </label>
+          <label className="flex items-center gap-2 pt-1">
+            <input
+              type="checkbox"
+              checked={agent.enabled}
+              onChange={(e) => onUpdate("enabled", e.target.checked)}
+              className="accent-[var(--color-green)]"
+            />
+            <span className="text-[var(--color-text-dim)]">habilitado</span>
+          </label>
+          <button
+            onClick={onRemove}
+            className="w-full mt-2 flex items-center justify-center gap-1 px-2 py-1 rounded border border-[var(--color-red)]/40 text-[var(--color-red)] hover:bg-[var(--color-red)]/10"
+          >
+            <Trash2 size={10} />
+            <span className="text-[9px] tracking-widest">ELIMINAR</span>
+          </button>
+        </div>
+      </Card>
+    );
+  }
+
+  // Read-only view
+  return (
+    <Card className={`border-2 ${accentClass.split(" ")[0]} ${!agent.enabled ? "opacity-50" : ""}`} title={agent.name}>
+      <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full border-2 ${accentClass} mb-3`}>
+        <Brain size={24} strokeWidth={1.5} />
+      </div>
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-sm text-[var(--color-text)] font-semibold">{agent.role}</span>
+        {!agent.enabled && (
+          <span className="text-[8px] tracking-widest font-mono px-1.5 py-0.5 rounded border border-[var(--color-text-dim)]/30 text-[var(--color-text-dim)]">
+            OFF
+          </span>
+        )}
+      </div>
+      <div className="text-[10px] text-[var(--color-text-dim)] font-mono mb-3">
+        {linkedActive.length} flujo{linkedActive.length !== 1 ? "s" : ""} activo{linkedActive.length !== 1 ? "s" : ""}
+      </div>
+      {agent.trigger_keywords && agent.trigger_keywords.length > 0 && (
+        <div className="flex flex-wrap gap-1 mb-2">
+          {agent.trigger_keywords.slice(0, 5).map((k) => (
+            <span key={k} className="text-[8px] font-mono tracking-widest px-1.5 py-0.5 rounded bg-black/40 border border-[var(--color-border)] text-[var(--color-text-dim)]">
+              {k}
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="flex flex-col gap-1">
+        {linkedActive.slice(0, 3).map((w: any, i: number) => (
+          <div key={i} className="flex items-center gap-2 text-[10px] text-[var(--color-text-dim)] font-mono">
+            <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-green)] animate-pulse" />
+            {w.name}
+          </div>
+        ))}
+        {linkedActive.length === 0 && (
+          <div className="text-[10px] text-[var(--color-text-dim)]">Sin coincidencias en flujos</div>
+        )}
+      </div>
+    </Card>
+  );
+}
+
+function ExplicaPanel() {
+  const [data, setData] = useState<any>(null);
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    api.tonyExplica().then(setData);
+    const i = setInterval(() => api.tonyExplica().then(setData), 60000);
+    return () => clearInterval(i);
+  }, []);
+
+  if (!data?.ok) return null;
+  const score = data.score || 0;
+  const colorBorder =
+    score >= 80 ? "border-[var(--color-green)]/40" :
+    score >= 60 ? "border-[var(--color-amber)]/40" :
+    "border-[var(--color-red)]/40";
+  const colorBg =
+    score >= 80 ? "bg-[var(--color-green)]/5" :
+    score >= 60 ? "bg-[var(--color-amber)]/5" :
+    "bg-[var(--color-red)]/5";
+
+  // Just show first line (mood) + button to expand
+  const lines = (data.explanation || "").split("\n");
+  const mood = lines[0]?.replace(/^#\s*/, "") || data.mood;
+  const detail = lines.slice(1).filter((l: string) => l.trim()).join("\n");
+
+  return (
+    <div className={`px-3 py-2.5 rounded border ${colorBorder} ${colorBg} flex items-start gap-3`}>
+      <Sparkles size={14} className={`mt-0.5 shrink-0 ${score >= 80 ? "text-[var(--color-green)]" : score >= 60 ? "text-[var(--color-amber)]" : "text-[var(--color-red)]"}`} />
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between gap-2">
+          <div className="text-[12px] text-[var(--color-text)] font-semibold truncate">{mood}</div>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-[9px] font-mono tracking-widest text-[var(--color-text-dim)] hover:text-[var(--color-cyan)] shrink-0"
+          >
+            {expanded ? "OCULTAR" : "DETALLE"}
+          </button>
+        </div>
+        {expanded && (
+          <pre className="text-[10px] font-mono text-[var(--color-text-dim)] whitespace-pre-wrap mt-2 leading-relaxed">{detail}</pre>
+        )}
+      </div>
     </div>
   );
 }

@@ -5,9 +5,10 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, TrendingUp, Bot, Workflow, Zap, BarChart3,
   ShieldCheck, Settings, Brain, Eye, ChevronLeft, ChevronRight,
-  Mail, MessageCircle, Library, Newspaper, Building2, Megaphone, KeyRound
+  Mail, MessageCircle, Library, Newspaper, Building2, Megaphone, KeyRound,
+  Webhook, Target, Menu as MenuIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -16,8 +17,10 @@ const NAV = [
   { href: "/company", icon: Building2, label: "EMPRESA" },
   { href: "/social-manager", icon: Megaphone, label: "POSTS SOCIALES" },
   { href: "/trading", icon: TrendingUp, label: "TRADING" },
+  { href: "/watchlist", icon: Target, label: "WATCHLIST" },
   { href: "/agents", icon: Bot, label: "AGENTES IA" },
   { href: "/workflows", icon: Workflow, label: "FLUJOS N8N" },
+  { href: "/webhooks", icon: Webhook, label: "WEBHOOKS" },
   { href: "/email", icon: Mail, label: "EMAIL" },
   { href: "/news", icon: Newspaper, label: "NOTICIAS" },
   { href: "/research", icon: Library, label: "INVESTIGACIÓN" },
@@ -33,14 +36,51 @@ const NAV = [
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Auto-collapse on small screens
+  useEffect(() => {
+    const onResize = () => {
+      const w = window.innerWidth;
+      if (w < 768) setCollapsed(true);
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // Close mobile drawer on route change
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   return (
-    <aside
-      className={cn(
-        "flex flex-col border-r border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur transition-all sticky top-0 h-screen",
-        collapsed ? "w-16" : "w-56"
+    <>
+      {/* Mobile hamburger button (visible solo en pequeñas) */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="md:hidden fixed top-3 left-3 z-30 p-2 rounded bg-[var(--color-bg-card)] border border-[var(--color-cyan)]/40 text-[var(--color-cyan)]"
+        aria-label="Abrir menú"
+      >
+        <MenuIcon size={18} />
+      </button>
+
+      {/* Mobile backdrop */}
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/70 backdrop-blur"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
-    >
+
+      <aside
+        className={cn(
+          "flex flex-col border-r border-[var(--color-border)] bg-[var(--color-bg-card)]/95 backdrop-blur transition-all top-0 h-screen z-50",
+          // Mobile: drawer (fixed full-height, slide from left)
+          mobileOpen ? "fixed left-0 w-64" : "fixed -left-full w-64",
+          // Desktop md+: sticky inline
+          "md:sticky md:left-0",
+          collapsed ? "md:w-16" : "md:w-56",
+        )}
+      >
       {/* Logo */}
       <div className="flex items-center gap-3 p-4 border-b border-[var(--color-border)]">
         <div className="relative w-9 h-9 rounded border-2 border-[var(--color-cyan)] overflow-hidden bg-black flex items-center justify-center shrink-0">
@@ -80,13 +120,23 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Collapse toggle */}
+      {/* Collapse toggle (desktop only) */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="flex items-center justify-center gap-2 p-3 border-t border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-cyan)]"
+        className="hidden md:flex items-center justify-center gap-2 p-3 border-t border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-cyan)]"
       >
         {collapsed ? <ChevronRight size={14} /> : <><ChevronLeft size={14} /><span className="text-[9px] tracking-widest font-mono">COLAPSAR</span></>}
       </button>
-    </aside>
+
+      {/* Close drawer (mobile only) */}
+      <button
+        onClick={() => setMobileOpen(false)}
+        className="md:hidden flex items-center justify-center gap-2 p-3 border-t border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-red)]"
+      >
+        <ChevronLeft size={14} />
+        <span className="text-[9px] tracking-widest font-mono">CERRAR MENÚ</span>
+      </button>
+      </aside>
+    </>
   );
 }

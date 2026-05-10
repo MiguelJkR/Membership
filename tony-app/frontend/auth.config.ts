@@ -13,6 +13,33 @@ export const authConfig: NextAuthConfig = {
       }
       // All other pages require auth
       if (!isLoggedIn) return false; // redirects to /login
+
+      // Role-based path permissions (lazy import — auth.config runs in middleware
+      // which can't import server-only modules, but pure JS like users.ts is fine)
+      const role = (auth?.user as any)?.role || "admin";
+      const path = nextUrl.pathname;
+
+      // Inline minimal permission check to avoid import overhead in middleware
+      const TRADER_BLOCKED = ["/settings", "/security", "/vault"];
+      const VIEWER_BLOCKED = [
+        "/settings", "/security", "/vault",
+        "/agents", "/automation", "/email", "/social-manager", "/social",
+      ];
+
+      if (role === "trader") {
+        for (const b of TRADER_BLOCKED) {
+          if (path === b || path.startsWith(b + "/")) {
+            return Response.redirect(new URL("/?denied=trader", nextUrl));
+          }
+        }
+      }
+      if (role === "viewer") {
+        for (const b of VIEWER_BLOCKED) {
+          if (path === b || path.startsWith(b + "/")) {
+            return Response.redirect(new URL("/?denied=viewer", nextUrl));
+          }
+        }
+      }
       return true;
     },
   },

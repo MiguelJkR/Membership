@@ -1,12 +1,42 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
+import { authenticate, type UserRole } from "./lib/users";
 
-const TONY_USERNAME = process.env.TONY_USERNAME || "miguel";
-const TONY_PASSWORD = process.env.TONY_PASSWORD || "tony-ai-2026";
+declare module "next-auth" {
+  interface User {
+    role?: UserRole;
+  }
+  interface Session {
+    user: {
+      id?: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      role?: UserRole;
+    };
+  }
+}
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
+  callbacks: {
+    ...authConfig.callbacks,
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = (user as any).role;
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        (session.user as any).role = token.role;
+        (session.user as any).id = token.id;
+      }
+      return session;
+    },
+  },
   providers: [
     Credentials({
       credentials: {
@@ -15,10 +45,14 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       },
       authorize: async (credentials) => {
         const { username, password } = credentials as { username: string; password: string };
-        if (username === TONY_USERNAME && password === TONY_PASSWORD) {
-          return { id: "miguel", name: "Miguel A Balart Batlle", email: "contact@maclorianxgroup.com" };
-        }
-        return null;
+        const user = authenticate(username, password);
+        if (!user) return null;
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        };
       },
     }),
   ],

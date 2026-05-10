@@ -98,6 +98,155 @@ export const api = {
     ),
   agentSessionDetail: (id: string) =>
     fetchJson<{ ok: boolean; session: any }>(`/api/tony_agent/session/${encodeURIComponent(id)}`),
+  agentPerformance: () =>
+    fetchJson<{
+      ok: boolean;
+      total_sessions: number;
+      status_breakdown: Record<string, number>;
+      completion_rate_pct: number;
+      memory_usage_pct: number;
+      avg_iterations: number;
+      top_tools: Array<[string, number]>;
+      timeline_7d: Array<{ day: string; total: number; complete: number; error: number; completion_rate: number }>;
+    }>("/api/tony_agent/performance"),
+  agentOrchestrate: (goal: string, max_steps = 4) =>
+    fetchJson<{
+      ok: boolean;
+      goal: string;
+      steps_total: number;
+      steps: Array<{ step: number; sub_goal: string; final: string; status: string }>;
+      final_synthesis: string;
+      duration_s: number;
+    }>("/api/tony_agent/orchestrate", {
+      method: "POST",
+      body: JSON.stringify({ goal, max_steps }),
+    }),
+  watchlistTriggersSave: (triggers: any[]) =>
+    fetchJson<{ ok: boolean; saved: boolean; count: number }>("/api/watchlist_triggers/save", {
+      method: "POST",
+      body: JSON.stringify({ triggers }),
+    }),
+  watchlistTriggers: () =>
+    fetchJson<{
+      ok: boolean;
+      total: number;
+      active_cooldowns: number;
+      triggers: Array<{
+        id: string;
+        symbol: string;
+        trigger_above?: number;
+        trigger_below?: number;
+        action: string;
+        rationale: string;
+        priority: "critical" | "high" | "info";
+        cooldown_h: number;
+        valid_from?: string;
+        last_fired_ts?: string;
+        last_price?: number;
+        in_cooldown: boolean;
+        cooldown_remaining_min: number;
+      }>;
+    }>("/api/watchlist_triggers"),
+  alertBridgeStatus: () =>
+    fetchJson<{
+      ok: boolean;
+      discord: string;
+      slack: string;
+      filters: { level_min?: string; skip_categories?: string[] };
+    }>("/api/alert_bridge/status"),
+  alertBridgeConfigure: (config: { discord?: string | null; slack?: string | null; level_min?: string }) =>
+    fetchJson<{ ok: boolean }>("/api/alert_bridge/configure", {
+      method: "POST",
+      body: JSON.stringify(config),
+    }),
+  alertBridgeBroadcast: (text: string, level: "info" | "warn" | "error" | "critical" = "info") =>
+    fetchJson<{ ok: boolean; sent_to?: string[] }>("/api/alert_bridge/broadcast", {
+      method: "POST",
+      body: JSON.stringify({ text, level }),
+    }),
+  uptime: () =>
+    fetchJson<{
+      ok: boolean;
+      start_ts: number;
+      uptime_seconds: number;
+      days: number;
+      hours: number;
+      minutes: number;
+      label: string;
+    }>("/api/uptime"),
+  feedbackInsights: () =>
+    fetchJson<{
+      ok: boolean;
+      total: number;
+      by_category: Record<string, number>;
+      by_intent: Record<string, number>;
+      by_sentiment: Record<string, number>;
+      positive_rate_pct: number;
+      rejection_rate_pct: number;
+    }>("/api/telegram_feedback/insights"),
+  feedbackRecent: (limit = 20) =>
+    fetchJson<{
+      ok: boolean;
+      entries: Array<{
+        ts: string;
+        reply_text: string;
+        original_preview: string;
+        category: string;
+        intent: string;
+        sentiment: string;
+      }>;
+    }>(`/api/telegram_feedback/recent?limit=${limit}`),
+  agentsConfig: () =>
+    fetchJson<{ ok: boolean; config: { _metadata?: any; agents: AgentConfig[] } }>("/api/agents/config"),
+  agentsConfigSave: (config: { _metadata?: any; agents: AgentConfig[] }) =>
+    fetchJson<{ ok: boolean; saved: boolean; agents_count: number }>(
+      "/api/agents/config", { method: "POST", body: JSON.stringify({ config }) }
+    ),
+  tonyExplica: () =>
+    fetchJson<{
+      ok: boolean;
+      explanation: string;
+      score: number;
+      mood: string;
+      raw: any;
+      ts: string;
+    }>("/api/tony_explica"),
+  n8nErrorTimeline: () =>
+    fetchJson<{
+      ok: boolean;
+      total_24h: number;
+      timeline: Array<{ hour: string; label: string; count: number }>;
+    }>("/api/n8n_error_timeline"),
+  n8nErrors: () =>
+    fetchJson<{
+      ok: boolean;
+      total_errors_last_30: number;
+      errors: Array<{ id: string; workflow_id: string; workflow_name: string; started_at: string; mode: string }>;
+      by_workflow: Array<{ workflow_name: string; error_count: number; most_recent: string }>;
+    }>("/api/n8n_errors"),
+  systemStatus: () =>
+    fetchJson<{
+      ok?: boolean;
+      ts: string;
+      subsystems: Record<string, any>;
+      tools: { total: number; read_only: number; gated: number; names: string[] };
+      alerts: { watchlist_triggers?: number; fired_recently?: number; last_fired?: string | null };
+      health: { composite_score?: number; label?: string };
+    }>("/api/system_status"),
+};
+
+export type AgentConfig = {
+  id: string;
+  name: string;
+  enabled: boolean;
+  icon?: string;
+  accent?: string;
+  role: string;
+  responsibilities?: string[];
+  tools_needed?: string[];
+  linked_workflows?: string[];
+  trigger_keywords?: string[];
+  default_prompt_extension?: string;
 };
 
 export type AgentTraceEntry =
