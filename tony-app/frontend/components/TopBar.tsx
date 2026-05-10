@@ -1,26 +1,55 @@
 "use client";
-import { Activity, Bell, User, Wifi, WifiOff, Volume2, LogOut, Heart, Clock } from "lucide-react";
+import { Bell, Volume2, LogOut, Heart, Clock, Search, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api, fmt } from "@/lib/api";
 import { signOut, useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { VoiceModal } from "@/components/VoiceModal";
 import { NotificationsPopover } from "@/components/NotificationsPopover";
 
+const ROUTE_TITLES: Record<string, string> = {
+  "/": "DASHBOARD",
+  "/trading": "TRADING",
+  "/agents": "AGENTES",
+  "/workflows": "WORKFLOWS",
+  "/analytics": "ANÁLISIS",
+  "/automation": "AUTOMATIZACIÓN",
+  "/webhooks": "WEBHOOKS",
+  "/research": "RESEARCH",
+  "/vault": "VAULT",
+  "/watchlist": "WATCHLIST",
+  "/settings": "CONFIGURACIÓN",
+  "/news": "REGISTROS",
+  "/chat": "AYUDA",
+};
+
 export function TopBar() {
+  const pathname = usePathname();
   const session = useSession();
-  const userName = session.data?.user?.name?.split(" ")[0] || "MIGUEL";
-  const [aiStatus, setAiStatus] = useState<"online" | "offline" | "checking">("checking");
-  const [capital, setCapital] = useState<number | undefined>();
   const [pl, setPl] = useState<number | undefined>();
   const [alerts, setAlerts] = useState(0);
   const [healthScore, setHealthScore] = useState<number | undefined>();
-  const [errorCount24h, setErrorCount24h] = useState<number>(0);
   const [uptimeStartTs, setUptimeStartTs] = useState<number | undefined>();
   const [uptimeNow, setUptimeNow] = useState<number>(0);
   const [showVoice, setShowVoice] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [now, setNow] = useState<string>("");
 
-  // Live uptime tick (every second once we know start_ts)
+  // Live clock tick
+  useEffect(() => {
+    const tick = () => {
+      const d = new Date();
+      const hh = d.getHours().toString().padStart(2, "0");
+      const mm = d.getMinutes().toString().padStart(2, "0");
+      const ss = d.getSeconds().toString().padStart(2, "0");
+      setNow(`${hh}:${mm}:${ss}`);
+    };
+    tick();
+    const i = setInterval(tick, 1000);
+    return () => clearInterval(i);
+  }, []);
+
+  // Live uptime tick
   useEffect(() => {
     if (!uptimeStartTs) return;
     const tick = () => setUptimeNow(Math.floor(Date.now() / 1000) - uptimeStartTs);
@@ -40,28 +69,20 @@ export function TopBar() {
   useEffect(() => {
     let mounted = true;
     async function ping() {
-      const pf = await api.portfolio();
-      if (!mounted) return;
-      if (pf.ok !== false) {
-        setAiStatus("online");
+      try {
+        const pf = await api.portfolio();
+        if (!mounted) return;
         const real = pf.real_money_only || {};
-        setCapital(real.total_value);
         setPl(real.total_pl);
-      } else {
-        setAiStatus("offline");
-      }
-      const notifications = await api.notifications();
-      if (mounted) setAlerts(notifications.events?.length || 0);
-      // Health composite + n8n error count
+      } catch {}
+      try {
+        const notifications = await api.notifications();
+        if (mounted) setAlerts(notifications.events?.length || 0);
+      } catch {}
       try {
         const sys = await api.systemStatus();
         if (mounted) setHealthScore(sys.health?.composite_score);
       } catch {}
-      try {
-        const errs = await api.n8nErrors();
-        if (mounted) setErrorCount24h(errs.total_errors_last_30 || 0);
-      } catch {}
-      // Uptime — fetch start_ts once
       if (!uptimeStartTs) {
         try {
           const u = await api.uptime();
@@ -74,103 +95,98 @@ export function TopBar() {
     return () => { mounted = false; clearInterval(interval); };
   }, []);
 
+  const routeTitle = ROUTE_TITLES[pathname] || pathname.replace("/", "").toUpperCase() || "DASHBOARD";
+
   return (
-    <header className="flex items-center justify-between gap-4 px-5 py-3 border-b border-[var(--color-border)] bg-[var(--color-bg-card)]/40 backdrop-blur sticky top-0 z-10">
-      {/* Left: AI Status */}
-      <div className="flex items-center gap-3">
-        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${
-          aiStatus === "online"
-            ? "border-[var(--color-green)]/40 bg-[var(--color-green)]/10 text-[var(--color-green)]"
-            : "border-[var(--color-red)]/40 bg-[var(--color-red)]/10 text-[var(--color-red)]"
-        }`}>
-          {aiStatus === "online" ? <Wifi size={12} /> : <WifiOff size={12} />}
-          <span className="text-[9px] tracking-widest font-mono">
-            {aiStatus === "online" ? "SISTEMA EN LÍNEA" : aiStatus === "offline" ? "SISTEMA OFFLINE" : "VERIFICANDO..."}
-          </span>
-          {aiStatus === "online" && <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-green)] animate-pulse" />}
+    <header className="flex items-center gap-4 px-5 py-3 border-b border-[var(--color-border)] bg-[var(--color-bg-card)]/40 backdrop-blur sticky top-0 z-10">
+      {/* Left: Breadcrumb TONY-OS / DASHBOARD / "/" */}
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="text-[10px] tracking-[0.25em] font-mono text-[var(--color-text-dim)]">TONY-OS</span>
+        <ChevronRight size={11} className="text-[var(--color-text-dim)]/50" />
+        <span className="text-[10px] tracking-[0.25em] font-mono text-[var(--color-green)] font-semibold">{routeTitle}</span>
+        <span className="ml-2 px-2 py-0.5 rounded border border-[var(--color-border)] text-[10px] font-mono text-[var(--color-text-dim)]">/</span>
+      </div>
+
+      {/* Center: Search */}
+      <div className="flex-1 max-w-xl mx-auto hidden md:block">
+        <div className="relative">
+          <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-dim)]" />
+          <input
+            type="text"
+            placeholder="Para abrir la pantalla completa..."
+            className="w-full pl-8 pr-3 py-1.5 bg-black/40 border border-[var(--color-border)] rounded text-[10px] font-mono text-[var(--color-text)] focus:outline-none focus:border-[var(--color-green)]/50 placeholder:text-[var(--color-text-dim)]"
+          />
         </div>
-        <div className="hidden sm:flex items-center gap-2 text-[var(--color-text-dim)]">
-          <Activity size={12} />
-          <span className="text-[9px] font-mono tracking-widest">AUTÓNOMO · MULTI-AGENTE</span>
-        </div>
-        {/* Health badge */}
+      </div>
+
+      {/* Right block: pills + voice + bell + clock */}
+      <div className="flex items-center gap-3 shrink-0">
+        {/* UPTIME pill */}
+        {uptimeStartTs && (
+          <div className="hidden lg:flex items-center gap-1.5 text-[10px] font-mono">
+            <Clock size={10} className="text-[var(--color-text-dim)]" />
+            <span className="tracking-widest text-[var(--color-text-dim)]">UPTIME</span>
+            <span className="text-[var(--color-text)] tabular-nums">{formatUptime(uptimeNow)}</span>
+          </div>
+        )}
+        {/* P&L pill */}
+        {pl !== undefined && (
+          <div className="hidden md:flex items-center gap-1.5 text-[10px] font-mono">
+            <span className="tracking-widest text-[var(--color-text-dim)]">P&L 24H</span>
+            <span className={pl >= 0 ? "text-[var(--color-green)]" : "text-[var(--color-red)]"}>
+              {pl >= 0 ? "+" : ""}{fmt(pl)}
+            </span>
+          </div>
+        )}
+        {/* HEALTH pill */}
         {healthScore !== undefined && (
           <div
-            className={`hidden md:flex items-center gap-1.5 px-2 py-1 rounded-full border ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-mono ${
               healthScore >= 80
-                ? "border-[var(--color-green)]/40 bg-[var(--color-green)]/5 text-[var(--color-green)]"
+                ? "border-[var(--color-green)]/40 bg-[var(--color-green)]/10 text-[var(--color-green)]"
                 : healthScore >= 60
-                ? "border-[var(--color-amber)]/40 bg-[var(--color-amber)]/5 text-[var(--color-amber)]"
-                : "border-[var(--color-red)]/40 bg-[var(--color-red)]/5 text-[var(--color-red)]"
+                ? "border-[var(--color-amber)]/40 bg-[var(--color-amber)]/10 text-[var(--color-amber)]"
+                : "border-[var(--color-red)]/40 bg-[var(--color-red)]/10 text-[var(--color-red)]"
             }`}
-            title={`Sistema health composite + n8n errores 24h`}
           >
             <Heart size={10} strokeWidth={2} />
-            <span className="text-[9px] tracking-widest font-mono font-semibold">{healthScore}/100</span>
-            {errorCount24h > 0 && (
-              <span className="text-[8px] font-mono opacity-70">· {errorCount24h}err</span>
-            )}
+            <span className="tracking-widest font-semibold">HEALTH {healthScore}%</span>
           </div>
         )}
-        {/* UPTIME counter (live tick) */}
-        {uptimeStartTs && (
-          <div
-            className="hidden lg:flex items-center gap-1.5 px-2 py-1 rounded-full border border-[var(--color-cyan)]/30 bg-[var(--color-cyan)]/5 text-[var(--color-cyan)]"
-            title="Backend uptime"
-          >
-            <Clock size={10} strokeWidth={2} />
-            <span className="text-[9px] tracking-widest font-mono font-semibold tabular-nums">
-              UPTIME {formatUptime(uptimeNow)}
-            </span>
-          </div>
-        )}
-      </div>
 
-      {/* Center: Capital + P/L */}
-      <div className="flex items-center gap-4 sm:gap-6">
-        <div className="flex flex-col items-end">
-          <span className="text-[8px] tracking-widest text-[var(--color-text-dim)] font-mono">CAPITAL REAL</span>
-          <span className="text-sm font-mono font-semibold text-[var(--color-cyan)]">{capital !== undefined ? fmt(capital) : "—"}</span>
-        </div>
-        <div className="flex flex-col items-end">
-          <span className="text-[8px] tracking-widest text-[var(--color-text-dim)] font-mono">P/L</span>
-          <span className={`text-sm font-mono font-semibold ${pl !== undefined && pl >= 0 ? "text-[var(--color-green)]" : "text-[var(--color-red)]"}`}>
-            {pl !== undefined ? fmt(pl) : "—"}
-          </span>
-        </div>
-      </div>
-
-      {/* Right: Voice + Alerts + Profile */}
-      <div className="flex items-center gap-3">
+        {/* Voice button */}
         <button
           onClick={() => setShowVoice(true)}
-          className="p-2 rounded text-[var(--color-text-dim)] hover:text-[var(--color-green)] hover:bg-[var(--color-green)]/10 transition-colors"
-          title="Tony habla (TTS spanish)"
+          className="p-1.5 rounded text-[var(--color-text-dim)] hover:text-[var(--color-green)] hover:bg-[var(--color-green)]/10 transition-colors"
+          title="Tony habla (TTS)"
         >
-          <Volume2 size={16} strokeWidth={1.5} />
+          <Volume2 size={14} strokeWidth={1.5} />
         </button>
+
+        {/* Bell */}
         <button
           onClick={() => setShowNotifications(true)}
-          className="relative p-2 rounded text-[var(--color-text-dim)] hover:text-[var(--color-amber)] hover:bg-[var(--color-amber)]/10 transition-colors"
+          className="relative p-1.5 rounded text-[var(--color-text-dim)] hover:text-[var(--color-amber)] hover:bg-[var(--color-amber)]/10 transition-colors"
           title="Notificaciones"
         >
-          <Bell size={16} strokeWidth={1.5} />
+          <Bell size={14} strokeWidth={1.5} />
           {alerts > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-[var(--color-red)] text-[8px] font-bold text-white flex items-center justify-center animate-pulse">
-              {alerts > 9 ? "9+" : alerts}
-            </span>
+            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-[var(--color-red)] animate-pulse" />
           )}
         </button>
-        <button className="flex items-center gap-2 px-3 py-1.5 rounded border border-[var(--color-border)] hover:border-[var(--color-cyan)]/40 transition-colors">
-          <User size={12} className="text-[var(--color-cyan)]" />
-          <span className="text-[10px] tracking-widest font-mono text-[var(--color-text)]">{userName.toUpperCase()}</span>
-        </button>
+
+        {/* Clock */}
+        <span className="text-[12px] tracking-wider font-mono text-[var(--color-green)] tabular-nums hidden sm:inline">
+          {now}
+        </span>
+
+        {/* User logout */}
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="p-2 rounded text-[var(--color-text-dim)] hover:text-[var(--color-red)] transition-colors"
-          title="Cerrar sesión"
+          className="p-1.5 rounded text-[var(--color-text-dim)] hover:text-[var(--color-red)] transition-colors"
+          title={`Cerrar sesión (${session.data?.user?.name || ""})`}
         >
-          <LogOut size={16} strokeWidth={1.5} />
+          <LogOut size={14} strokeWidth={1.5} />
         </button>
       </div>
 
