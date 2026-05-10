@@ -23,9 +23,32 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
 
 export function ServiceWorkerRegister() {
   useEffect(() => {
-    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {});
-    }
+    if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+    let didReload = false;
+    navigator.serviceWorker
+      .register("/sw.js", { updateViaCache: "none" })
+      .then((reg) => {
+        intervalId = setInterval(() => reg.update().catch(() => {}), 10 * 60_000);
+        reg.addEventListener("updatefound", () => {
+          const w = reg.installing;
+          if (!w) return;
+          w.addEventListener("statechange", () => {
+            if (w.state === "installed" && navigator.serviceWorker.controller) {
+              w.postMessage({ type: "SKIP_WAITING" });
+            }
+          });
+        });
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (didReload) return;
+          didReload = true;
+          window.location.reload();
+        });
+      })
+      .catch(() => {});
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
   return null;
 }
