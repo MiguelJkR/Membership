@@ -38,7 +38,7 @@ export function RendimientoCard() {
     return rows.slice(-tfDef.rows);
   }, [rows, tf]);
 
-  const values = sliced.map((r: any) => Number(r.combined ?? r.value ?? 0));
+  const values = sliced.map((r: any) => Number(r.real_money_value ?? r.moomoo_value ?? r.combined_value ?? r.combined ?? r.value ?? 0));
   const minV = values.length ? Math.min(...values) : 0;
   const maxV = values.length ? Math.max(...values) : 0;
 
@@ -47,7 +47,7 @@ export function RendimientoCard() {
     if (rows.length < 2) {
       return { drawdown: 0, sharpe: 0, profitFactor: 0, winRate: 0 };
     }
-    const allValues = rows.map((r: any) => Number(r.combined ?? r.value ?? 0));
+    const allValues = rows.map((r: any) => Number(r.real_money_value ?? r.moomoo_value ?? r.combined_value ?? r.combined ?? r.value ?? 0));
     const returns: number[] = [];
     for (let i = 1; i < allValues.length; i++) {
       const ret = allValues[i - 1] !== 0 ? (allValues[i] - allValues[i - 1]) / allValues[i - 1] : 0;

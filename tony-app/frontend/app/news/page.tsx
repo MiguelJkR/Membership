@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, MiniMetric } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
 import { Newspaper, ExternalLink, TrendingUp, TrendingDown, Minus, Loader2, RefreshCw, Briefcase, Eye, DollarSign, Coins, BarChart3 } from "lucide-react";
 
 function SentimentBadge({ score, label }: { score?: number; label?: string }) {
@@ -82,11 +81,16 @@ export default function NewsPage() {
   const activeData = activeSymbol ? news[activeSymbol] : null;
 
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader
-        title="Feed de Noticias"
-        subtitle={`${watchlist.total_count || 0} INSTRUMENTOS · POSICIONES + WATCHLIST + FOREX + CRYPTO + ÍNDICES`}
-      />
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center gap-2">
+          <Newspaper size={14} className="text-[var(--color-green)]" />
+          <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+            FEED MULTI-INSTRUMENTO · {watchlist.total_count || 0} TICKERS · POSICIONES + WATCHLIST + FOREX + CRYPTO + ÍNDICES
+          </span>
+        </div>
+      </div>
 
       {/* Type filter pills */}
       <div className="flex flex-wrap gap-2">

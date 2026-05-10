@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, MiniMetric } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
-import { X, CheckCircle2, AlertCircle, Loader2, Clock, Webhook, Zap } from "lucide-react";
+import { X, CheckCircle2, AlertCircle, Loader2, Clock, Webhook, Zap, GitBranch } from "lucide-react";
 
 const CATEGORY_COLORS: Record<string, string> = {
   trading: "bg-[var(--color-cyan)]/20 text-[var(--color-cyan)] border-[var(--color-cyan)]/40",
@@ -48,8 +47,18 @@ export default function WorkflowsPage() {
   list.forEach((a: any) => { byCategory[a.category] = (byCategory[a.category] || 0) + 1; });
 
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader title="Flujos · Orquestación n8n" subtitle={`${agents.count || 0} ACTIVOS · CRON + WEBHOOK + DISPARADORES POR EVENTO · CLICK PARA DETALLE`} />
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-2">
+            <GitBranch size={14} className="text-[var(--color-green)]" />
+            <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+              ORQUESTACIÓN N8N · {agents.count || 0} ACTIVOS · CRON + WEBHOOK + EVENTOS · CLICK PARA DETALLE
+            </span>
+          </div>
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
         <MiniMetric label="TOTAL" value={`${list.length}`} tone="cyan" />

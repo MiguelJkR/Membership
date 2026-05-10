@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
+import { Terminal } from "lucide-react";
 
 const SAMPLE_LOGS = [
   "[BRAIN] cortex_consolidate cycle 47",
@@ -79,8 +79,16 @@ export default function MatrixPage() {
   return (
     <div className="relative min-h-full">
       <canvas ref={canvasRef} className="fixed inset-0 z-0 opacity-50" />
-      <div className="relative z-10 p-5 space-y-4">
-        <PageHeader title="Modo Matrix" subtitle="FEED DE EJECUCIÓN AUTÓNOMA · ACTIVIDAD NEURAL · EN VIVO" />
+      <div className="relative z-10 p-4 md:p-5 space-y-4">
+        {/* Subheader strip — Claude Design vocabulary */}
+        <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+          <div className="flex items-center gap-2">
+            <Terminal size={14} className="text-[var(--color-green)]" />
+            <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+              MODO MATRIX · FEED DE EJECUCIÓN AUTÓNOMA · ACTIVIDAD NEURAL · EN VIVO
+            </span>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card title="FEED DE EJECUCIÓN" glow="green">

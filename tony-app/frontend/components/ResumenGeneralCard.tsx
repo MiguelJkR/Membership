@@ -29,20 +29,25 @@ export function ResumenGeneralCard() {
         setPortfolio(pf);
         setPerf(pe);
         setRisk(rk);
-        // Try to get recent trades count
+        // Recent activity counts (broker fills + signals + trades, all-time + 24h)
         try {
           const noti = await api.notifications();
           const events = noti.events || [];
+          const isTradeLike = (e: any) =>
+            String(e.event_type || "").toLowerCase().match(/trade|fill|signal|broker/);
+          const tradeEventsAll = events.filter(isTradeLike);
           const last24h = events.filter((e: any) => {
             const t = new Date(e.timestamp_utc || e.ts || 0).getTime();
             return Date.now() - t < 24 * 60 * 60 * 1000;
           });
-          const tradeEvents = last24h.filter((e: any) =>
-            String(e.event_type || "").toLowerCase().includes("trade") ||
-            String(e.event_type || "").toLowerCase().includes("fill") ||
-            String(e.event_type || "").toLowerCase().includes("signal")
-          );
-          if (mounted) setTrades({ count_24h: tradeEvents.length });
+          const tradeEvents24 = last24h.filter(isTradeLike);
+          if (mounted) {
+            setTrades({
+              count_24h: tradeEvents24.length,
+              count_total: tradeEventsAll.length,
+              events_24h: last24h.length,
+            });
+          }
         } catch {}
       } catch {}
     }
@@ -54,22 +59,66 @@ export function ResumenGeneralCard() {
   const real = portfolio?.real_money_only || {};
   const totalCapital = real.total_value || 0;
   const totalPL = real.total_pl || 0;
-  const plPct = totalCapital ? (totalPL / Math.max(totalCapital - totalPL, 1)) * 100 : 0;
+  // % vs cost basis (NOT 24h delta — this is total unrealized)
+  const totalPlPct = totalCapital ? (totalPL / Math.max(totalCapital - totalPL, 1)) * 100 : 0;
 
-  // 7d perf calc from history
+  // Real 24h delta from perf history rows (timestamp-aware)
+  // Backend rows: { ts, combined_value, real_money_value, moomoo_value, oanda_value, moomoo_pl, oanda_pl }
   const rows = perf?.rows || [];
+  // Use REAL MONEY value (no demo OANDA) — that's what the user actually cares about
+  const valueAt = (row: any) =>
+    Number(row?.real_money_value ?? row?.moomoo_value ?? row?.combined_value ?? row?.combined ?? row?.value ?? 0);
+
+  let pl24h = 0;
+  let pct24h = 0;
+  if (rows.length >= 2) {
+    const last = rows[rows.length - 1];
+    const lv = valueAt(last);
+    const lastTs = new Date(last.timestamp_utc || last.ts || last.date || 0).getTime();
+    // Find row closest to 24h ago
+    const target24 = lastTs - 24 * 60 * 60 * 1000;
+    let ref24 = rows[0];
+    for (const r of rows) {
+      const t = new Date(r.timestamp_utc || r.ts || r.date || 0).getTime();
+      if (t <= target24) ref24 = r;
+      else break;
+    }
+    const rv = valueAt(ref24);
+    if (rv > 0) {
+      pl24h = lv - rv;
+      pct24h = (pl24h / rv) * 100;
+    }
+  }
+  // Fallback to total P&L if not enough history
+  const showTotal = rows.length < 2 || pl24h === 0;
+  const plDisplayValue = showTotal ? totalPL : pl24h;
+  const plDisplayPct = showTotal ? totalPlPct : pct24h;
+  const plDeltaLabel = showTotal ? "(TOTAL)" : "(24H)";
+
+  // 7d delta — same logic but 7 days back
   let pl7d = 0;
   let pct7d = 0;
   if (rows.length >= 2) {
     const last = rows[rows.length - 1];
-    const ref7 = rows.length > 7 ? rows[rows.length - 7] : rows[0];
-    const lv = Number(last.combined ?? last.value ?? 0);
-    const rv = Number(ref7.combined ?? ref7.value ?? 0);
-    pl7d = lv - rv;
-    pct7d = rv ? (pl7d / rv) * 100 : 0;
+    const lv = valueAt(last);
+    const lastTs = new Date(last.timestamp_utc || last.ts || last.date || 0).getTime();
+    const target7 = lastTs - 7 * 24 * 60 * 60 * 1000;
+    let ref7 = rows[0];
+    for (const r of rows) {
+      const t = new Date(r.timestamp_utc || r.ts || r.date || 0).getTime();
+      if (t <= target7) ref7 = r;
+      else break;
+    }
+    const rv = valueAt(ref7);
+    if (rv > 0) {
+      pl7d = lv - rv;
+      pct7d = (pl7d / rv) * 100;
+    }
   }
 
-  const tradesCount = trades?.count_24h ?? 0;
+  // If no trades in 24h, fallback to all-time trade count to show meaningful number
+  const tradesCount = (trades?.count_24h && trades.count_24h > 0) ? trades.count_24h : (trades?.count_total ?? 0);
+  const tradesLabel = (trades?.count_24h && trades.count_24h > 0) ? "(24H)" : "(TOTAL)";
   const riskScore = risk?.total_score || 0;
   const riskLabel = riskScore < 30 ? "BAJO" : riskScore < 60 ? "MEDIO" : "ALTO";
   const riskColor =
@@ -79,11 +128,10 @@ export function ResumenGeneralCard() {
       ? "text-[var(--color-amber)]"
       : "text-[var(--color-red)]";
 
-  // Build sparklines from perf history
-  const buildSpark = (idx: number) => {
+  // Build sparklines from perf history (using same valueAt mapper)
+  const buildSpark = (_idx: number) => {
     if (!rows.length) return [];
-    const values = rows.slice(-30).map((r: any) => Number(r.combined ?? r.value ?? 0));
-    return values;
+    return rows.slice(-30).map((r: any) => valueAt(r));
   };
 
   return (
@@ -103,11 +151,11 @@ export function ResumenGeneralCard() {
         <KPI
           label="CAPITAL TOTAL"
           value={fmt(totalCapital)}
-          delta={`${plPct >= 0 ? "+" : ""}${plPct.toFixed(2)}%`}
-          deltaLabel="(24H)"
+          delta={`${plDisplayPct >= 0 ? "+" : ""}${plDisplayPct.toFixed(2)}%`}
+          deltaLabel={plDeltaLabel}
           unit="USD"
           spark={buildSpark(0)}
-          tone={plPct >= 0 ? "green" : "red"}
+          tone={plDisplayValue >= 0 ? "green" : "red"}
         />
         <KPI
           label="GANANCIAS (7D)"
@@ -117,9 +165,10 @@ export function ResumenGeneralCard() {
           tone={pl7d >= 0 ? "green" : "red"}
         />
         <KPI
-          label="OPERACIONES (24H)"
+          label="OPERACIONES"
           value={`${tradesCount}`}
-          delta={`+${Math.max(0, tradesCount - 0)}`}
+          delta={trades?.events_24h ? `${trades.events_24h} eventos hoy` : "Sin actividad hoy"}
+          deltaLabel={tradesLabel}
           spark={buildSpark(2)}
           tone="cyan"
         />

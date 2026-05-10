@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Card, MiniMetric } from "@/components/Card";
-import { PageHeader } from "@/components/PageHeader";
-import { Calendar, Clock, RefreshCw } from "lucide-react";
+import { Calendar, Clock, RefreshCw, Zap } from "lucide-react";
 
 const N8N_CRONS = [
   { name: "Email Hourly Check + Telegram Alert", interval: "1h", lastRun: "00:00 UTC" },
@@ -26,8 +25,16 @@ export default function AutomationPage() {
   const SCHEDULED = scheduled.tasks || [];
 
   return (
-    <div className="p-5 space-y-4">
-      <PageHeader title="Centro de Automatización" subtitle="TAREAS PROGRAMADAS · CRONS N8N · WATCHDOG" />
+    <div className="p-4 md:p-5 space-y-4">
+      {/* Subheader strip — Claude Design vocabulary */}
+      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/60 backdrop-blur px-4 py-3">
+        <div className="flex items-center gap-2">
+          <Zap size={14} className="text-[var(--color-green)]" />
+          <span className="text-[10px] tracking-[0.3em] font-mono text-[var(--color-text-dim)]">
+            CENTRO DE AUTOMATIZACIÓN · TAREAS PROGRAMADAS · CRONS N8N · WATCHDOG
+          </span>
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <MiniMetric label="PROGRAMADAS" value={`${SCHEDULED.length}`} tone="cyan" />

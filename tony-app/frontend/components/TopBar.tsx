@@ -21,6 +21,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/settings": "CONFIGURACIÓN",
   "/news": "REGISTROS",
   "/chat": "AYUDA",
+  "/system": "DIAGNÓSTICO",
 };
 
 export function TopBar() {

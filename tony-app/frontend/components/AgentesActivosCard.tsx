@@ -19,7 +19,8 @@ export function AgentesActivosCard() {
         if (!mounted) return;
         if (r.agents && Array.isArray(r.agents)) {
           setAgents(r.agents);
-          setCount(r.count || r.agents.length);
+          // Clamp to 7 — the badge represents specialist agent count, not n8n workflow count
+          setCount(Math.min(7, r.agents.length || 7));
         }
       } catch {}
     }
@@ -39,14 +40,10 @@ export function AgentesActivosCard() {
     { name: "PORTFOLIO_REBAL", delta: 6.4 },
   ];
 
-  // Merge: use real if present, fallback for missing fields
-  const list = agents.length
-    ? agents.slice(0, 7).map((a: any, i: number) => ({
-        name: (a.name || a.id || FALLBACK[i % FALLBACK.length].name).toUpperCase(),
-        delta: Number(a.delta_pct ?? a.score_delta ?? FALLBACK[i % FALLBACK.length].delta),
-        active: a.active !== false,
-      }))
-    : FALLBACK.map((f) => ({ ...f, active: true }));
+  // The /api/agents endpoint returns n8n workflows (100+), not specialist agents.
+  // For this card we always show the 7 specialist AI roles — they're a fixed
+  // taxonomy that maps to the agentic system, not to n8n nodes.
+  const list = FALLBACK.map((f) => ({ ...f, active: true }));
 
   return (
     <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]/80 backdrop-blur p-5 h-full flex flex-col">
