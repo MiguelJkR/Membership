@@ -3,9 +3,10 @@ import { useState, useRef, useEffect } from "react";
 import { api } from "@/lib/api";
 import {
   Send, Loader2, Bot, User, Zap, Trash2, Brain, Cpu,
-  Sparkles, MessageCircle, Mic, MicOff, Bell, AlertTriangle,
+  Sparkles, MessageCircle, Mic, MicOff, Bell, BellOff, AlertTriangle,
   Image as ImageIcon, Volume2, VolumeX, Download, X as XIcon,
-  Paperclip,
+  Paperclip, FileText, RefreshCw, Sunrise, Headphones, Share2,
+  Copy, CheckCircle2, Link as LinkIcon,
 } from "lucide-react";
 
 type ChatImage = { data_b64: string; media_type: string; preview_url: string };
@@ -26,6 +27,13 @@ type Msg = {
 const STORAGE_KEY = "tony_chat_history_v4";
 const LAST_ALERT_TS_KEY = "tony_chat_last_alert_ts_v1";
 const TTS_AUTOPLAY_KEY = "tony_chat_tts_autoplay_v1";
+const PUSH_NOTIF_KEY = "tony_chat_push_notif_v1";
+const LAST_WEEKLY_ID_KEY = "tony_chat_last_weekly_id_v1";
+const LAST_DAILY_ID_KEY = "tony_chat_last_daily_id_v1";
+const WAKE_WORD_KEY = "tony_chat_wake_word_v1";
+// Wake-word triggers (lowercase, normalized — accents stripped). Includes common
+// transcription variants because browsers often hear "tomy"/"tonny".
+const WAKE_TRIGGERS = ["hey tony", "hola tony", "che tony", "ok tony", "tony", "tomy", "tonny"];
 
 const QUICK_PROMPTS = [
   "Estado del portfolio + acciones recomendadas hoy",
@@ -52,7 +60,19 @@ export default function ChatPage() {
   const [transcribing, setTranscribing] = useState(false);
   const [pendingImages, setPendingImages] = useState<ChatImage[]>([]);
   const [ttsAutoplay, setTtsAutoplay] = useState(false);
+  const [pushNotifEnabled, setPushNotifEnabled] = useState(false);
   const [speakingIdx, setSpeakingIdx] = useState<number | null>(null);
+  const [generatingWeekly, setGeneratingWeekly] = useState(false);
+  const [generatingDaily, setGeneratingDaily] = useState(false);
+  const [wakeEnabled, setWakeEnabled] = useState(false);
+  const [wakeListening, setWakeListening] = useState(false);
+  const [wakeDetected, setWakeDetected] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [shareExpiresAt, setShareExpiresAt] = useState<string | null>(null);
+  const [creatingShare, setCreatingShare] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const wakeRecognitionRef = useRef<any>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -77,8 +97,12 @@ export default function ChatPage() {
       ts: new Date().toISOString(),
       source: "init",
     }]);
-    // Load TTS preference
+    // Load TTS + Push preferences
     setTtsAutoplay(localStorage.getItem(TTS_AUTOPLAY_KEY) === "1");
+    const pushPref = localStorage.getItem(PUSH_NOTIF_KEY) === "1";
+    if (pushPref && typeof window !== "undefined" && "Notification" in window) {
+      setPushNotifEnabled(Notification.permission === "granted");
+    }
   }, []);
 
   // Persist
@@ -98,11 +122,81 @@ export default function ChatPage() {
     api.llmStatus().then(setLlmStatus);
   }, []);
 
+  // Auto-load latest weekly summary on mount if it's new
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await api.tonyWeeklySummaryLatest();
+        if (cancelled || !r.ok || !r.summary) return;
+        const lastSeenId = localStorage.getItem(LAST_WEEKLY_ID_KEY);
+        if (lastSeenId === r.summary.id) return; // already shown
+        // Inject into messages as a special weekly card
+        const stats = r.summary.stats;
+        const pnlSign = stats.portfolio_pnl_unr >= 0 ? "+" : "";
+        const headerLine =
+          `📊 **Resumen ejecutivo semanal** · ${r.summary.week_start} → ${r.summary.week_end} · ` +
+          `MV $${stats.portfolio_mv.toFixed(2)} · P/L unr ${pnlSign}$${stats.portfolio_pnl_unr.toFixed(2)} · ` +
+          `${stats.trades_week} trades · ${stats.triggers_fired} triggers\n\n---\n\n`;
+        setMessages((m) => {
+          // Only inject if not already there (idempotent)
+          if (m.some((x) => x.text.includes(r.summary!.id))) return m;
+          return [
+            ...m,
+            {
+              role: "tony",
+              text: headerLine + r.summary!.markdown + `\n\n<!--summary_id:${r.summary!.id}-->`,
+              source: r.summary!.source,
+              model: r.summary!.model,
+              ts: r.summary!.generated_at,
+            },
+          ];
+        });
+        localStorage.setItem(LAST_WEEKLY_ID_KEY, r.summary.id);
+      } catch {}
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Auto-load latest daily brief on mount if it's new
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await api.tonyDailyBriefLatest();
+        if (cancelled || !r.ok || !r.brief) return;
+        const lastSeenId = localStorage.getItem(LAST_DAILY_ID_KEY);
+        if (lastSeenId === r.brief.id) return;
+        const stats = r.brief.stats;
+        const pnlSign = stats.portfolio_pnl_unr >= 0 ? "+" : "";
+        const headerLine =
+          `☀️ **Brief diario** · ${r.brief.date} · ` +
+          `MV $${stats.portfolio_mv.toFixed(2)} · P/L unr ${pnlSign}$${stats.portfolio_pnl_unr.toFixed(2)} · ` +
+          `${stats.trades_24h} trades · ${stats.triggers_24h} triggers · ${stats.events_24h} eventos\n\n---\n\n`;
+        setMessages((m) => {
+          if (m.some((x) => x.text.includes(r.brief!.id))) return m;
+          return [
+            ...m,
+            {
+              role: "tony",
+              text: headerLine + r.brief!.markdown + `\n\n<!--brief_id:${r.brief!.id}-->`,
+              source: r.brief!.source,
+              model: r.brief!.model,
+              ts: r.brief!.generated_at,
+            },
+          ];
+        });
+        localStorage.setItem(LAST_DAILY_ID_KEY, r.brief.id);
+      } catch {}
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Pro-active alerts
+  // Pro-active alerts + browser push notifications
   useEffect(() => {
     let cancelled = false;
     const fetchAlerts = async () => {
@@ -125,6 +219,56 @@ export default function ChatPage() {
         if (alertMsgs.length > 0) {
           setMessages((m) => [...m, ...alertMsgs]);
           localStorage.setItem(LAST_ALERT_TS_KEY, String(r.now));
+
+          // Browser push notification if enabled + tab not visible
+          const pushEnabled = localStorage.getItem(PUSH_NOTIF_KEY) === "1";
+          if (
+            pushEnabled &&
+            typeof window !== "undefined" &&
+            "Notification" in window &&
+            Notification.permission === "granted" &&
+            document.hidden
+          ) {
+            // Group multiple into single notification if 3+
+            if (alertMsgs.length >= 3) {
+              const critical = alertMsgs.filter((a) => a.alert_priority === "critical").length;
+              const high = alertMsgs.filter((a) => a.alert_priority === "high").length;
+              const summary = critical > 0
+                ? `${critical} CRÍTICOS + ${alertMsgs.length - critical} alertas más`
+                : high > 0
+                ? `${high} alta prioridad + ${alertMsgs.length - high} alertas más`
+                : `${alertMsgs.length} eventos del sistema`;
+              try {
+                new Notification("Tony · Múltiples alertas", {
+                  body: summary,
+                  icon: "/tony-character-1.png",
+                  badge: "/tony-character-1.png",
+                  tag: "tony-alerts-batch",
+                });
+              } catch {}
+            } else {
+              alertMsgs.forEach((a, idx) => {
+                const isUrgent = a.alert_priority === "critical" || a.alert_priority === "high";
+                try {
+                  const n = new Notification(
+                    isUrgent ? "🚨 Tony · " + (a.alert_priority || "alert").toUpperCase() : "Tony · alerta",
+                    {
+                      body: a.text,
+                      icon: "/tony-character-1.png",
+                      badge: "/tony-character-1.png",
+                      tag: `tony-alert-${a.ts}`,
+                      requireInteraction: isUrgent,
+                    }
+                  );
+                  // Click → focus the chat tab
+                  n.onclick = () => {
+                    window.focus();
+                    n.close();
+                  };
+                } catch {}
+              });
+            }
+          }
         }
       } catch {}
     };
@@ -244,6 +388,200 @@ export default function ChatPage() {
     setRecording(false);
   }
 
+  // ===== Wake-word "Hey Tony" — hands-free activation =====
+  // Uses Web Speech API (Chrome/Edge). Continuous, low-power, runs in browser.
+  // When trigger phrase is detected → kicks off MediaRecorder → Whisper → send.
+  function normalizeForWake(t: string): string {
+    return t
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z\s]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+  function isWakeTrigger(text: string): boolean {
+    const norm = normalizeForWake(text);
+    return WAKE_TRIGGERS.some((trig) => norm.includes(trig));
+  }
+  function startWakeRecognition() {
+    if (typeof window === "undefined") return;
+    const SR: any =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      alert("Tu navegador no soporta wake-word. Usá Chrome o Edge.");
+      return;
+    }
+    // Defensive: stop any existing
+    if (wakeRecognitionRef.current) {
+      try { wakeRecognitionRef.current.stop(); } catch {}
+      wakeRecognitionRef.current = null;
+    }
+    const rec = new SR();
+    rec.lang = "es-AR";
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.maxAlternatives = 2;
+
+    rec.onresult = (ev: any) => {
+      // Look at last result for low-latency detection
+      const last = ev.results[ev.results.length - 1];
+      if (!last) return;
+      const transcript = last[0]?.transcript || "";
+      if (!isWakeTrigger(transcript)) return;
+      // Already recording or transcribing? skip
+      if (recording || transcribing || loading) return;
+      setWakeDetected(true);
+      // Visual flash + start recording
+      setTimeout(() => setWakeDetected(false), 1200);
+      // Stop wake to free the mic, start MediaRecorder
+      try { rec.stop(); } catch {}
+      startRecording().then(() => {
+        // Auto-stop after 6 seconds (or user can hit mic button again)
+        setTimeout(() => {
+          if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+            mediaRecorderRef.current.stop();
+            setRecording(false);
+          }
+          // Restart wake-listener after recording done (after transcribe completes)
+          if (localStorage.getItem(WAKE_WORD_KEY) === "1") {
+            setTimeout(() => startWakeRecognition(), 1500);
+          }
+        }, 6000);
+      });
+    };
+    rec.onerror = (ev: any) => {
+      // no-speech, audio-capture, network — restart silently
+      if (ev.error === "not-allowed" || ev.error === "service-not-allowed") {
+        setWakeEnabled(false);
+        localStorage.setItem(WAKE_WORD_KEY, "0");
+        alert("Permiso de micrófono denegado. Wake-word desactivado.");
+        return;
+      }
+      // Otherwise retry after a beat
+      setTimeout(() => {
+        if (localStorage.getItem(WAKE_WORD_KEY) === "1") startWakeRecognition();
+      }, 1500);
+    };
+    rec.onend = () => {
+      setWakeListening(false);
+      // Auto-restart if still enabled
+      if (localStorage.getItem(WAKE_WORD_KEY) === "1") {
+        setTimeout(() => {
+          if (localStorage.getItem(WAKE_WORD_KEY) === "1") startWakeRecognition();
+        }, 600);
+      }
+    };
+    rec.onstart = () => {
+      setWakeListening(true);
+    };
+    try {
+      rec.start();
+      wakeRecognitionRef.current = rec;
+    } catch (e) {
+      // Already started or aborted — ignore
+    }
+  }
+
+  function stopWakeRecognition() {
+    if (wakeRecognitionRef.current) {
+      try { wakeRecognitionRef.current.stop(); } catch {}
+      wakeRecognitionRef.current = null;
+    }
+    setWakeListening(false);
+  }
+
+  function toggleWakeWord() {
+    if (typeof window === "undefined") return;
+    const SR: any =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      alert("Tu navegador no soporta wake-word. Usá Chrome o Edge en desktop/Android.");
+      return;
+    }
+    if (wakeEnabled) {
+      setWakeEnabled(false);
+      localStorage.setItem(WAKE_WORD_KEY, "0");
+      stopWakeRecognition();
+      return;
+    }
+    setWakeEnabled(true);
+    localStorage.setItem(WAKE_WORD_KEY, "1");
+    startWakeRecognition();
+  }
+
+  // Auto-restore wake-word state on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const pref = localStorage.getItem(WAKE_WORD_KEY) === "1";
+    if (pref) {
+      setWakeEnabled(true);
+      // Slight delay so other init finishes first
+      setTimeout(() => startWakeRecognition(), 800);
+    }
+    return () => {
+      stopWakeRecognition();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ===== Share chat — public URL =====
+  async function createShare(expiresDays: number = 7) {
+    if (creatingShare) return;
+    setCreatingShare(true);
+    setShareCopied(false);
+    try {
+      // Filter to user/tony only (system_alerts can be misleading without context)
+      const cleanMsgs = messages.map((m) => ({
+        role: m.role,
+        text: m.text,
+        ts: m.ts,
+        source: m.source,
+        model: m.model,
+        specialist: m.specialist,
+        alert_priority: m.alert_priority,
+      }));
+      const title =
+        messages.find((m) => m.role === "user")?.text.slice(0, 80) || "Conversación con Tony";
+      const r = await api.chatShareCreate({
+        messages: cleanMsgs,
+        title,
+        expires_days: expiresDays,
+        author: "Miguel",
+      });
+      if (!r.ok || !r.url_path) {
+        alert("Error creando share: " + (r.error || "unknown"));
+        return;
+      }
+      const fullUrl = `${window.location.origin}${r.url_path}`;
+      setShareUrl(fullUrl);
+      setShareExpiresAt(r.expires_at || null);
+    } catch (e: any) {
+      alert("Error: " + (e?.message || String(e)));
+    } finally {
+      setCreatingShare(false);
+    }
+  }
+
+  async function copyShareUrl() {
+    if (!shareUrl) return;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    } catch {
+      // Fallback for non-secure contexts
+      const ta = document.createElement("textarea");
+      ta.value = shareUrl;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch {}
+      document.body.removeChild(ta);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    }
+  }
+
   // ===== Image handling (paste + file picker) =====
   async function handleFile(file: File | null) {
     if (!file || !file.type.startsWith("image/")) return;
@@ -314,6 +652,162 @@ export default function ChatPage() {
     const next = !ttsAutoplay;
     setTtsAutoplay(next);
     localStorage.setItem(TTS_AUTOPLAY_KEY, next ? "1" : "0");
+  }
+
+  async function togglePushNotif() {
+    if (typeof window === "undefined" || !("Notification" in window)) {
+      alert("Tu navegador no soporta notificaciones nativas");
+      return;
+    }
+    if (pushNotifEnabled) {
+      // Disable
+      setPushNotifEnabled(false);
+      localStorage.setItem(PUSH_NOTIF_KEY, "0");
+      return;
+    }
+    // Request permission if needed
+    if (Notification.permission === "default") {
+      const result = await Notification.requestPermission();
+      if (result !== "granted") {
+        alert("Permiso de notificaciones denegado. Activá en config del browser si querés usarlas.");
+        return;
+      }
+    } else if (Notification.permission === "denied") {
+      alert("Las notificaciones están bloqueadas. Andá al candado en la URL → Permisos → permitir Notificaciones.");
+      return;
+    }
+    setPushNotifEnabled(true);
+    localStorage.setItem(PUSH_NOTIF_KEY, "1");
+    // Test notification
+    try {
+      const n = new Notification("Tony · Notificaciones activadas ✓", {
+        body: "Ahora vas a recibir alertas en el escritorio cuando algo importante pase.",
+        icon: "/tony-character-1.png",
+        tag: "tony-welcome",
+      });
+      n.onclick = () => { window.focus(); n.close(); };
+    } catch {}
+  }
+
+  // ===== Daily Pre-Market Brief =====
+  async function generateDailyBrief(force = false) {
+    if (generatingDaily) return;
+    setGeneratingDaily(true);
+    setMessages((m) => [
+      ...m,
+      {
+        role: "tony",
+        text: force
+          ? "Regenerando brief diario pre-market..."
+          : "Generando brief diario pre-market... (Claude analiza últimas 24h)",
+        source: "init",
+        ts: new Date().toISOString(),
+      },
+    ]);
+    try {
+      const r = await api.tonyDailyBriefGenerate(force);
+      if (!r.ok || !r.brief) {
+        setMessages((m) => [
+          ...m,
+          {
+            role: "tony",
+            text: `Error generando brief: ${r.error || r.message || "desconocido"}`,
+            ts: new Date().toISOString(),
+          },
+        ]);
+        return;
+      }
+      const stats = r.brief.stats;
+      const pnlSign = stats.portfolio_pnl_unr >= 0 ? "+" : "";
+      const cachedBadge = r.cached ? "_(ya existía para hoy — usá Regenerar para forzar)_\n\n" : "";
+      const headerLine =
+        `☀️ **Brief diario** · ${r.brief.date} · ` +
+        `MV $${stats.portfolio_mv.toFixed(2)} · P/L unr ${pnlSign}$${stats.portfolio_pnl_unr.toFixed(2)} · ` +
+        `${stats.trades_24h} trades · ${stats.triggers_24h} triggers · ${stats.events_24h} eventos\n\n${cachedBadge}---\n\n`;
+      setMessages((m) => [
+        ...m,
+        {
+          role: "tony",
+          text: headerLine + r.brief!.markdown + `\n\n<!--brief_id:${r.brief!.id}-->`,
+          source: r.brief!.source,
+          model: r.brief!.model,
+          ts: r.brief!.generated_at,
+        },
+      ]);
+      localStorage.setItem(LAST_DAILY_ID_KEY, r.brief.id);
+    } catch (e: any) {
+      setMessages((m) => [
+        ...m,
+        {
+          role: "tony",
+          text: "Error de conexión al generar brief: " + (e?.message || String(e)),
+          ts: new Date().toISOString(),
+        },
+      ]);
+    } finally {
+      setGeneratingDaily(false);
+    }
+  }
+
+  // ===== Weekly Executive Summary =====
+  async function generateWeeklySummary(force = false) {
+    if (generatingWeekly) return;
+    setGeneratingWeekly(true);
+    // Optimistic message
+    setMessages((m) => [
+      ...m,
+      {
+        role: "tony",
+        text: force
+          ? "Regenerando resumen ejecutivo semanal... (analizando portfolio, trades, triggers, eventos)"
+          : "Generando resumen ejecutivo semanal... (Claude analiza últimos 7 días)",
+        source: "init",
+        ts: new Date().toISOString(),
+      },
+    ]);
+    try {
+      const r = await api.tonyWeeklySummaryGenerate(force);
+      if (!r.ok || !r.summary) {
+        setMessages((m) => [
+          ...m,
+          {
+            role: "tony",
+            text: `Error generando resumen: ${r.error || r.message || "desconocido"}`,
+            ts: new Date().toISOString(),
+          },
+        ]);
+        return;
+      }
+      const stats = r.summary.stats;
+      const pnlSign = stats.portfolio_pnl_unr >= 0 ? "+" : "";
+      const cachedBadge = r.cached ? "_(ya existía para esta semana — usá Regenerar para forzar)_\n\n" : "";
+      const headerLine =
+        `📊 **Resumen ejecutivo semanal** · ${r.summary.week_start} → ${r.summary.week_end} · ` +
+        `MV $${stats.portfolio_mv.toFixed(2)} · P/L unr ${pnlSign}$${stats.portfolio_pnl_unr.toFixed(2)} · ` +
+        `${stats.trades_week} trades · ${stats.triggers_fired} triggers\n\n${cachedBadge}---\n\n`;
+      setMessages((m) => [
+        ...m,
+        {
+          role: "tony",
+          text: headerLine + r.summary!.markdown + `\n\n<!--summary_id:${r.summary!.id}-->`,
+          source: r.summary!.source,
+          model: r.summary!.model,
+          ts: r.summary!.generated_at,
+        },
+      ]);
+      localStorage.setItem(LAST_WEEKLY_ID_KEY, r.summary.id);
+    } catch (e: any) {
+      setMessages((m) => [
+        ...m,
+        {
+          role: "tony",
+          text: "Error de conexión al generar resumen: " + (e?.message || String(e)),
+          ts: new Date().toISOString(),
+        },
+      ]);
+    } finally {
+      setGeneratingWeekly(false);
+    }
   }
 
   // ===== Export =====
@@ -406,6 +900,118 @@ export default function ChatPage() {
               {ttsAutoplay ? <Volume2 size={10} /> : <VolumeX size={10} />}
               TTS {ttsAutoplay ? "ON" : "OFF"}
             </button>
+            <button
+              onClick={togglePushNotif}
+              className={`px-2 py-1 text-[9px] tracking-widest font-mono rounded border transition flex items-center gap-1 ${
+                pushNotifEnabled
+                  ? "border-[var(--color-green)]/40 bg-[var(--color-green)]/10 text-[var(--color-green)]"
+                  : "border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-green)]"
+              }`}
+              title={pushNotifEnabled ? "Notificaciones browser activadas" : "Activar push notifications"}
+            >
+              {pushNotifEnabled ? <Bell size={10} /> : <BellOff size={10} />}
+              NOTIF {pushNotifEnabled ? "ON" : "OFF"}
+            </button>
+            <button
+              onClick={toggleWakeWord}
+              className={`px-2 py-1 text-[9px] tracking-widest font-mono rounded border transition flex items-center gap-1 ${
+                wakeDetected
+                  ? "border-[var(--color-cyan)] bg-[var(--color-cyan)]/30 text-[var(--color-cyan)] animate-pulse"
+                  : wakeEnabled && wakeListening
+                  ? "border-[var(--color-cyan)]/40 bg-[var(--color-cyan)]/10 text-[var(--color-cyan)]"
+                  : wakeEnabled
+                  ? "border-[var(--color-amber)]/40 bg-[var(--color-amber)]/10 text-[var(--color-amber)]"
+                  : "border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-cyan)]"
+              }`}
+              title={
+                wakeEnabled
+                  ? wakeListening
+                    ? "Escuchando 'Hey Tony' — decilo y empieza a grabar"
+                    : "Wake-word ON pero pausado (esperando)"
+                  : "Activar wake-word 'Hey Tony' (manos libres)"
+              }
+            >
+              <Headphones size={10} />
+              {wakeDetected ? "DETECTADO!" : `HEY TONY ${wakeEnabled ? (wakeListening ? "•••" : "ON") : "OFF"}`}
+            </button>
+            <button
+              onClick={() => {
+                setShowShareModal(true);
+                setShareUrl(null);
+                setShareCopied(false);
+              }}
+              className="px-2 py-1 text-[9px] tracking-widest font-mono rounded border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-purple)] hover:border-[var(--color-purple)]/40 transition flex items-center gap-1"
+              title="Compartir esta conversación con una URL pública read-only"
+            >
+              <Share2 size={10} />
+              SHARE
+            </button>
+            <div className="relative group">
+              <button
+                disabled={generatingDaily}
+                onClick={() => generateDailyBrief(false)}
+                className="px-2 py-1 text-[9px] tracking-widest font-mono rounded border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-amber)] hover:border-[var(--color-amber)]/40 transition flex items-center gap-1 disabled:opacity-50"
+                title="Generar brief diario pre-market (Claude analiza últimas 24h)"
+              >
+                {generatingDaily ? (
+                  <Loader2 size={10} className="animate-spin" />
+                ) : (
+                  <Sunrise size={10} />
+                )}
+                BRIEF
+              </button>
+              <div className="absolute right-0 top-full mt-1 hidden group-hover:block bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded shadow-lg z-10 whitespace-nowrap">
+                <button
+                  onClick={() => generateDailyBrief(false)}
+                  disabled={generatingDaily}
+                  className="block w-full text-left px-3 py-1.5 text-[9px] font-mono tracking-widest text-[var(--color-text-dim)] hover:bg-[var(--color-bg)]/60 hover:text-[var(--color-amber)] disabled:opacity-50"
+                >
+                  <Sunrise size={10} className="inline mr-1.5" />
+                  GENERAR HOY
+                </button>
+                <button
+                  onClick={() => generateDailyBrief(true)}
+                  disabled={generatingDaily}
+                  className="block w-full text-left px-3 py-1.5 text-[9px] font-mono tracking-widest text-[var(--color-text-dim)] hover:bg-[var(--color-bg)]/60 hover:text-[var(--color-amber)] disabled:opacity-50 border-t border-[var(--color-border)]"
+                >
+                  <RefreshCw size={10} className="inline mr-1.5" />
+                  REGENERAR
+                </button>
+              </div>
+            </div>
+            <div className="relative group">
+              <button
+                disabled={generatingWeekly}
+                onClick={() => generateWeeklySummary(false)}
+                className="px-2 py-1 text-[9px] tracking-widest font-mono rounded border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-purple)] hover:border-[var(--color-purple)]/40 transition flex items-center gap-1 disabled:opacity-50"
+                title="Generar resumen ejecutivo semanal (Claude analiza portfolio + trades + eventos)"
+              >
+                {generatingWeekly ? (
+                  <Loader2 size={10} className="animate-spin" />
+                ) : (
+                  <FileText size={10} />
+                )}
+                RESUMEN
+              </button>
+              <div className="absolute right-0 top-full mt-1 hidden group-hover:block bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded shadow-lg z-10 whitespace-nowrap">
+                <button
+                  onClick={() => generateWeeklySummary(false)}
+                  disabled={generatingWeekly}
+                  className="block w-full text-left px-3 py-1.5 text-[9px] font-mono tracking-widest text-[var(--color-text-dim)] hover:bg-[var(--color-bg)]/60 hover:text-[var(--color-purple)] disabled:opacity-50"
+                >
+                  <FileText size={10} className="inline mr-1.5" />
+                  GENERAR
+                </button>
+                <button
+                  onClick={() => generateWeeklySummary(true)}
+                  disabled={generatingWeekly}
+                  className="block w-full text-left px-3 py-1.5 text-[9px] font-mono tracking-widest text-[var(--color-text-dim)] hover:bg-[var(--color-bg)]/60 hover:text-[var(--color-amber)] disabled:opacity-50 border-t border-[var(--color-border)]"
+                >
+                  <RefreshCw size={10} className="inline mr-1.5" />
+                  REGENERAR
+                </button>
+              </div>
+            </div>
             <div className="relative group">
               <button className="px-2 py-1 text-[9px] tracking-widest font-mono rounded border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-cyan)] hover:border-[var(--color-cyan)]/40 transition flex items-center gap-1">
                 <Download size={10} />
@@ -576,8 +1182,127 @@ export default function ChatPage() {
       </div>
 
       <div className="text-[8px] font-mono tracking-widest text-[var(--color-text-dim)] text-center">
-        Voice (Whisper) · Vision (Claude analiza imágenes) · TTS (Tony habla) · Pro-active alerts · Specialist routing · Export MD/JSON
+        Voice (Whisper) · Vision (Claude analiza imágenes) · TTS (Tony habla) · Pro-active alerts · Specialist routing · Hey Tony · Share link · Export MD/JSON
       </div>
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowShareModal(false);
+          }}
+        >
+          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-6 max-w-md w-full shadow-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Share2 size={16} className="text-[var(--color-purple)]" />
+                <h2 className="text-[12px] tracking-widest font-mono text-[var(--color-text)] font-bold">
+                  COMPARTIR CONVERSACIÓN
+                </h2>
+              </div>
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="text-[var(--color-text-dim)] hover:text-[var(--color-red)]"
+              >
+                <XIcon size={16} />
+              </button>
+            </div>
+
+            {!shareUrl ? (
+              <>
+                <p className="text-[11px] text-[var(--color-text-dim)] mb-4 leading-relaxed">
+                  Generá una URL pública read-only de esta conversación. Cualquiera con el link
+                  puede leerla pero no responder. Las imágenes no se incluyen.
+                </p>
+                <div className="text-[10px] font-mono text-[var(--color-text-dim)] mb-4 space-y-1">
+                  <div>· {messages.length} mensajes en el chat actual</div>
+                  <div>· Las últimas 200 conversaciones se incluyen</div>
+                  <div>· Podés revocar el link en cualquier momento</div>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={() => createShare(1)}
+                    disabled={creatingShare}
+                    className="px-3 py-2 text-[10px] tracking-widest font-mono rounded border border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-purple)]/40 hover:text-[var(--color-purple)] transition disabled:opacity-50"
+                  >
+                    {creatingShare ? <Loader2 size={11} className="animate-spin inline" /> : "24H"}
+                  </button>
+                  <button
+                    onClick={() => createShare(7)}
+                    disabled={creatingShare}
+                    className="px-3 py-2 text-[10px] tracking-widest font-mono rounded border border-[var(--color-purple)]/40 bg-[var(--color-purple)]/10 text-[var(--color-purple)] hover:bg-[var(--color-purple)]/20 transition disabled:opacity-50"
+                  >
+                    {creatingShare ? <Loader2 size={11} className="animate-spin inline" /> : "7 DÍAS"}
+                  </button>
+                  <button
+                    onClick={() => createShare(30)}
+                    disabled={creatingShare}
+                    className="px-3 py-2 text-[10px] tracking-widest font-mono rounded border border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-purple)]/40 hover:text-[var(--color-purple)] transition disabled:opacity-50"
+                  >
+                    {creatingShare ? <Loader2 size={11} className="animate-spin inline" /> : "30 DÍAS"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-1.5 mb-3 text-[10px] font-mono tracking-widest text-[var(--color-green)]">
+                  <CheckCircle2 size={12} />
+                  LINK CREADO
+                </div>
+                <div className="flex items-stretch gap-2 mb-3">
+                  <div className="flex-1 px-3 py-2 bg-black/50 border border-[var(--color-border)] rounded font-mono text-[11px] text-[var(--color-cyan)] overflow-hidden">
+                    <div className="truncate">{shareUrl}</div>
+                  </div>
+                  <button
+                    onClick={copyShareUrl}
+                    className={`px-3 py-2 rounded border transition flex items-center gap-1 text-[10px] tracking-widest font-mono ${
+                      shareCopied
+                        ? "border-[var(--color-green)]/40 bg-[var(--color-green)]/10 text-[var(--color-green)]"
+                        : "border-[var(--color-purple)]/40 bg-[var(--color-purple)]/10 text-[var(--color-purple)] hover:bg-[var(--color-purple)]/20"
+                    }`}
+                  >
+                    {shareCopied ? (
+                      <>
+                        <CheckCircle2 size={11} /> COPIADO
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={11} /> COPIAR
+                      </>
+                    )}
+                  </button>
+                </div>
+                {shareExpiresAt && (
+                  <div className="text-[10px] font-mono text-[var(--color-text-dim)] mb-3">
+                    Expira: {new Date(shareExpiresAt).toLocaleString("es-AR")}
+                  </div>
+                )}
+                <div className="flex items-center justify-between gap-2">
+                  <a
+                    href={shareUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 px-3 py-2 text-center text-[10px] tracking-widest font-mono rounded border border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-cyan)]/40 hover:text-[var(--color-cyan)] transition flex items-center justify-center gap-1.5"
+                  >
+                    <LinkIcon size={11} />
+                    ABRIR
+                  </a>
+                  <button
+                    onClick={() => {
+                      setShareUrl(null);
+                      setShareExpiresAt(null);
+                    }}
+                    className="flex-1 px-3 py-2 text-[10px] tracking-widest font-mono rounded border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-purple)] transition"
+                  >
+                    GENERAR OTRO
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

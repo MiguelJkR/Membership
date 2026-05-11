@@ -121,6 +121,198 @@ export const api = {
       now: number;
     }>(`/api/chat/pending_alerts?since=${since}`),
 
+  tonyWeeklySummaryLatest: () =>
+    fetchJson<{
+      ok: boolean;
+      summary: null | {
+        id: string;
+        week_start: string;
+        week_end: string;
+        generated_at: string;
+        source: string;
+        model: string;
+        markdown: string;
+        stats: {
+          trades_week: number;
+          triggers_fired: number;
+          events_count: number;
+          portfolio_pnl_unr: number;
+          portfolio_mv: number;
+        };
+      };
+      total?: number;
+      message?: string;
+    }>(`/api/tony_weekly_summary`),
+
+  tonyWeeklySummaryGenerate: async (force = false) => {
+    const r = await fetch("/api/tony_weekly_summary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ force }),
+    });
+    return r.json() as Promise<{
+      ok: boolean;
+      summary?: {
+        id: string;
+        week_start: string;
+        week_end: string;
+        generated_at: string;
+        source: string;
+        model: string;
+        markdown: string;
+        stats: {
+          trades_week: number;
+          triggers_fired: number;
+          events_count: number;
+          portfolio_pnl_unr: number;
+          portfolio_mv: number;
+        };
+      };
+      cached?: boolean;
+      error?: string;
+      message?: string;
+    }>;
+  },
+
+  tonyDailyBriefLatest: () =>
+    fetchJson<{
+      ok: boolean;
+      brief: null | {
+        id: string;
+        date: string;
+        generated_at: string;
+        source: string;
+        model: string;
+        markdown: string;
+        stats: {
+          trades_24h: number;
+          triggers_24h: number;
+          events_24h: number;
+          portfolio_pnl_unr: number;
+          portfolio_mv: number;
+        };
+      };
+      total?: number;
+      message?: string;
+    }>(`/api/tony_daily_brief`),
+
+  tonyDailyBriefGenerate: async (force = false) => {
+    const r = await fetch("/api/tony_daily_brief", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ force }),
+    });
+    return r.json() as Promise<{
+      ok: boolean;
+      brief?: {
+        id: string;
+        date: string;
+        generated_at: string;
+        source: string;
+        model: string;
+        markdown: string;
+        stats: {
+          trades_24h: number;
+          triggers_24h: number;
+          events_24h: number;
+          portfolio_pnl_unr: number;
+          portfolio_mv: number;
+        };
+      };
+      cached?: boolean;
+      error?: string;
+      message?: string;
+    }>;
+  },
+
+  chatShareCreate: async (params: {
+    messages: Array<{ role: string; text: string; ts: string; source?: string; model?: string; specialist?: any; alert_priority?: string }>;
+    title?: string;
+    expires_days?: number;
+    author?: string;
+  }) => {
+    const r = await fetch("/api/chat/share/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+    });
+    return r.json() as Promise<{
+      ok: boolean;
+      token?: string;
+      url_path?: string;
+      expires_at?: string;
+      message_count?: number;
+      error?: string;
+    }>;
+  },
+
+  chatShareList: () =>
+    fetchJson<{
+      ok: boolean;
+      shares: Array<{
+        token: string;
+        title: string;
+        created_at: string;
+        expires_at: string;
+        message_count: number;
+        view_count: number;
+        url_path: string;
+      }>;
+      total: number;
+    }>(`/api/chat/share/list`),
+
+  chatShareRevoke: async (token: string) => {
+    const r = await fetch("/api/chat/share/revoke", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+    return r.json() as Promise<{ ok: boolean; revoked?: boolean; error?: string }>;
+  },
+
+  tonyDailyBriefHistory: (limit = 30) =>
+    fetchJson<{
+      ok: boolean;
+      briefs: Array<{
+        id: string;
+        date: string;
+        generated_at: string;
+        source: string;
+        model: string;
+        markdown: string;
+        stats: {
+          trades_24h: number;
+          triggers_24h: number;
+          events_24h: number;
+          portfolio_pnl_unr: number;
+          portfolio_mv: number;
+        };
+      }>;
+      total?: number;
+    }>(`/api/tony_daily_brief/history?limit=${limit}`),
+
+  tonyWeeklySummaryHistory: () =>
+    fetchJson<{
+      ok: boolean;
+      summaries: Array<{
+        id: string;
+        week_start: string;
+        week_end: string;
+        generated_at: string;
+        source: string;
+        model: string;
+        markdown: string;
+        stats: {
+          trades_week: number;
+          triggers_fired: number;
+          events_count: number;
+          portfolio_pnl_unr: number;
+          portfolio_mv: number;
+        };
+      }>;
+      total?: number;
+    }>(`/api/tony_weekly_summary/history`),
+
   voiceTranscribe: async (audioBlob: Blob): Promise<{ ok: boolean; text?: string; error?: string }> => {
     const form = new FormData();
     form.append("audio", audioBlob, "audio.webm");

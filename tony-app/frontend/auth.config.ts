@@ -7,6 +7,10 @@ export const authConfig: NextAuthConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnLogin = nextUrl.pathname.startsWith("/login");
+      // Public paths — no auth required (shared chat URLs, etc.)
+      const PUBLIC_PATHS = ["/share/", "/api/chat/share/"];
+      const isPublic = PUBLIC_PATHS.some((p) => nextUrl.pathname.startsWith(p));
+      if (isPublic) return true;
       if (isOnLogin) {
         if (isLoggedIn) return Response.redirect(new URL("/", nextUrl));
         return true;
