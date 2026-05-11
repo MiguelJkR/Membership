@@ -11,8 +11,10 @@ import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname?.startsWith("/login");
+  // Public share pages render bare — no sidebar/topbar
+  const isPublicShare = pathname?.startsWith("/share/");
 
-  if (isAuthPage) {
+  if (isAuthPage || isPublicShare) {
     return <>{children}</>;
   }
 
