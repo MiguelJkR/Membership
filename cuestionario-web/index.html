@@ -10,26 +10,35 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Söhne:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/cookie-consent.css">
 
 <style>
 :root {
-  --green-deep: #0F4C3A;
-  --green-soft: #1D9E75;
-  --green-pale: #E1F5EE;
-  --sand: #F5EFE3;
-  --sand-warm: #EBE2D0;
-  --ink: #1A1A17;
-  --ink-soft: #4A4A45;
-  --ink-mute: #888780;
-  --rule: #D6CFBF;
-  --paper: #FBF8F1;
-  --accent: #C04828;
-  --error: #B23B2A;
-  --success: #1D9E75;
-  --ring: rgba(15, 76, 58, 0.18);
-  --radius: 6px;
-  --radius-lg: 14px;
-  --shadow: 0 1px 0 rgba(26, 26, 23, 0.04), 0 8px 28px rgba(26, 26, 23, 0.06);
+  /* Paleta dark v3 — gradiente blue ↔ purple (synthwave azul-morado).
+     Nombres legacy se mantienen con valores nuevos. */
+  --green-deep: #8B5CF6;            /* violet primary (entre blue y purple) */
+  --green-soft: #A78BFA;             /* violet light hover */
+  --green-pale: rgba(139, 92, 246, 0.20); /* selected tint */
+  --sand: #161033;                   /* surface secundario azul-morado */
+  --sand-warm: #1E1645;              /* surface darker */
+  --ink: #FFFFFF;                    /* texto blanco puro */
+  --ink-soft: #B8B5D6;               /* texto secundario blue-gray */
+  --ink-mute: #807FA6;               /* texto muted */
+  --rule: rgba(255, 255, 255, 0.08); /* border sutil */
+  --paper: #0E0B2E;                  /* background base azul-morado oscuro */
+  --surface: #11102B;                /* superficie de cards (sólida) */
+  --accent: #6366F1;                 /* indigo accent (blue-purple bridge) */
+  --error: #FF4D6D;
+  --success: #10F4B1;
+  --ring: rgba(139, 92, 246, 0.50);
+  --radius: 10px;
+  --radius-lg: 20px;
+  --shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 12px 40px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 0 1px rgba(139,92,246,0.4), 0 16px 48px rgba(99,102,241,0.35);
+  --gradient-cta: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #A855F7 100%);
+  --gradient-cta-hover: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #C77DFF 100%);
+  --gradient-text: linear-gradient(135deg, #93C5FD 0%, #C4B5FD 100%);
+  --surface-glass: rgba(17, 16, 43, 0.85);
   --serif: 'Fraunces', 'Times New Roman', serif;
   --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -42,9 +51,30 @@ body {
   line-height: 1.6;
   color: var(--ink);
   background: var(--paper);
+  background-image:
+    /* estrellitas dispersas (efecto espacio) */
+    radial-gradient(1px 1px at 8% 18%, rgba(255,255,255,0.6), transparent 100%),
+    radial-gradient(1.5px 1.5px at 22% 42%, rgba(255,255,255,0.5), transparent 100%),
+    radial-gradient(1px 1px at 38% 12%, rgba(255,255,255,0.7), transparent 100%),
+    radial-gradient(1px 1px at 55% 78%, rgba(255,255,255,0.5), transparent 100%),
+    radial-gradient(1px 1px at 72% 28%, rgba(255,255,255,0.4), transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 65%, rgba(255,255,255,0.6), transparent 100%),
+    radial-gradient(1px 1px at 92% 12%, rgba(255,255,255,0.5), transparent 100%),
+    radial-gradient(1px 1px at 15% 88%, rgba(255,255,255,0.4), transparent 100%),
+    radial-gradient(1px 1px at 65% 95%, rgba(255,255,255,0.5), transparent 100%),
+    /* blobs blue ↔ purple — gradiente alternado */
+    radial-gradient(ellipse 55% 50% at 10% 8%, rgba(59, 130, 246, 0.75) 0%, transparent 65%),    /* blue brillante */
+    radial-gradient(ellipse 45% 40% at 90% 22%, rgba(139, 92, 246, 0.70) 0%, transparent 60%),    /* purple vivid */
+    radial-gradient(ellipse 50% 45% at 95% 80%, rgba(30, 64, 175, 0.85) 0%, transparent 65%),     /* deep blue */
+    radial-gradient(ellipse 60% 50% at 25% 90%, rgba(139, 92, 246, 0.65) 0%, transparent 70%),    /* violet medio */
+    radial-gradient(ellipse 35% 30% at 70% 55%, rgba(99, 102, 241, 0.40) 0%, transparent 65%);    /* indigo bridge */
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 button, input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
@@ -57,12 +87,12 @@ button, input, textarea, select { font-family: inherit; font-size: inherit; colo
 
 header.site-header {
   border-bottom: 1px solid var(--rule);
-  background: var(--paper);
   position: sticky;
   top: 0;
   z-index: 50;
-  backdrop-filter: blur(12px);
-  background: rgba(251, 248, 241, 0.92);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  background: rgba(14, 11, 46, 0.7);
 }
 .header-inner {
   display: flex;
@@ -84,24 +114,26 @@ header.site-header {
   text-decoration: none;
 }
 .brand-mark {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: var(--green-deep);
+  background: var(--gradient-cta);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--paper);
+  color: #fff;
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
   font-size: 13px;
+  box-shadow: 0 0 24px rgba(139, 92, 246, 0.7), 0 0 0 1px rgba(255,255,255,0.12);
 }
 
 .lang-toggle {
   display: flex;
   gap: 2px;
-  background: var(--sand-warm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--rule);
   padding: 3px;
   border-radius: 999px;
   font-size: 12px;
@@ -119,9 +151,9 @@ header.site-header {
   transition: all 0.2s;
 }
 .lang-toggle button.active {
-  background: var(--paper);
-  color: var(--ink);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  background: var(--gradient-cta);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
 }
 
 main { padding: 56px 0 96px; }
@@ -179,7 +211,7 @@ h1 em {
   .choice-cards { grid-template-columns: 1fr; }
 }
 .choice {
-  background: var(--paper);
+  background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: var(--radius-lg);
   padding: 28px 24px;
@@ -188,12 +220,28 @@ h1 em {
   text-align: left;
   position: relative;
   overflow: hidden;
-}
-.choice:hover {
-  border-color: var(--green-deep);
-  transform: translateY(-2px);
+  color: inherit;
   box-shadow: var(--shadow);
 }
+.choice::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(59, 130, 246, 0.5));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.choice:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.4), 0 16px 48px rgba(139, 92, 246, 0.4);
+}
+.choice:hover::before { opacity: 1; }
 .choice::after {
   content: '→';
   position: absolute;
@@ -204,23 +252,25 @@ h1 em {
   transition: transform 0.25s, color 0.25s;
 }
 .choice:hover::after {
-  color: var(--green-deep);
+  color: var(--green-soft);
   transform: translateX(4px);
 }
 .choice-icon {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: var(--green-pale);
+  background: var(--gradient-cta);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 0 32px rgba(139, 92, 246, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 .choice-icon svg {
-  width: 20px;
-  height: 20px;
-  stroke: var(--green-deep);
+  width: 22px;
+  height: 22px;
+  stroke: #fff;
+  stroke-width: 2;
 }
 .choice-title {
   font-family: var(--serif);
@@ -239,10 +289,11 @@ h1 em {
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: var(--ink-mute);
+  color: var(--ink-soft);
   margin-top: 16px;
   padding: 4px 10px;
-  background: var(--sand);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--rule);
   border-radius: 999px;
 }
 .choice-time::before {
@@ -270,6 +321,81 @@ h1 em {
   height: 14px;
   stroke: var(--green-deep);
   flex-shrink: 0;
+}
+
+.faq {
+  margin-top: 64px;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+}
+.faq-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.faq-item {
+  border-bottom: 1px solid var(--rule);
+  padding: 16px 0;
+}
+.faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  padding-right: 32px;
+  position: relative;
+  user-select: none;
+  outline: none;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  top: -2px;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--green-deep);
+  transition: transform 0.2s ease;
+  line-height: 1;
+}
+.faq-item[open] summary::after {
+  content: "−";
+}
+.faq-item summary:hover {
+  color: var(--green-deep);
+}
+.faq-item summary:focus-visible {
+  box-shadow: 0 0 0 3px var(--ring);
+  border-radius: 4px;
+}
+.faq-item p {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.faq-item p code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  background: var(--sand-warm);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.faq-item p a {
+  color: var(--green-deep);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 2px;
+}
+.faq-item p a:hover {
+  text-decoration-color: var(--green-deep);
 }
 
 .form-section { display: none; }
@@ -319,24 +445,27 @@ h1 em {
   position: sticky;
   top: 65px;
   z-index: 40;
-  background: var(--paper);
+  background: rgba(14, 11, 46, 0.7);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
   padding: 16px 0;
   margin: -16px -24px 32px;
   padding: 16px 24px;
   border-bottom: 1px solid var(--rule);
 }
 .progress-bar {
-  height: 3px;
-  background: var(--rule);
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 2px;
   overflow: hidden;
   position: relative;
 }
 .progress-fill {
   height: 100%;
-  background: var(--green-deep);
+  background: var(--gradient-cta);
   width: 0%;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.6);
 }
 .progress-label {
   display: flex;
@@ -400,13 +529,17 @@ h1 em {
 input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select, textarea {
   width: 100%;
   padding: 14px 16px;
-  background: var(--paper);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   font-size: 16px;
   color: var(--ink);
   transition: all 0.2s;
   font-family: var(--sans);
+}
+select option {
+  background: var(--sand);
+  color: var(--ink);
 }
 textarea {
   resize: vertical;
@@ -417,7 +550,7 @@ input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--green-deep);
   box-shadow: 0 0 0 3px var(--ring);
-  background: white;
+  background: rgba(255, 255, 255, 0.07);
 }
 input::placeholder, textarea::placeholder {
   color: var(--ink-mute);
@@ -443,17 +576,18 @@ input::placeholder, textarea::placeholder {
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  background: var(--paper);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   cursor: pointer;
   transition: all 0.2s;
   font-size: 14px;
   user-select: none;
+  color: var(--ink);
 }
 .check-option:hover {
   border-color: var(--green-soft);
-  background: var(--green-pale);
+  background: rgba(139, 92, 246, 0.10);
 }
 .check-option input {
   width: 16px;
@@ -471,6 +605,38 @@ input::placeholder, textarea::placeholder {
   background: var(--green-pale);
 }
 
+.other-fields {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--sand);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.other-fields[hidden] { display: none; }
+.other-field-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+.other-fields input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: var(--ink);
+}
+.other-fields input[type="text"]:focus {
+  outline: none;
+  border-color: var(--green-deep);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
 .radio-group {
   display: flex;
   flex-direction: column;
@@ -481,17 +647,19 @@ input::placeholder, textarea::placeholder {
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  background: var(--paper);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   cursor: pointer;
   transition: all 0.2s;
+  color: var(--ink);
 }
-.radio-option:hover { border-color: var(--green-soft); }
+.radio-option:hover { border-color: var(--green-soft); background: rgba(255, 255, 255, 0.06); }
 .radio-option input { margin-top: 4px; flex-shrink: 0; accent-color: var(--green-deep); }
 .radio-option:has(input:checked) {
   border-color: var(--green-deep);
-  background: var(--green-pale);
+  background: rgba(139, 92, 246, 0.12);
+  box-shadow: 0 0 0 1px var(--green-deep), 0 0 16px rgba(139, 92, 246, 0.2);
 }
 .radio-option-text {
   font-size: 14px;
@@ -508,7 +676,7 @@ input::placeholder, textarea::placeholder {
 .scale-btn {
   aspect-ratio: 1;
   border: 1px solid var(--rule);
-  background: var(--paper);
+  background: rgba(255, 255, 255, 0.04);
   border-radius: var(--radius);
   cursor: pointer;
   font-family: var(--serif);
@@ -519,13 +687,15 @@ input::placeholder, textarea::placeholder {
 }
 .scale-btn:hover {
   border-color: var(--green-soft);
-  background: var(--green-pale);
+  background: rgba(139, 92, 246, 0.12);
   transform: translateY(-1px);
+  color: var(--ink);
 }
 .scale-btn.selected {
-  border-color: var(--green-deep);
-  background: var(--green-deep);
-  color: var(--paper);
+  border-color: transparent;
+  background: var(--gradient-cta);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.5);
 }
 .scale-labels {
   display: flex;
@@ -537,12 +707,15 @@ input::placeholder, textarea::placeholder {
 }
 
 .pitch {
-  background: linear-gradient(135deg, var(--green-pale) 0%, var(--sand) 100%);
-  border-left: 3px solid var(--green-deep);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(59, 130, 246, 0.10) 100%);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  border-left: 3px solid var(--green-soft);
   padding: 28px 32px;
   margin-bottom: 32px;
   border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   position: relative;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 .pitch::before {
   content: '"';
@@ -551,8 +724,8 @@ input::placeholder, textarea::placeholder {
   left: 16px;
   font-family: var(--serif);
   font-size: 80px;
-  color: var(--green-deep);
-  opacity: 0.15;
+  color: var(--green-soft);
+  opacity: 0.25;
   line-height: 1;
 }
 .pitch-label {
@@ -580,25 +753,38 @@ input::placeholder, textarea::placeholder {
   border-top: 1px solid var(--rule);
 }
 .btn-primary {
-  background: var(--green-deep);
-  color: var(--paper);
+  background: var(--gradient-cta);
+  color: #fff;
   border: none;
   padding: 18px 40px;
   border-radius: var(--radius);
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s;
   letter-spacing: 0.01em;
   display: inline-flex;
   align-items: center;
   gap: 12px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 12px 36px rgba(139, 92, 246, 0.55);
+  position: relative;
+  overflow: hidden;
 }
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-cta-hover);
+  opacity: 0;
+  transition: opacity 0.25s;
+  z-index: 0;
+}
+.btn-primary > * { position: relative; z-index: 1; }
 .btn-primary:hover {
-  background: var(--ink);
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(15, 76, 58, 0.25);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.18), 0 16px 44px rgba(59, 130, 246, 0.55);
 }
+.btn-primary:hover::before { opacity: 1; }
 .btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -624,19 +810,20 @@ input::placeholder, textarea::placeholder {
 }
 .success-state.active { display: block; animation: fadeIn 0.5s ease-out; }
 .success-icon {
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
   margin: 0 auto 32px;
   border-radius: 50%;
-  background: var(--green-pale);
+  background: var(--gradient-cta);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 56px rgba(139, 92, 246, 0.65), 0 0 0 1px rgba(255,255,255,0.12);
 }
 .success-icon svg {
   width: 28px;
   height: 28px;
-  stroke: var(--green-deep);
+  stroke: #fff;
   stroke-width: 2.5;
 }
 .success-state h2 {
@@ -656,7 +843,8 @@ input::placeholder, textarea::placeholder {
 .success-state .next {
   margin-top: 32px;
   padding: 24px;
-  background: var(--sand);
+  background: var(--surface-glass);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-lg);
   font-size: 14px;
   color: var(--ink-soft);
@@ -664,6 +852,8 @@ input::placeholder, textarea::placeholder {
   max-width: 480px;
   margin-left: auto;
   margin-right: auto;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 footer {
@@ -672,7 +862,9 @@ footer {
   text-align: center;
   font-size: 13px;
   color: var(--ink-mute);
-  background: var(--paper);
+  background: rgba(14, 11, 46, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 footer a { color: var(--green-deep); text-decoration: none; }
 footer a:hover { text-decoration: underline; }
@@ -771,6 +963,42 @@ footer a:hover { text-decoration: underline; }
       <span data-i18n="trust-3">Sin venta, solo investigación</span>
     </div>
   </div>
+
+  <section class="faq">
+    <h2 class="faq-title" data-i18n="faq-title">¿Tienes dudas? Estas son las preguntas que más nos hacen.</h2>
+    <details class="faq-item">
+      <summary data-i18n="faq-q1">¿Quiénes son MacLorian X Group?</summary>
+      <p data-i18n="faq-a1">Somos una empresa de tecnología basada en Cape Coral, fundada por Miguel Angel Balart Batlle. Estamos diseñando una nueva plataforma para profesionales de servicios y homeowners de SW Florida. La empresa está registrada como LLC en Florida.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q2">¿Para qué van a usar mis respuestas?</summary>
+      <p data-i18n="faq-a2">Para entender cómo trabajan los proveedores reales y qué necesitan los homeowners reales en SW Florida, antes de construir el producto. Tus respuestas moldean directamente las decisiones de qué construimos y qué descartamos. Si lo que diseñamos te sirve, serás de los primeros en probarlo.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q3">¿Es confidencial? ¿Mis datos son anónimos?</summary>
+      <p data-i18n="faq-a3">Tus respuestas se guardan en nuestra base de datos privada y no se comparten con terceros, ni se publican, ni se venden. Los reportes y conclusiones que hagamos son agregados (sin identificar a personas específicas). Tu nombre y contacto solo los usamos si elegiste que te avisemos cuando esté listo.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q4">¿Me van a vender algo después de responder?</summary>
+      <p data-i18n="faq-a4">No. Esto es investigación, no es un funnel de ventas. Si al final del cuestionario marcaste que querés que te avisemos, te escribiremos UNA sola vez cuando el producto esté listo para probar. Si dijiste que no, no te contactamos.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q5">¿Cuánto me toma realmente?</summary>
+      <p data-i18n="faq-a5">8-12 minutos si vas leyendo y respondiendo sin pensar mucho. Más si querés dar respuestas detalladas (ideal para nosotros, pero no obligatorio). Las preguntas con asterisco son obligatorias; el resto las podés saltar.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q6">¿Por qué debería darle 10 minutos a alguien que no conozco?</summary>
+      <p data-i18n="faq-a6">Porque tu opinión real puede cambiar el producto antes de que existan errores caros. La mayoría de productos de servicios fracasan porque nunca preguntaron a la gente del campo cómo trabaja. Estamos haciendo lo opuesto: preguntar antes de construir.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q7">¿Esto es legítimo o phishing?</summary>
+      <p data-i18n="faq-a7">Legítimo. La URL <code>investigacion.maclorianxgroup.com</code> está bajo nuestro dominio corporativo registrado. No te pedimos contraseñas, número de tarjeta, ni nada sensible — solo info de tu negocio (proveedor) o tus hábitos de mantenimiento (homeowner). Si tenés dudas, escribime directo a <a href="mailto:contact@maclorianxgroup.com">contact@maclorianxgroup.com</a>.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq-q8">¿Qué pasa si dejo respuestas en blanco o me equivoco?</summary>
+      <p data-i18n="faq-a8">Las preguntas marcadas con asterisco (*) son obligatorias. El resto las podés saltar si no aplican o no querés contestar. Tu respuesta cuenta igual aunque dejes algunas en blanco — preferimos respuestas honestas-incompletas a respuestas inventadas-completas.</p>
+    </details>
+  </section>
 </section>
 
 <!-- ============================== PROVEEDOR ============================== -->
@@ -877,19 +1105,19 @@ footer a:hover { text-decoration: underline; }
           <label class="check-option"><input type="checkbox" name="q2_categorias" value="Barber & beauty"><span data-i18n="cat-barber">Barbería / Peluquería</span></label>
           <label class="check-option"><input type="checkbox" name="q2_categorias" value="Pet services"><span data-i18n="cat-pet">Servicios para mascotas</span></label>
           <label class="check-option"><input type="checkbox" name="q2_categorias" value="Auto detailing"><span data-i18n="cat-auto">Auto detailing</span></label>
-          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Home cleaning"><span data-i18n="cat-home">Limpieza de hogar</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Home cleaning"><span data-i18n="cat-home-cleaning">Limpieza de hogar</span></label>
           <label class="check-option"><input type="checkbox" name="q2_categorias" value="Spa & wellness"><span data-i18n="cat-spa">Spa & wellness</span></label>
-          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Personal fitness"><span data-i18n="cat-fit">Personal trainer / Fitness</span></label>
-          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Otros" id="pro-cat-otros"><span data-i18n="cat-otros">Otros (especificar abajo)</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Personal fitness"><span data-i18n="cat-fitness">Personal trainer / Fitness</span></label>
+          <label class="check-option"><input type="checkbox" name="q2_categorias" value="Otra (Personalizar)" data-other-toggle="provider"><span data-i18n="cat-other">Otra (Personalizar)</span></label>
         </div>
-        <input type="text" name="q2_categoria_personalizada" placeholder="Si marcaste 'Otros': describe tu servicio (transporte escolar, IT support, seguros, tax, therapy, security, etc.)" style="margin-top: 12px;">
-      </div>
-
-      <div class="q">
-        <span class="q-num">P2b</span>
-        <div class="q-text" data-i18n="pro-q2b">¿Cuál es el nombre legal de tu LLC o negocio registrado?</div>
-        <div class="q-hint" data-i18n="pro-q2b-hint">Opcional pero útil — nos ayuda a verificar y reservar tu spot en el piloto.</div>
-        <input type="text" name="negocio_llc" placeholder="Ej: MacLorian X Group LLC">
+        <div class="other-fields" id="provider-other-fields" hidden>
+          <div class="q-hint" style="margin-top: 8px;" data-i18n="pro-q2-other-hint">Marcaste "Otra". Cuéntanos qué categoría y el nombre legal de tu LLC para validar el negocio.</div>
+          <label class="other-field-label" data-i18n="pro-q2-custom-label">¿Qué categoría?</label>
+          <input type="text" name="q2_categoria_custom" data-other-required data-i18n-placeholder="pro-q2-custom-ph" placeholder="Ej: Mobile car wash, dog walking, etc.">
+          <label class="other-field-label" data-i18n="pro-q2-llc-label">Nombre legal de tu LLC</label>
+          <input type="text" name="q2_llc_name" data-other-required data-i18n-placeholder="pro-q2-llc-ph" placeholder="Ej: ABC Services LLC">
+          <div class="error-msg" data-i18n="err-required">Este campo es obligatorio.</div>
+        </div>
       </div>
 
       <div class="q">
@@ -965,6 +1193,65 @@ footer a:hover { text-decoration: underline; }
         <span class="q-num">P11</span>
         <div class="q-text" data-i18n="pro-q11">Si pudieras cambiar UNA sola cosa de cómo trabajas hoy, ¿qué sería?</div>
         <textarea name="q11_cambio_uno"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P11a</span>
+        <div class="q-text" data-i18n="pro-q11a">¿Pagás a marketplaces tipo Thumbtack, Angi o HomeAdvisor para conseguir leads? ¿Cuánto al mes?</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q11a_marketplace_spend" value="0"><span class="radio-option-text" data-i18n="mkt-0">No uso ninguno</span></label>
+          <label class="radio-option"><input type="radio" name="q11a_marketplace_spend" value="1-100"><span class="radio-option-text" data-i18n="mkt-1">Menos de $100/mes</span></label>
+          <label class="radio-option"><input type="radio" name="q11a_marketplace_spend" value="100-300"><span class="radio-option-text">$100 – $300</span></label>
+          <label class="radio-option"><input type="radio" name="q11a_marketplace_spend" value="300-500"><span class="radio-option-text">$300 – $500</span></label>
+          <label class="radio-option"><input type="radio" name="q11a_marketplace_spend" value="500-1000"><span class="radio-option-text">$500 – $1,000</span></label>
+          <label class="radio-option"><input type="radio" name="q11a_marketplace_spend" value="1000+"><span class="radio-option-text" data-i18n="mkt-5">Más de $1,000</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P11b</span>
+        <div class="q-text" data-i18n="pro-q11b">De los leads por los que pagaste, ¿qué porcentaje terminó en trabajo real?</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q11b_lead_conversion" value="N/A"><span class="radio-option-text" data-i18n="lc-na">No uso marketplaces de pago</span></label>
+          <label class="radio-option"><input type="radio" name="q11b_lead_conversion" value="0-10"><span class="radio-option-text" data-i18n="lc-1">Menos del 10% (la mayoría son falsos)</span></label>
+          <label class="radio-option"><input type="radio" name="q11b_lead_conversion" value="10-25"><span class="radio-option-text">10–25%</span></label>
+          <label class="radio-option"><input type="radio" name="q11b_lead_conversion" value="25-50"><span class="radio-option-text">25–50%</span></label>
+          <label class="radio-option"><input type="radio" name="q11b_lead_conversion" value="50+"><span class="radio-option-text" data-i18n="lc-4">Más del 50%</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P11c</span>
+        <div class="q-text" data-i18n="pro-q11c">¿Cuántos clientes te cancelan última hora o no aparecen (no-shows) en una semana típica?</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q11c_no_shows" value="0"><span class="radio-option-text" data-i18n="ns-0">Ninguno o casi ninguno</span></label>
+          <label class="radio-option"><input type="radio" name="q11c_no_shows" value="1-2"><span class="radio-option-text" data-i18n="ns-1">1–2 por semana</span></label>
+          <label class="radio-option"><input type="radio" name="q11c_no_shows" value="3-5"><span class="radio-option-text" data-i18n="ns-2">3–5 por semana</span></label>
+          <label class="radio-option"><input type="radio" name="q11c_no_shows" value="5+"><span class="radio-option-text" data-i18n="ns-3">Más de 5</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P11d</span>
+        <div class="q-text" data-i18n="pro-q11d">¿Pedís depósito o pago adelantado antes de empezar un trabajo?</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q11d_deposit" value="No"><span class="radio-option-text" data-i18n="dep-no">No, cobro al final</span></label>
+          <label class="radio-option"><input type="radio" name="q11d_deposit" value="A veces"><span class="radio-option-text" data-i18n="dep-some">A veces, depende del cliente</span></label>
+          <label class="radio-option"><input type="radio" name="q11d_deposit" value="50% upfront"><span class="radio-option-text" data-i18n="dep-50">Siempre pido 50% upfront</span></label>
+          <label class="radio-option"><input type="radio" name="q11d_deposit" value="100% upfront"><span class="radio-option-text" data-i18n="dep-100">Cobro 100% antes de empezar</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P11e</span>
+        <div class="q-text" data-i18n="pro-q11e">Imaginate dos modelos de plataforma. ¿Cuál preferirías?</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="q11e_pricing_model" value="pay-per-lead"><span class="radio-option-text" data-i18n="pm-ppl">Pago $25–40 por cada lead que recibo (haya trabajo o no), tipo Thumbtack/Angi</span></label>
+          <label class="radio-option"><input type="radio" name="q11e_pricing_model" value="commission"><span class="radio-option-text" data-i18n="pm-com">Pago 8–12% del trabajo SOLO cuando ya cobré</span></label>
+          <label class="radio-option"><input type="radio" name="q11e_pricing_model" value="subscription"><span class="radio-option-text" data-i18n="pm-sub">Suscripción mensual fija ($20–50) sin importar cuántos trabajos haga</span></label>
+          <label class="radio-option"><input type="radio" name="q11e_pricing_model" value="otro"><span class="radio-option-text" data-i18n="pm-otro">Ninguno me convence / explico abajo</span></label>
+        </div>
+        <textarea name="q11e_pricing_model_detalle" placeholder="¿Por qué preferís ese modelo, o qué te haría cambiarlo?" style="margin-top: 12px;"></textarea>
       </div>
     </div>
 
@@ -1164,20 +1451,20 @@ footer a:hover { text-decoration: underline; }
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Roof maintenance"><span data-i18n="cat-roof">Mantenimiento de techos</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Pressure washing"><span data-i18n="cat-pw">Pressure washing</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Gutter cleaning"><span data-i18n="cat-gutter">Limpieza de canaletas</span></label>
-          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Home cleaning"><span data-i18n="cat-clean">Limpieza interior del hogar</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Home cleaning"><span data-i18n="cat-home-cleaning">Limpieza de hogar</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Handyman"><span>Handyman</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Tree service"><span data-i18n="cat-tree">Tree service / poda</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Barber & beauty"><span data-i18n="cat-barber">Barbería / Peluquería</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Pet services"><span data-i18n="cat-pet">Servicios para mascotas</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Auto detailing"><span data-i18n="cat-auto">Auto detailing</span></label>
           <label class="check-option"><input type="checkbox" name="q1_servicios" value="Spa & wellness"><span data-i18n="cat-spa">Spa & wellness</span></label>
-          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Personal fitness"><span data-i18n="cat-fit">Personal trainer</span></label>
-          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Hurricane prep"><span data-i18n="cat-hurricane">Hurricane prep</span></label>
-          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Generator service"><span data-i18n="cat-gen">Servicio de generador</span></label>
-          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Exterior cleaning"><span data-i18n="cat-ext">Limpieza exterior</span></label>
-          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Otros"><span data-i18n="cat-otros">Otros (especificar abajo)</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Personal fitness"><span data-i18n="cat-fitness">Personal trainer / Fitness</span></label>
+          <label class="check-option"><input type="checkbox" name="q1_servicios" value="Otra (Personalizar)" data-other-toggle="client"><span data-i18n="cat-other">Otra (Personalizar)</span></label>
         </div>
-        <input type="text" name="q1_categoria_personalizada" placeholder="Si marcaste 'Otros': describe el servicio (transporte escolar, IT support, seguros, etc.)" style="margin-top: 12px;">
+        <div class="other-fields" id="client-other-fields" hidden>
+          <label class="other-field-label" data-i18n="cli-q1-custom-label">¿Qué servicio?</label>
+          <input type="text" name="q1_servicio_custom" data-i18n-placeholder="cli-q1-custom-ph" placeholder="Ej: Mobile car wash, dog walking, etc.">
+        </div>
       </div>
 
       <div class="q">
@@ -1212,6 +1499,45 @@ footer a:hover { text-decoration: underline; }
         <span class="q-num">P5</span>
         <div class="q-text" data-i18n="cli-q5">Cuéntanos la última vez que algo se rompió en tu casa y tuviste que llamar a un técnico de emergencia. ¿Qué pasó?</div>
         <textarea name="q5_emergencia"></textarea>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P5a</span>
+        <div class="q-text" data-i18n="cli-q5a">La última vez que necesitaste un servicio para tu casa, ¿cómo encontraste al proveedor? Marcá todos los que apliquen.</div>
+        <div class="checkbox-grid">
+          <label class="check-option"><input type="checkbox" name="q5a_canal_descubrimiento" value="referral_persona"><span data-i18n="cli-ch-ref">Recomendación de amigo / familiar / vecino</span></label>
+          <label class="check-option"><input type="checkbox" name="q5a_canal_descubrimiento" value="WhatsApp"><span data-i18n="cli-ch-wa">Grupo de WhatsApp</span></label>
+          <label class="check-option"><input type="checkbox" name="q5a_canal_descubrimiento" value="FB Group"><span data-i18n="cli-ch-fbg">Grupo de Facebook</span></label>
+          <label class="check-option"><input type="checkbox" name="q5a_canal_descubrimiento" value="FB Marketplace"><span>Facebook Marketplace</span></label>
+          <label class="check-option"><input type="checkbox" name="q5a_canal_descubrimiento" value="Nextdoor"><span>Nextdoor</span></label>
+          <label class="check-option"><input type="checkbox" name="q5a_canal_descubrimiento" value="Google"><span data-i18n="cli-ch-gg">Búsqueda en Google / Maps</span></label>
+          <label class="check-option"><input type="checkbox" name="q5a_canal_descubrimiento" value="Yelp"><span>Yelp</span></label>
+          <label class="check-option"><input type="checkbox" name="q5a_canal_descubrimiento" value="Thumbtack/Angi"><span>Thumbtack / Angi / HomeAdvisor</span></label>
+          <label class="check-option"><input type="checkbox" name="q5a_canal_descubrimiento" value="Truck/sign"><span data-i18n="cli-ch-truck">Vi su camión / cartel / volante</span></label>
+          <label class="check-option"><input type="checkbox" name="q5a_canal_descubrimiento" value="Otro"><span data-i18n="cat-other">Otro</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P5b</span>
+        <div class="q-text" data-i18n="cli-q5b">¿Cómo le pagaste a esa persona o empresa?</div>
+        <div class="checkbox-grid">
+          <label class="check-option"><input type="checkbox" name="q5b_metodo_pago" value="Cash"><span data-i18n="pay-cash">Efectivo</span></label>
+          <label class="check-option"><input type="checkbox" name="q5b_metodo_pago" value="Zelle"><span>Zelle</span></label>
+          <label class="check-option"><input type="checkbox" name="q5b_metodo_pago" value="Cash App"><span>Cash App</span></label>
+          <label class="check-option"><input type="checkbox" name="q5b_metodo_pago" value="Venmo"><span>Venmo</span></label>
+          <label class="check-option"><input type="checkbox" name="q5b_metodo_pago" value="PayPal"><span>PayPal</span></label>
+          <label class="check-option"><input type="checkbox" name="q5b_metodo_pago" value="Tarjeta"><span data-i18n="pay-card">Tarjeta de crédito / débito</span></label>
+          <label class="check-option"><input type="checkbox" name="q5b_metodo_pago" value="Cheque"><span data-i18n="pay-check">Cheque</span></label>
+          <label class="check-option"><input type="checkbox" name="q5b_metodo_pago" value="Transferencia"><span data-i18n="pay-bank">Transferencia bancaria</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="q-num">P5c</span>
+        <div class="q-text" data-i18n="cli-q5c">¿Tuviste algún problema con ese servicio? Contános qué pasó.</div>
+        <div class="q-hint" data-i18n="cli-q5c-hint">Llegó tarde, cobró de más, dejó algo mal, no entendía lo que pedías, etc. Si todo bien, podés saltearlo.</div>
+        <textarea name="q5c_problema_servicio" placeholder="Opcional"></textarea>
       </div>
     </div>
 
@@ -1366,7 +1692,7 @@ footer a:hover { text-decoration: underline; }
 </main>
 
 <footer>
-  <p>© 2026 MacLorian X Group LLC · Cape Coral, FL · <a href="mailto:contact@maclorianxgroup.com">contact@maclorianxgroup.com</a></p>
+  <p>© 2026 MacLorian X Group LLC · Cape Coral, FL · <a href="mailto:contact@maclorianxgroup.com">contact@maclorianxgroup.com</a> · <a href="/privacy" style="color: inherit;">Privacidad</a></p>
   <p style="margin-top: 6px; opacity: 0.6;" data-i18n="footer-note">Esta es una investigación de mercado. No estamos vendiendo nada.</p>
 </footer>
 
@@ -1387,6 +1713,23 @@ const TRANSLATIONS = {
     "trust-1": "Tus respuestas son confidenciales",
     "trust-2": "Toma 10–12 minutos",
     "trust-3": "Sin venta, solo investigación",
+    "faq-title": "¿Tienes dudas? Estas son las preguntas que más nos hacen.",
+    "faq-q1": "¿Quiénes son MacLorian X Group?",
+    "faq-a1": "Somos una empresa de tecnología basada en Cape Coral, fundada por Miguel Angel Balart Batlle. Estamos diseñando una nueva plataforma para profesionales de servicios y homeowners de SW Florida. La empresa está registrada como LLC en Florida.",
+    "faq-q2": "¿Para qué van a usar mis respuestas?",
+    "faq-a2": "Para entender cómo trabajan los proveedores reales y qué necesitan los homeowners reales en SW Florida, antes de construir el producto. Tus respuestas moldean directamente las decisiones de qué construimos y qué descartamos. Si lo que diseñamos te sirve, serás de los primeros en probarlo.",
+    "faq-q3": "¿Es confidencial? ¿Mis datos son anónimos?",
+    "faq-a3": "Tus respuestas se guardan en nuestra base de datos privada y no se comparten con terceros, ni se publican, ni se venden. Los reportes y conclusiones que hagamos son agregados (sin identificar a personas específicas). Tu nombre y contacto solo los usamos si elegiste que te avisemos cuando esté listo.",
+    "faq-q4": "¿Me van a vender algo después de responder?",
+    "faq-a4": "No. Esto es investigación, no es un funnel de ventas. Si al final del cuestionario marcaste que querés que te avisemos, te escribiremos UNA sola vez cuando el producto esté listo para probar. Si dijiste que no, no te contactamos.",
+    "faq-q5": "¿Cuánto me toma realmente?",
+    "faq-a5": "8-12 minutos si vas leyendo y respondiendo sin pensar mucho. Más si querés dar respuestas detalladas (ideal para nosotros, pero no obligatorio). Las preguntas con asterisco son obligatorias; el resto las podés saltar.",
+    "faq-q6": "¿Por qué debería darle 10 minutos a alguien que no conozco?",
+    "faq-a6": "Porque tu opinión real puede cambiar el producto antes de que existan errores caros. La mayoría de productos de servicios fracasan porque nunca preguntaron a la gente del campo cómo trabaja. Estamos haciendo lo opuesto: preguntar antes de construir.",
+    "faq-q7": "¿Esto es legítimo o phishing?",
+    "faq-a7": "Legítimo. La URL <code>investigacion.maclorianxgroup.com</code> está bajo nuestro dominio corporativo registrado. No te pedimos contraseñas, número de tarjeta, ni nada sensible — solo info de tu negocio (proveedor) o tus hábitos de mantenimiento (homeowner). Si tenés dudas, escribime directo a <a href=\"mailto:contact@maclorianxgroup.com\">contact@maclorianxgroup.com</a>.",
+    "faq-q8": "¿Qué pasa si dejo respuestas en blanco o me equivoco?",
+    "faq-a8": "Las preguntas marcadas con asterisco (*) son obligatorias. El resto las podés saltar si no aplican o no querés contestar. Tu respuesta cuenta igual aunque dejes algunas en blanco — preferimos respuestas honestas-incompletas a respuestas inventadas-completas.",
     "back": "Volver",
     "pro-title": "Cuéntanos cómo trabajas hoy.",
     "pro-intro": "20 preguntas. Lo importante son los detalles concretos: tus servicios reales, tus precios reales, tus dolores reales. Cuanto más honesto, más útil para ti y para nosotros.",
@@ -1417,6 +1760,20 @@ const TRANSLATIONS = {
     "cat-tree": "Tree service / poda",
     "cat-clean": "Limpieza interior",
     "cat-ac-full": "A/C maintenance",
+    "cat-barber": "Barbería / Peluquería",
+    "cat-pet": "Servicios para mascotas",
+    "cat-auto": "Auto detailing",
+    "cat-home-cleaning": "Limpieza de hogar",
+    "cat-spa": "Spa & wellness",
+    "cat-fitness": "Personal trainer / Fitness",
+    "cat-other": "Otra (Personalizar)",
+    "pro-q2-other-hint": "Marcaste \"Otra\". Cuéntanos qué categoría y el nombre legal de tu LLC para validar el negocio.",
+    "pro-q2-custom-label": "¿Qué categoría?",
+    "pro-q2-custom-ph": "Ej: Mobile car wash, dog walking, etc.",
+    "pro-q2-llc-label": "Nombre legal de tu LLC",
+    "pro-q2-llc-ph": "Ej: ABC Services LLC",
+    "cli-q1-custom-label": "¿Qué servicio?",
+    "cli-q1-custom-ph": "Ej: Mobile car wash, dog walking, etc.",
     "pro-q3": "De todos los servicios que ofreces, ¿cuál es el que más te genera ingresos hoy?",
     "pro-q4": "¿Cómo consigues clientes nuevos hoy?",
     "pro-q4-hint": "Referidos, Facebook, NextDoor, Google, anuncios, walk-by, etc.",
@@ -1540,6 +1897,23 @@ const TRANSLATIONS = {
     "trust-1": "Your answers are confidential",
     "trust-2": "Takes 10–12 minutes",
     "trust-3": "No sales, just research",
+    "faq-title": "Got questions? These are the ones we hear most.",
+    "faq-q1": "Who is MacLorian X Group?",
+    "faq-a1": "We're a tech company based in Cape Coral, founded by Miguel Angel Balart Batlle. We're designing a new platform for service professionals and homeowners in SW Florida. The company is registered as an LLC in Florida.",
+    "faq-q2": "What will you use my answers for?",
+    "faq-a2": "To understand how real service providers work and what real homeowners need in SW Florida, before we build the product. Your answers directly shape what we build and what we drop. If what we design is useful to you, you'll be among the first to try it.",
+    "faq-q3": "Is it confidential? Is my data anonymous?",
+    "faq-a3": "Your answers are stored in our private database and are not shared with third parties, nor published, nor sold. Any reports and conclusions we share are aggregated (without identifying specific people). We only use your name and contact info if you chose to be notified when it's ready.",
+    "faq-q4": "Will you try to sell me something after I answer?",
+    "faq-a4": "No. This is research, not a sales funnel. If at the end of the questionnaire you opted in to be notified, we'll write you ONCE when the product is ready to try. If you opted out, we won't contact you.",
+    "faq-q5": "How long does it really take?",
+    "faq-a5": "8-12 minutes if you read and answer without overthinking. Longer if you want to give detailed answers (ideal for us, not required). Questions with an asterisk are required; the rest you can skip.",
+    "faq-q6": "Why should I give 10 minutes to someone I don't know?",
+    "faq-a6": "Because your real opinion can change the product before expensive mistakes happen. Most service products fail because nobody asked the people in the field how they actually work. We're doing the opposite: asking before building.",
+    "faq-q7": "Is this legit or phishing?",
+    "faq-a7": "Legit. The URL <code>investigacion.maclorianxgroup.com</code> is under our registered corporate domain. We don't ask for passwords, card numbers, or anything sensitive — just info about your business (provider) or maintenance habits (homeowner). If in doubt, email me directly at <a href=\"mailto:contact@maclorianxgroup.com\">contact@maclorianxgroup.com</a>.",
+    "faq-q8": "What if I leave answers blank or get something wrong?",
+    "faq-a8": "Questions marked with an asterisk (*) are required. The rest you can skip if they don't apply or you'd rather not answer. Your response still counts even with blanks — we prefer honest-and-incomplete over made-up-and-complete.",
     "back": "Back",
     "pro-title": "Tell us how you work today.",
     "pro-intro": "20 questions. The details matter: your real services, your real prices, your real pains. The more honest, the more useful for you and for us.",
@@ -1570,6 +1944,20 @@ const TRANSLATIONS = {
     "cat-tree": "Tree service",
     "cat-clean": "Indoor cleaning",
     "cat-ac-full": "A/C maintenance",
+    "cat-barber": "Barber & beauty",
+    "cat-pet": "Pet services",
+    "cat-auto": "Auto detailing",
+    "cat-home-cleaning": "Home cleaning",
+    "cat-spa": "Spa & wellness",
+    "cat-fitness": "Personal trainer / fitness",
+    "cat-other": "Other (custom)",
+    "pro-q2-other-hint": "You checked \"Other\". Tell us which category and your LLC's legal name so we can validate the business.",
+    "pro-q2-custom-label": "Which category?",
+    "pro-q2-custom-ph": "e.g., Mobile car wash, dog walking, etc.",
+    "pro-q2-llc-label": "Your LLC's legal name",
+    "pro-q2-llc-ph": "e.g., ABC Services LLC",
+    "cli-q1-custom-label": "Which service?",
+    "cli-q1-custom-ph": "e.g., Mobile car wash, dog walking, etc.",
     "pro-q3": "Of all the services you offer, which one generates the most income today?",
     "pro-q4": "How do you find new customers today?",
     "pro-q4-hint": "Referrals, Facebook, NextDoor, Google, ads, walk-by, etc.",
@@ -1768,6 +2156,33 @@ document.querySelectorAll('.scale').forEach(scale => {
   });
 });
 
+document.querySelectorAll('input[data-other-toggle]').forEach(cb => {
+  cb.addEventListener('change', e => {
+    const target = e.target.dataset.otherToggle === 'provider' ? 'provider-other-fields' : 'client-other-fields';
+    const panel = document.getElementById(target);
+    if (!panel) return;
+    panel.hidden = !e.target.checked;
+    panel.querySelectorAll('input[data-other-required]').forEach(input => {
+      if (e.target.checked) input.setAttribute('required', '');
+      else { input.removeAttribute('required'); input.value = ''; }
+    });
+    if (!e.target.checked) {
+      panel.querySelectorAll('input').forEach(input => { input.value = ''; });
+    }
+  });
+});
+
+function applyI18nPlaceholders(lang) {
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    const val = TRANSLATIONS[lang][key];
+    if (val !== undefined) el.placeholder = val;
+  });
+}
+const _origSetLang = setLang;
+setLang = function(lang) { _origSetLang(lang); applyI18nPlaceholders(lang); };
+applyI18nPlaceholders(currentLang);
+
 function collectFormData(form, type) {
   const data = { type, lang: currentLang, submittedAt: new Date().toISOString(), source: window.location.href };
   const fd = new FormData(form);
@@ -1846,5 +2261,6 @@ window.showForm = showForm;
 window.goHome = goHome;
 </script>
 
+<script src="/cookie-consent.js" defer></script>
 </body>
 </html>

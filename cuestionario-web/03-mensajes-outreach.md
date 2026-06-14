@@ -2,7 +2,7 @@
 
 Mensajes listos para enviar a los proveedores y homeowners de SW Florida con el link al cuestionario web.
 
-**Reemplaza** `https://investigacion.maclorianxgroup.com` con tu URL real una vez deployed.
+**URL en producción:** [https://investigacion.maclorianxgroup.com](https://investigacion.maclorianxgroup.com) (HTTPS, Vercel + Notion API).
 
 ---
 

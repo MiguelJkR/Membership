@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" aria-label="TRASLAPP">
+  <!-- T grande dividida vertical (mitad naranja, mitad navy) -->
+  <!-- Brazo horizontal de la T (parte naranja izquierda) -->
+  <path d="M 30 30 L 100 30 L 100 70 L 30 70 Z" fill="#F39C0F"/>
+  <!-- Brazo horizontal de la T (parte navy derecha) -->
+  <path d="M 100 30 L 170 30 L 170 70 L 100 70 Z" fill="#1F2D5C"/>
+  <!-- Tallo vertical (mitad izquierda naranja) -->
+  <path d="M 70 70 L 100 70 L 100 170 L 70 170 Z" fill="#F39C0F"/>
+  <!-- Tallo vertical (mitad derecha navy) -->
+  <path d="M 100 70 L 130 70 L 130 170 L 100 170 Z" fill="#1F2D5C"/>
+  <!-- Flecha hacia derecha en la esquina superior derecha -->
+  <g fill="#1F2D5C">
+    <polygon points="155,50 175,50 175,42 188,55 175,68 175,60 155,60"/>
+  </g>
+  <!-- Camion simplificado abajo derecha (dorado) -->
+  <g>
+    <!-- Caja del camion -->
+    <rect x="135" y="135" width="38" height="22" fill="#B5803F" stroke="#1F2D5C" stroke-width="1.5"/>
+    <!-- Cabina -->
+    <path d="M 173 135 L 188 135 L 188 157 L 173 157 Z" fill="#B5803F" stroke="#1F2D5C" stroke-width="1.5"/>
+    <!-- Ventana cabina -->
+    <rect x="176" y="138" width="9" height="8" fill="#1F2D5C"/>
+    <!-- Rueda 1 -->
+    <circle cx="146" cy="162" r="6" fill="#1F2D5C"/>
+    <circle cx="146" cy="162" r="2.5" fill="#FFFFFF"/>
+    <!-- Rueda 2 -->
+    <circle cx="180" cy="162" r="6" fill="#1F2D5C"/>
+    <circle cx="180" cy="162" r="2.5" fill="#FFFFFF"/>
+  </g>
+</svg>

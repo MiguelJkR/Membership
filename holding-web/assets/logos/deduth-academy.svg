@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" aria-label="DEDUTH ACADEMY">
+  <!-- D navy con esquinas redondeadas -->
+  <path d="M 45 30
+           L 100 30
+           Q 160 30 160 100
+           Q 160 170 100 170
+           L 45 170 Z"
+        fill="#1F2D5C"/>
+  <!-- Hueco interno de la D -->
+  <path d="M 78 60
+           L 100 60
+           Q 130 60 130 100
+           Q 130 140 100 140
+           L 78 140 Z"
+        fill="#FFFFFF"/>
+  <!-- Flecha dorada zigzag ascendente -->
+  <g stroke="#C8A059" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <polyline points="55,150 85,115 110,135 145,75"/>
+  </g>
+  <!-- Punta de flecha -->
+  <polygon points="145,75 122,82 138,98" fill="#C8A059" stroke="#C8A059" stroke-width="2" stroke-linejoin="round"/>
+</svg>
