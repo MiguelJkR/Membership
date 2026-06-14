@@ -634,3 +634,174 @@ Una vez tengas los 18 nombres + tel/email, agregalos al final de esta lista con 
 - [Security Systems Plus](https://securitysystemsplus.net/security/)
 - [Detailz Auto Spa Naples](https://www.detailzofnaples.com/)
 - [Yelp Detailz Auto Spa](https://www.yelp.com/biz/detailz-auto-spa-of-naples-naples)
+
+---
+
+# 🆕 ACTUALIZACIÓN 2026-06-14 — Contactos extraídos via WebSearch (verificados)
+
+> 19 negocios del archivo 06 + handoff Top 5 con tel/email/dirección/dueño verificados via WebSearch en directorios oficiales (Yelp, BBB, Yellow Pages, sitios oficiales). **Para los que tienen email, son sendable directos. Para los que solo tienen tel, WhatsApp/SMS.**
+
+## 🥇 Tabla maestra de contactos verificados
+
+| # | Negocio | Teléfono | Email | Dirección | Dueño/Notas |
+|---|---|---|---|---|---|
+| H1 | **AHCM** (Amazing Home & Commercial Maintenance) | (239) 205-0177 | **Support@AHCM-FL.com** | 200 NW 4th Terrace, Cape Coral 33993 | 24/7 emergency line · Multi-categoría completa |
+| H2 | **Lawn Hunters Plus** | (239) 922-7111 | **roger@lawnhuntersplus.com** | 1217 Cape Coral Pkwy E, Suite 110 | Owner: **Roger** · Also: Carmela Wait, Jim (239-810-2672) |
+| H3 | **MK's Lawn, Pool & Maintenance** | (239) 243-5996 | **i_work_247@yahoo.com** | 1723 SW 4th St, Cape Coral 33991 | 15+ años · Multi-categoría (lawn + pool) |
+| H4 | **Kelly Roofing** | (239) 228-3276 | Format: `{1st letter}@kellyroofing.com` | 1360 Rail Head Blvd, Naples 34110 | Owner: **Richard Kelly** · Founder: Joe Kelly · Joanna Kelly · 50+ años |
+| H5 | **Pillar Lawn Care** (Pillar Paradise) | (239) 333-7559 | (via website form) | PO Box 150135, Cape Coral 33915 | Owner: **Jose** · Multi-categoría: lawn + tree + pool |
+| H6 | **Rapid Response AC Services** | (239) 322-3816 | (via website) | 4804 SW 20th Pl, Cape Coral | Operators: Jason Albert Forand, Robert Stowell · 25+ años · Multi-city |
+| H7 | **First Class Air Conditioning** | (239) 574-2500 | (via website) | 1036 NE Pine Island Rd #1, Cape Coral 33909 | Since 1977 · Toll: 833-ACTRUTH |
+| H8 | **Hughes Exterminators** | (239) 573-6565 | **fortmyers@hughes-exterminators.com** | 926 SE 14th Ave, Cape Coral 33990 | 59+ años · Family-owned · Mike: MFoley@hughes-exterminators.com |
+| H9 | **Zoomin Groomin** (pet mobile) | (239) 237-0388 | **capezg@zoomingroomin.com** | Mobile service | Cape Coral + N. Fort Myers |
+| H10 | **Touch of Class Pet Grooming** | (239) 549-2211 | (via website) | 1207 Cape Coral Pkwy E, Cape Coral 33904 | Boarding + daycare + grooming |
+| H11 | **AAA Pressure Washing** | (239) 292-3571 | (via website) | 422 SW 2nd Ter, Unit 206, Cape Coral 33991 | — |
+| H12 | **Florida Power Wash Pros** | 239-841-2818 | (via website) | Cape Coral + Fort Myers + Punta Gorda + Naples | Multi-city |
+| H13 | **Green Leaf Lawn Services SWFL Inc.** | 239-728-1999 | (via website) | 111 5th St #A9, Fort Myers 33907 | 10+ años · Locally owned |
+| H14 | **All Seasons Window Cleaning & Pressure Washing** | (239) 541-3322 | (via website) | 712 SW 22nd Ter, Cape Coral | Window + pressure combo |
+| H15 | **Maximum Pest Control** | (239) 772-7363 | (via website) | 836 NE 7th Ter #5, Cape Coral 33909 | Owner: **David Markovits** |
+| H16 | **Southwest Heating & Cooling Inc** | (239) 205-1001 | (via website) | 1013 SE 12th Ct, Cape Coral 33990 | 20+ años |
+| H17 | **Air Necessity HVAC** | (239) 342-2079 | (via website) | Cape Coral · Multi-city: Lee + Collier + Charlotte | Family-owned |
+
+## 📨 Email envíables YA (5 con email directo)
+
+Estos los podés mandar email **HOY** sin trabajo adicional:
+
+### H1 — AHCM (Support@AHCM-FL.com)
+**Asunto:** $5,940/mes recurrente para AHCM + vivir como un faraón
+
+> Hola equipo de AHCM,
+>
+> Vi que cubren múltiple categorías (pressure washing, paver sealing, epoxy, gutters, handyman) desde Cape Coral y SW Florida — perfect fit para algo que estamos validando.
+>
+> En Faraón Pay armamos planes mensuales recurrentes donde dueños de casa pagan UNA cuota y reciben TODO el mantenimiento de su hogar. AHCM se convierte en el "equipo invisible" de cada cliente.
+>
+> **Cálculo real para AHCM:** 60 clientes × $99/mes en plan "Home Watch + Pressure trimestral" = **$5,940/mes recurrente**. Plan premium $149/mes × 30 clientes = **$4,470/mes adicional**. Total achievable en 12 meses: **~$10,400/mes**.
+>
+> Como member de la red Faraón Pay, en su propia casa pagan $99/mes ahorrando $180/mes vs separado.
+>
+> **Vivir como un faraón. Hoy. Por $99/mes.**
+>
+> 20 preguntas, 10 min, confidencial. Reservamos 1 de 5 spots del piloto si encaja.
+>
+> 👉 https://project-6lklw-git-master-migueljkrs-projects.vercel.app/
+>
+> Miguel Balart · Founder · Faraón Pay
+> MacLorian X Group LLC · Cape Coral, FL
+
+### H2 — Lawn Hunters Plus (roger@lawnhuntersplus.com)
+**Asunto:** Roger, $5,340/mes recurrente para Lawn Hunters Plus
+
+> Hola Roger,
+>
+> Vi Lawn Hunters Plus (1217 Cape Coral Pkwy E) y la diversidad de categorías que manejás es exactamente lo que Faraón Pay necesita.
+>
+> Idea: planes mensuales lawn $89/mes × 60 clientes = **$5,340/mes recurrente**. Plan premium $149/mes (con tree + sod) × 30 clientes = **$4,470/mes** adicional. Total potencial 12 meses: **~$8,300/mes** que entra automático.
+>
+> **Y como dueño de casa**, vos pagás $99/mes y tu casa funciona sola — lawn, A/C, handyman, pool, todo. Ahorrás ~$180/mes vs separado.
+>
+> **Vivir como un faraón.** 20 preguntas, 10 min. Spot piloto si encaja.
+>
+> 👉 https://project-6lklw-git-master-migueljkrs-projects.vercel.app/
+>
+> Miguel · Faraón Pay
+
+### H3 — MK's Lawn (i_work_247@yahoo.com)
+**Asunto:** $5,340/mes + ahorrar $180 — para MK's con 15 años de experiencia
+
+> Hola equipo de MK's Lawn, Pool & Maintenance,
+>
+> 15 años combinando lawn + pool en Cape Coral los pone en posición ideal para Faraón Pay — el bundle es el corazón del modelo.
+>
+> Plan "Lawn + Pool" $169/mes × 40 clientes = **$6,760/mes recurrente**. Plan basic lawn $89/mes × 30 más = **$2,670/mes adicional**. Total potencial: **~$9,400/mes** automático.
+>
+> Plus en su propia casa $99/mes ahorrando $180/mes vs proveedores separados.
+>
+> **Vivir como un faraón.** 20 preguntas, 10 min, confidencial. Reservamos spot del piloto.
+>
+> 👉 https://project-6lklw-git-master-migueljkrs-projects.vercel.app/
+>
+> Miguel Balart · Faraón Pay
+
+### H8 — Hughes Exterminators (fortmyers@hughes-exterminators.com)
+**Asunto:** $5,900/mes recurrente para Hughes (59 años, family-owned)
+
+> Hola Hughes Exterminators team,
+>
+> 59 años de pest control en Cape Coral es heritage. Faraón Pay quiere amplificarlo: planes mensuales $59/mes × 100 clientes = **$5,900/mes recurrente** (inspección + treatment preventivo + emergencia priority). Plan premium $99/mes × 50 = **$4,950/mes adicional**. Total: **~$10,800/mes**.
+>
+> Y como member en su propia casa $99/mes cubre lawn + A/C + handyman + pool ahorrando $180 vs separado.
+>
+> **Vivir como un faraón.** 20 preguntas, 10 min, confidencial.
+>
+> 👉 https://project-6lklw-git-master-migueljkrs-projects.vercel.app/
+>
+> Miguel · Founder · Faraón Pay
+> MacLorian X Group LLC
+
+### H9 — Zoomin Groomin (capezg@zoomingroomin.com)
+**Asunto:** $3,160/mes recurrente para Zoomin Groomin Cape Coral
+
+> Hola Zoomin Groomin team,
+>
+> Mobile pet grooming es el caso de uso perfecto para membresía mensual: las mascotas necesitan grooming cada 4-6 semanas religiosamente, pero el cliente lo coordina cada vez.
+>
+> Faraón Pay automatiza: plan $79/mes × 40 mascotas = **$3,160/mes recurrente**, agenda planificada, sin coordinar cada cita. Premium $129/mes × 30 = **$3,870/mes** adicional. Total: **~$7,000/mes**.
+>
+> Plus como member en su propia casa $99/mes ahorrando $180/mes.
+>
+> **Vivir como un faraón.** 20 preguntas, 10 min. Spot piloto reservado.
+>
+> 👉 https://project-6lklw-git-master-migueljkrs-projects.vercel.app/
+>
+> Miguel · Faraón Pay
+
+---
+
+## 📞 WhatsApp/SMS para los 12 restantes (solo tel directo)
+
+Pasale por WhatsApp el mensaje del Master Template del Bloque F, customizado con el nombre del dueño cuando lo tengamos:
+
+- H4 Kelly Roofing — **(239) 228-3276** — preguntar por **Richard Kelly**
+- H5 Pillar Lawn Care — **(239) 333-7559** — preguntar por **Jose**
+- H6 Rapid Response AC — **(239) 322-3816** — preguntar por **Jason Forand** o **Robert Stowell**
+- H7 First Class AC — **(239) 574-2500** — empresa desde 1977, preguntar por el dueño actual
+- H10 Touch of Class Pet — **(239) 549-2211**
+- H11 AAA Pressure Washing — **(239) 292-3571**
+- H12 Florida Power Wash Pros — **(239) 841-2818**
+- H13 Green Leaf Lawn — **(239) 728-1999**
+- H14 All Seasons Window — **(239) 541-3322**
+- H15 Maximum Pest Control — **(239) 772-7363** — preguntar por **David Markovits**
+- H16 Southwest Heating & Cooling — **(239) 205-1001**
+- H17 Air Necessity HVAC — **(239) 342-2079** — family-owned
+
+---
+
+## 🎯 Próximos pasos (cuando vuelvas)
+
+1. **Si Miguel subió las imágenes de las 10 tarjetas restantes** (Sarah Insurance · YAC Yami · Nany's · JM Jewelry · GLO Auto · Guedes · Dairon · Rio Piedra · GM Guines · Carpio's) → extraigo emails que el .txt perdió y completo la lista.
+2. **Pending WebSearches** para los ~14 negocios del archivo 06 que aún no resolví (Mann Ventures, Dfermins, Guardian Greenscaping, Gulf Coast Lawn, DCL Pool, Laguna Blue Pool, Southwest Wash Pros, Gutter Bro, Benitez Pressure, Gerald's Tree, Tim's Tree, Joshua Tree, Davie Tree, Tree Service SWFL, American Mechanical, J&D AC, Woof Gang, Martins Maintenance, Fiesta Insurance, LP Insurance, ASAP Accounting + algunos más). Puedo seguir en próximo turno con otro batch.
+3. **Para los 18 faltantes** (school transport, spa, fitness, generator, beauty) → Google Maps + Miguel manualmente, o WebSearch agente próximo turno.
+
+---
+
+## 📚 Sources adicionales (round 4)
+
+- [Cape Strong Lawn Care BBB](https://www.bbb.org/us/fl/cape-coral/profile/lawn-care/cape-strong-lawn-care-0653-90453064)
+- [AHCM Contact Us](https://ahcm-fl.com/contact-us)
+- [AHCM Buzzfile](https://www.buzzfile.com/business/Amazing-Home-and-Commercial-Maintenance,-Inc.-239-205-0177)
+- [Lawn Hunters Plus Sunbiz](https://search.sunbiz.org/Inquiry/corporationsearch/SearchResultDetail?inquirytype=EntityName&searchTerm=LAWN+HUNTERS+LLC)
+- [MK's Lawn Yelp](https://www.yelp.com/biz/mks-lawn-and-maintenance-cape-coral-3)
+- [Kelly Roofing Yelp](https://www.yelp.com/biz/kelly-roofing-naples-5)
+- [Pillar Lawn Care Yellowpages](https://m.yellowpages.com/cape-coral-fl/mip/pillar-lawn-care-and-landscaping-517015607)
+- [Rapid Response AC Buildzoom](https://www.buildzoom.com/contractor/rapid-response-ac-services-inc)
+- [First Class AC Yelp](https://www.yelp.com/biz/first-class-air-conditioning-cape-coral)
+- [Hughes Exterminators Yelp](https://www.yelp.com/biz/hughes-exterminators-cape-coral)
+- [Zoomin Groomin Bringfido](https://www.bringfido.com/resource/44535)
+- [Touch of Class Pet Yelp](https://www.yelp.com/biz/touch-of-class-pet-grooming-cape-coral-3)
+- [AAA Pressure Washing Yelp](https://www.yelp.com/biz/aaa-pressure-washing-cape-coral)
+- [Green Leaf Lawn BBB](https://www.bbb.org/us/fl/fort-myers/profile/lawn-maintenance/green-leaf-lawn-services-swfl-inc-0653-90330566)
+- [All Seasons Window Patch](https://patch.com/florida/cape-coral-fl/business/listing/560756/all-seasons-window-cleaning-and-pressure-washing)
+- [Maximum Pest Control Yelp](https://www.yelp.com/biz/maximum-pest-control-cape-coral-2)
+- [Southwest Heating Cooling BBB](https://www.bbb.org/us/fl/cape-coral/profile/air-conditioning-contractor/southwest-heating-cooling-inc-0653-90109191)
+- [Air Necessity HVAC](https://airnecessityhvac.com/contact/)
