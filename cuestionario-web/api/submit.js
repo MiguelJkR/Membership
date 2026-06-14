@@ -352,8 +352,22 @@ function buildProperties(data, type) {
         rich_text: [{ text: { content: clamp(data.q18_referidos, 1990) } }]
       };
     }
-    
-    props['Proximo paso'] = { select: { name: 'Sin accion' } };
+
+    const subsClient = data.q12_suscribirse;
+    const receptClient = inferReceptividad(data, type);
+    let proxPasoClient;
+    if (subsClient === 'Sí' || subsClient === 'Si') {
+      proxPasoClient = receptClient >= 6 ? 'Pasar a piloto' : 'Volver a contactar';
+    } else if (subsClient === 'Tal vez' || receptClient >= 7) {
+      proxPasoClient = 'Pasar a piloto';
+    } else if (receptClient >= 4) {
+      proxPasoClient = 'Volver a contactar';
+    } else if (subsClient === 'No' && receptClient < 4) {
+      proxPasoClient = 'Descartar';
+    } else {
+      proxPasoClient = 'Sin accion';
+    }
+    props['Proximo paso'] = { select: { name: proxPasoClient } };
   }
 
   const otherCats = type === 'provider' ? data.q2_categorias : data.q1_servicios;
