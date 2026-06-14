@@ -8,7 +8,10 @@ const ALLOWED_CATEGORIES = [
   'A/C & HVAC', 'Pool service', 'Lawn care', 'Pest control',
   'Roof maintenance', 'Pressure washing', 'Gutter cleaning',
   'Exterior cleaning', 'Hurricane prep', 'Handyman',
-  'Generator service', 'Tree service'
+  'Generator service', 'Tree service',
+  'Barber & beauty', 'Pet services', 'Auto detailing',
+  'Home cleaning', 'Spa & wellness', 'Personal fitness',
+  'Otros'
 ];
 
 const CITY_MAP = {
@@ -49,7 +52,7 @@ function inferProviderDominant(data) {
   const lower = dom.toLowerCase();
   if (lower.includes('a/c') || lower.includes('ac ') || lower.includes('hvac') || lower.includes('aire')) return 'A/C & HVAC';
   if (lower.includes('pool') || lower.includes('piscina')) return 'Pool service';
-  if (lower.includes('lawn') || lower.includes('jardín') || lower.includes('jardin') || lower.includes('grass')) return 'Lawn care';
+  if (lower.includes('lawn') || lower.includes('jardín') || lower.includes('jardin') || lower.includes('grass') || lower.includes('landscap')) return 'Lawn care';
   if (lower.includes('pest') || lower.includes('plaga') || lower.includes('mosquito')) return 'Pest control';
   if (lower.includes('roof') || lower.includes('techo')) return 'Roof maintenance';
   if (lower.includes('pressure') || lower.includes('presión') || lower.includes('presion')) return 'Pressure washing';
@@ -59,6 +62,12 @@ function inferProviderDominant(data) {
   if (lower.includes('handyman') || lower.includes('handy')) return 'Handyman';
   if (lower.includes('generator') || lower.includes('generador')) return 'Generator service';
   if (lower.includes('tree') || lower.includes('árbol') || lower.includes('arbol') || lower.includes('poda')) return 'Tree service';
+  if (lower.includes('barber') || lower.includes('peluquer') || lower.includes('beauty') || lower.includes('cosmetolog') || lower.includes('hair') || lower.includes('salon')) return 'Barber & beauty';
+  if (lower.includes('pet') || lower.includes('mascota') || lower.includes('groom') || lower.includes('dog') || lower.includes('perro') || lower.includes('gato') || lower.includes('cat ')) return 'Pet services';
+  if (lower.includes('detail') || (lower.includes('auto') && lower.includes('clean')) || lower.includes('car wash')) return 'Auto detailing';
+  if (lower.includes('clean') || lower.includes('limpieza') || lower.includes('housekeeping') || lower.includes('maid')) return 'Home cleaning';
+  if (lower.includes('spa') || lower.includes('wellness') || lower.includes('massage') || lower.includes('masaj')) return 'Spa & wellness';
+  if (lower.includes('fitness') || lower.includes('trainer') || lower.includes('gym') || lower.includes('entrenador')) return 'Personal fitness';
   return null;
 }
 
@@ -275,6 +284,19 @@ function buildProperties(data, type) {
     if (emailValue.includes('@') && emailValue.includes('.')) {
       props['Email'] = { email: emailValue };
     }
+  }
+
+  if (data.negocio_llc) {
+    props['Nombre LLC del negocio'] = {
+      rich_text: [{ text: { content: clamp(data.negocio_llc, 500) } }]
+    };
+  }
+
+  const catCustom = data.q2_categoria_personalizada || data.q1_categoria_personalizada;
+  if (catCustom) {
+    props['Categoria personalizada'] = {
+      rich_text: [{ text: { content: clamp(catCustom, 500) } }]
+    };
   }
   
   const city = normalizeCity(data.ciudad);
