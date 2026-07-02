@@ -855,6 +855,46 @@ input::placeholder, textarea::placeholder {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
+.share-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.share-row #share-url {
+  flex: 1 1 220px;
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px dashed var(--green-deep);
+  border-radius: 10px;
+  font-family: monospace;
+  font-size: 13px;
+  color: var(--green-deep);
+  word-break: break-all;
+}
+.copy-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  background: var(--green-deep);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+.copy-link-btn:hover { filter: brightness(1.12); }
+.copy-link-btn:active { transform: scale(0.97); }
+.copy-link-btn.copied { background: #22c55e; }
+.copy-link-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2; }
 
 footer {
   border-top: 1px solid var(--rule);
@@ -1683,8 +1723,14 @@ footer a:hover { text-decoration: underline; }
   <p data-i18n="success-msg">Tus respuestas ya están con nosotros. Lo que dijiste va a moldear directamente cómo construimos esto.</p>
   <p data-i18n="success-msg2">Si nos diste tu contacto y aceptaste que te avisemos, te escribiremos cuando estemos listos para los primeros pilotos en SW Florida.</p>
   <div class="next">
-    <strong data-i18n="success-next-label">Y si conoces a alguien más que debería responder esto, comparte el link:</strong><br>
-    <span style="font-family: monospace; font-size: 13px; color: var(--green-deep); word-break: break-all;" id="share-url"></span>
+    <strong id="share-label" data-i18n="success-next-label">Y si conoces a alguien más que debería responder esto, comparte el link:</strong>
+    <div class="share-row">
+      <span id="share-url"></span>
+      <button type="button" class="copy-link-btn" id="copy-link-btn" onclick="copyShareLink()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span id="copy-btn-text" data-i18n="copy-link">Copiar enlace</span>
+      </button>
+    </div>
   </div>
   <button class="btn-primary" style="margin-top: 32px;" onclick="goHome()" data-i18n="success-btn">Volver al inicio</button>
 </section>
@@ -1877,6 +1923,9 @@ const TRANSLATIONS = {
     "success-msg": "Tus respuestas ya están con nosotros. Lo que dijiste va a moldear directamente cómo construimos esto.",
     "success-msg2": "Si nos diste tu contacto y aceptaste que te avisemos, te escribiremos cuando estemos listos para los primeros pilotos en SW Florida.",
     "success-next-label": "Y si conoces a alguien más que debería responder esto, comparte el link:",
+    "success-share-provider": "Envíales este enlace a tus clientes — los lleva directo al cuestionario para homeowners:",
+    "copy-link": "Copiar enlace",
+    "copy-link-done": "¡Copiado!",
     "success-btn": "Volver al inicio",
     "footer-note": "Esta es una investigación de mercado. No estamos vendiendo nada.",
     "err-required": "Este campo es obligatorio.",
@@ -2061,6 +2110,9 @@ const TRANSLATIONS = {
     "success-msg": "Your answers are with us now. What you said will directly shape how we build this.",
     "success-msg2": "If you gave us your contact and accepted to be notified, we'll write when we're ready for the first pilots in SW Florida.",
     "success-next-label": "And if you know someone else who should answer this, share the link:",
+    "success-share-provider": "Send this link to your clients — it takes them straight to the homeowner questionnaire:",
+    "copy-link": "Copy link",
+    "copy-link-done": "Copied!",
     "success-btn": "Back to start",
     "footer-note": "This is market research. We're not selling anything.",
     "err-required": "This field is required.",
@@ -2185,6 +2237,7 @@ applyI18nPlaceholders(currentLang);
 
 function collectFormData(form, type) {
   const data = { type, lang: currentLang, submittedAt: new Date().toISOString(), source: window.location.href };
+  if (REF_SOURCE) data.ref = REF_SOURCE;
   const fd = new FormData(form);
   for (const [key, value] of fd.entries()) {
     if (data[key]) {
@@ -2235,7 +2288,7 @@ async function submitForm(form, type, btn) {
 
     document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
     document.getElementById('success').classList.add('active');
-    document.getElementById('share-url').textContent = window.location.origin + window.location.pathname;
+    setShareLink(type, data);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form.reset();
   } catch(err) {
@@ -2256,9 +2309,76 @@ document.getElementById('client-questionnaire').addEventListener('submit', e => 
   submitForm(e.target, 'client', e.target.querySelector('button[type="submit"]'));
 });
 
+// ===== Share link (proveedor → cuestionario de homeowners) =====
+function slugify(s) {
+  return String(s || '').toLowerCase().normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40);
+}
+
+function setShareLink(type, data) {
+  const base = window.location.origin + window.location.pathname;
+  let shareUrl = base;
+  let labelKey = 'success-next-label';
+  if (type === 'provider') {
+    const slug = slugify(data.negocio || data.nombre);
+    shareUrl = base + '?form=client' + (slug ? '&ref=' + encodeURIComponent(slug) : '');
+    labelKey = 'success-share-provider';
+  }
+  const labelEl = document.getElementById('share-label');
+  labelEl.setAttribute('data-i18n', labelKey);
+  labelEl.textContent = TRANSLATIONS[currentLang][labelKey];
+  document.getElementById('share-url').textContent = shareUrl;
+}
+
+function copyShareLink() {
+  const url = document.getElementById('share-url').textContent;
+  const done = () => {
+    const btn = document.getElementById('copy-link-btn');
+    const txt = document.getElementById('copy-btn-text');
+    btn.classList.add('copied');
+    txt.textContent = TRANSLATIONS[currentLang]['copy-link-done'];
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      txt.textContent = TRANSLATIONS[currentLang]['copy-link'];
+    }, 2000);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+  } else {
+    fallbackCopy(url, done);
+  }
+}
+
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); done(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+// ===== Deep link: ?form=client|provider abre el formulario directo; ?ref= trackea quién compartió =====
+let REF_SOURCE = '';
+(function() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    REF_SOURCE = (params.get('ref') || '').slice(0, 60);
+    const f = (params.get('form') || '').toLowerCase();
+    if (f === 'client' || f === 'cliente' || f === 'homeowner') showForm('client');
+    else if (f === 'provider' || f === 'proveedor') showForm('provider');
+  } catch(e) {}
+})();
+
 window.setLang = setLang;
 window.showForm = showForm;
 window.goHome = goHome;
+window.copyShareLink = copyShareLink;
 </script>
 
 <script src="/cookie-consent.js" defer></script>
