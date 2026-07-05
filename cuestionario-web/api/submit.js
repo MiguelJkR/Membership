@@ -273,10 +273,13 @@ function buildProperties(data, type) {
       date: { start: new Date().toISOString().split('T')[0] }
     },
     'Fuente del contacto': {
-      select: { name: 'Otro' }
+      select: { name: data.ref ? 'Referido' : 'Otro' }
     },
     'Notas principales': {
-      rich_text: [{ text: { content: buildNotasPrincipales(data, type) } }]
+      rich_text: [{ text: { content: clamp(
+        (data.ref ? `Referido por: ${clamp(String(data.ref), 60)}\n` : '') + buildNotasPrincipales(data, type),
+        1990
+      ) } }]
     },
     'Frase textual clave': {
       rich_text: [{ text: { content: buildFraseTextual(data, type) } }]
