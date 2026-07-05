@@ -895,6 +895,10 @@ input::placeholder, textarea::placeholder {
 .copy-link-btn:active { transform: scale(0.97); }
 .copy-link-btn.copied { background: #22c55e; }
 .copy-link-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2; }
+.share-wa-btn { background: #25D366; }
+.share-wa-btn svg { fill: #fff; stroke: none; }
+.share-native-btn { background: var(--ink, #1a2b3c); }
+.share-row { flex-wrap: wrap; }
 
 footer {
   border-top: 1px solid var(--rule);
@@ -1730,6 +1734,14 @@ footer a:hover { text-decoration: underline; }
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         <span id="copy-btn-text" data-i18n="copy-link">Copiar enlace</span>
       </button>
+      <button type="button" class="copy-link-btn share-wa-btn" onclick="shareWhatsApp()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="none"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35z"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.35A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.15l-.3-.18-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+        <span data-i18n="share-wa">WhatsApp</span>
+      </button>
+      <button type="button" class="copy-link-btn share-native-btn" id="share-native-btn" onclick="shareNative()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/></svg>
+        <span data-i18n="share-native">Compartir</span>
+      </button>
     </div>
   </div>
   <button class="btn-primary" style="margin-top: 32px;" onclick="goHome()" data-i18n="success-btn">Volver al inicio</button>
@@ -1924,6 +1936,10 @@ const TRANSLATIONS = {
     "success-msg2": "Si nos diste tu contacto y aceptaste que te avisemos, te escribiremos cuando estemos listos para los primeros pilotos en SW Florida.",
     "success-next-label": "Y si conoces a alguien más que debería responder esto, comparte el link:",
     "success-share-provider": "Envíales este enlace a tus clientes — los lleva directo al cuestionario para homeowners:",
+    "share-wa": "WhatsApp",
+    "share-native": "Compartir",
+    "share-text-provider": "Estoy participando en una investigación sobre servicios del hogar en Florida. Si tenés casa, tu opinión ayuda (5 min, en español o inglés):",
+    "share-text-generic": "Encuesta corta sobre servicios del hogar en Florida (5 min, en español o inglés) — tu opinión ayuda:",
     "copy-link": "Copiar enlace",
     "copy-link-done": "¡Copiado!",
     "success-btn": "Volver al inicio",
@@ -2111,6 +2127,10 @@ const TRANSLATIONS = {
     "success-msg2": "If you gave us your contact and accepted to be notified, we'll write when we're ready for the first pilots in SW Florida.",
     "success-next-label": "And if you know someone else who should answer this, share the link:",
     "success-share-provider": "Send this link to your clients — it takes them straight to the homeowner questionnaire:",
+    "share-wa": "WhatsApp",
+    "share-native": "Share",
+    "share-text-provider": "I'm taking part in a research study about home services in Florida. If you own a home, your input helps (5 min, English or Spanish):",
+    "share-text-generic": "Quick survey about home services in Florida (5 min, English or Spanish) — your input helps:",
     "copy-link": "Copy link",
     "copy-link-done": "Copied!",
     "success-btn": "Back to start",
@@ -2331,6 +2351,39 @@ function setShareLink(type, data) {
   labelEl.setAttribute('data-i18n', labelKey);
   labelEl.textContent = TRANSLATIONS[currentLang][labelKey];
   document.getElementById('share-url').textContent = shareUrl;
+}
+
+function _shareText() {
+  // el texto según contexto: proveedor comparte el cuestionario de clientes
+  const isProvider = document.getElementById('share-label')
+    .getAttribute('data-i18n') === 'success-share-provider';
+  const key = isProvider ? 'share-text-provider' : 'share-text-generic';
+  return TRANSLATIONS[currentLang][key] || '';
+}
+
+function shareWhatsApp() {
+  const url = document.getElementById('share-url').textContent;
+  const text = encodeURIComponent(_shareText() + ' ' + url);
+  window.open('https://wa.me/?text=' + text, '_blank', 'noopener');
+}
+
+async function shareNative() {
+  const url = document.getElementById('share-url').textContent;
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: 'MacLorian X Group', text: _shareText(), url: url });
+    } else {
+      copyShareLink();
+    }
+  } catch (e) { /* usuario canceló el share sheet — ok */ }
+}
+
+// ocultar el botón de share nativo donde no existe (desktop viejo)
+if (!navigator.share) {
+  document.addEventListener('DOMContentLoaded', function () {
+    const b = document.getElementById('share-native-btn');
+    if (b) b.style.display = 'none';
+  });
 }
 
 function copyShareLink() {
