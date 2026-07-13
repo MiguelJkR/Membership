@@ -1131,6 +1131,7 @@ const TRANSLATIONS = {
     "o-vertical-fitness": "Fitness y bienestar (gym, entrenador, yoga, clases…)",
     "o-vertical-auto": "Autos (detailing, lavado, mantenimiento móvil…)",
     "o-vertical-other": "Otro servicio por membresía (lavandería, clases, limpieza de oficinas…)",
+    "o-vertical-gifts": "Flores y regalos (arreglos florales, suscripción de flores, regalos…)",
     "o-p_screener-main": "Sí, es mi negocio principal",
     "o-p_screener-part_time": "Sí, medio tiempo",
     "o-p_screener-employee": "No, soy empleado de otra empresa",
@@ -1737,6 +1738,7 @@ const TRANSLATIONS = {
     "vw-hint-fitness": "Pensando en tu gym o entrenamiento: las membresías suelen ir de $60 a $200 al mes.",
     "vw-hint-auto": "Pensando en tu servicio de autos: los clubes de lavado/detailing van de $20 a $60 al mes.",
     "vw-hint-other": "Pensando en tu servicio: una lavandería por suscripción va de $50 a $200 al mes; ajústalo al tuyo.",
+    "vw-hint-gifts": "Pensando en tu negocio de flores/regalos: una suscripción de flores suele ir de $40 a $120 al mes; ajústalo al tuyo.",
   },
   en: {
     "brand": "MacLorian X Group",
@@ -1875,6 +1877,7 @@ const TRANSLATIONS = {
     "o-vertical-fitness": "Fitness & wellness (gym, trainer, yoga, classes…)",
     "o-vertical-auto": "Auto (detailing, wash, mobile maintenance…)",
     "o-vertical-other": "Other membership service (laundry, lessons, office cleaning…)",
+    "o-vertical-gifts": "Flowers & gifts (arrangements, flower subscription, gifts…)",
     "o-p_screener-main": "Yes, main business",
     "o-p_screener-part_time": "Yes, part-time",
     "o-p_screener-employee": "No, I work for someone else",
@@ -2478,6 +2481,7 @@ const TRANSLATIONS = {
     "vw-hint-fitness": "Thinking about your gym or training: memberships usually run $60 to $200 a month.",
     "vw-hint-auto": "Thinking about your auto service: wash/detailing clubs run $20 to $60 a month.",
     "vw-hint-other": "Thinking about your service: a laundry subscription runs $50 to $200 a month; adjust it to yours.",
+    "vw-hint-gifts": "Thinking about your flowers/gifts business: a flower subscription usually runs $40 to $120 a month; adjust it to yours.",
   }
 };
 
@@ -2573,7 +2577,7 @@ const WIZARD = {
   provider: [
     { id: 'p1', title: 'p-step1-title', micro: 'p-step1-micro', items: [
       { id: 'p_screener', type: 'chips', opts: ['main','part_time','employee','none'], req: true, softExit: ['employee','none'] },
-      { id: 'vertical', type: 'chips', opts: ['home','beauty','pets','food','fitness','auto','other'], req: true },
+      { id: 'vertical', type: 'chips', opts: ['home','beauty','pets','food','fitness','auto','gifts','other'], req: true },
       { id: 'p_name', type: 'text', max: 100 },
       { id: 'p_business', type: 'text', max: 100 },
       { id: 'p_crew', type: 'chips', opts: ['solo','1_2','3_5','6_15','15_plus'], req: true },
@@ -2680,7 +2684,7 @@ const WIZARD = {
   ],
   homeowner: [
     { id: 'h1', title: 'h-step1-title', micro: 'h-step1-micro', items: [
-      { id: 'vertical', type: 'chips', qKey: 'q-vertical-cust', opts: ['home','beauty','pets','food','fitness','auto','other'], req: true },
+      { id: 'vertical', type: 'chips', qKey: 'q-vertical-cust', opts: ['home','beauty','pets','food','fitness','auto','gifts','other'], req: true },
       { id: 'h_screener', type: 'chips', opts: ['year_round','snowbird','rental','renter'], req: true, softExit: ['renter'], cond: a => (a.vertical || 'home') === 'home' },
       { id: 'h_name', type: 'text', max: 100 },
       { id: 'h_zip', type: 'zip', req: true },

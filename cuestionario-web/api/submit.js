@@ -166,7 +166,7 @@ const FIELD_SPEC = {
   // validación silenciosa de un dato que nunca se guarda. Si algún día se quiere conservar, añadir
   // 'form' aquí Y una entrada en PROP_MAP con una propiedad Notion existente.
   utm:         { t: 'str', m: 300 },
-  vertical:    { t: 'slug', a: ['home', 'beauty', 'pets', 'food', 'fitness', 'auto', 'other'] },
+  vertical:    { t: 'slug', a: ['home', 'beauty', 'pets', 'food', 'fitness', 'auto', 'gifts', 'other'] },
 
   // ── proveedor ──
   p_screener:          { t: 'slug', a: ['main', 'part_time', 'employee', 'none'] },
