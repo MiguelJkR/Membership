@@ -984,8 +984,8 @@ const COUNTY_FIPS = {"Alachua":"001","Baker":"003","Bay":"005","Bradford":"007",
 const FL_COUNTIES = Object.keys(COUNTY_FIPS);
 const US_STATES = {"AL":"Alabama","AK":"Alaska","AZ":"Arizona","AR":"Arkansas","CA":"California","CO":"Colorado","CT":"Connecticut","DE":"Delaware","DC":"District of Columbia","FL":"Florida","GA":"Georgia","HI":"Hawaii","ID":"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa","KS":"Kansas","KY":"Kentucky","LA":"Louisiana","ME":"Maine","MD":"Maryland","MA":"Massachusetts","MI":"Michigan","MN":"Minnesota","MS":"Mississippi","MO":"Missouri","MT":"Montana","NE":"Nebraska","NV":"Nevada","NH":"New Hampshire","NJ":"New Jersey","NM":"New Mexico","NY":"New York","NC":"North Carolina","ND":"North Dakota","OH":"Ohio","OK":"Oklahoma","OR":"Oregon","PA":"Pennsylvania","RI":"Rhode Island","SC":"South Carolina","SD":"South Dakota","TN":"Tennessee","TX":"Texas","UT":"Utah","VT":"Vermont","VA":"Virginia","WA":"Washington","WV":"West Virginia","WI":"Wisconsin","WY":"Wyoming"};
 const QUICK_CHIPS = {
-  provider: ["pool-cleaning","lawn-care","general-pest","ac","house-cleaning","pressure-washing","handyman","home-watch"],
-  homeowner: ["lawn-care","pool-cleaning","general-pest","ac","house-cleaning","handyman","pressure-washing","home-watch"]
+  provider: ["pool-cleaning","lawn-care","general-pest","ac","house-cleaning","pressure-washing","handyman","home-watch","other"],
+  homeowner: ["lawn-care","pool-cleaning","general-pest","ac","house-cleaning","handyman","pressure-washing","home-watch","other"]
 };
 const GRID_ROWS = ["pest","lawn","pool","ac_plan","cleaning","home_watch","warranty","membership","other"];
 const GRID_RANGES = ["lt25","25_50","51_100","101_200","200_plus"];
@@ -1081,7 +1081,7 @@ const TRANSLATIONS = {
     "cat-quick-label": "Los más comunes:",
     "cat-combo-label": "Tu combo:",
     "cat-groups-label": "Todos los grupos:",
-    "cat-other-q": "¿Qué haces? En tus palabras.",
+    "cat-other-q": "¿No ves tu categoría? Escríbela y la agregamos a la investigación.",
     "cat-other-q-ho": "¿Qué otro servicio? En tus palabras.",
     "cat-no-results": "Nada con ese nombre — abre los grupos o marca “Otra”.",
     "grid-hint": "Si no pagas nada fijo, sigue sin marcar nada.",
@@ -1829,7 +1829,7 @@ const TRANSLATIONS = {
     "cat-quick-label": "Most common:",
     "cat-combo-label": "Your combo:",
     "cat-groups-label": "All groups:",
-    "cat-other-q": "What do you do? In your own words.",
+    "cat-other-q": "Don't see your category? Write it and we'll add it to the research.",
     "cat-other-q-ho": "Which other service? In your own words.",
     "cat-no-results": "Nothing by that name — open the groups or tap “Other”.",
     "grid-hint": "If you don't pay for anything on a fixed basis, just keep going without checking anything.",
