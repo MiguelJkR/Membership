@@ -1,0 +1,33 @@
+{
+ "ts": "2026-07-19T00:08:37.231114+00:00",
+ "stripe_mode": "TEST",
+ "caja_real": false,
+ "funnel": {
+  "prospectos": 159,
+  "emails_enviados": 88,
+  "negocios_alta": 6,
+  "onboarded_stripe": 2,
+  "verificados": 3,
+  "listados": 5,
+  "clientes": 63,
+  "membresias_activas": 56,
+  "por_estado": {
+   "active": 56,
+   "past_due": 4,
+   "paused": 3
+  }
+ },
+ "dinero_usd": {
+  "MRR": 2811.0,
+  "ingreso_plataforma_MRR_mes": 281.1,
+  "GMV_total": 2896.0,
+  "fee_plataforma_total": 289.6,
+  "fee_plataforma_30d": 289.6,
+  "ahorro_a_clientes": 0.0,
+  "fee_pct": 10.0
+ },
+ "tony_horas_ahorradas": 17.1,
+ "desbloquea_caja_real": [
+  "Stripe en TEST -> flip a LIVE (accion de Miguel: verificar cuenta)"
+ ]
+}
