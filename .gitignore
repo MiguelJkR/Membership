@@ -398,3 +398,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# colector revenue loop (local, no publicar)
+shutyu_loop.py
+shutyu_metrics.json
+shutyu_history.jsonl
+shutyu_loop.log
+run_shutyu_loop.bat
